@@ -3,30 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HOTY DOG Career Portal</title>
+<title>HOTY DOG HR Portal</title>
 
 <style>
 body{
 margin:0;
 font-family:'Segoe UI',sans-serif;
 background:#FFD43B;
-overflow-x:hidden;
 }
 
-.logo{
+.header{
 text-align:center;
-padding:30px 10px;
-}
-
-.logo img{
-max-width:500px;
-width:90%;
-
-
-@keyframes float{
-0%{transform:translateY(0px);}
-50%{transform:translateY(-12px);}
-100%{transform:translateY(0px);}
+padding:40px 10px;
+font-size:48px;
+font-weight:900;
+color:#ff6a00;
+letter-spacing:3px;
 }
 
 .container{
@@ -59,11 +51,10 @@ cursor:pointer;
 background:#ff6a00;
 color:white;
 transition:0.3s;
-box-shadow:0 5px 20px rgba(0,0,0,0.2);
 }
 
 button:hover{
-transform:scale(1.07);
+transform:scale(1.05);
 background:#ff8800;
 }
 
@@ -73,13 +64,12 @@ align-items:center;
 margin:10px 0;
 padding:12px;
 border-radius:15px;
-transition:0.3s;
 cursor:pointer;
+transition:0.3s;
 }
 
 .option:hover{
 background:#fff3e0;
-transform:translateX(5px);
 }
 
 .circle{
@@ -95,8 +85,8 @@ margin-right:10px;
 font-weight:bold;
 }
 
-input[type="text"]{
-width:90%;
+input[type="text"], input[type="tel"]{
+width:95%;
 padding:12px;
 margin:10px 0;
 border-radius:15px;
@@ -111,9 +101,8 @@ display:none;
 
 <body>
 
-<div class="logo">
-<!-- Agar rasmni GitHubga yuklasang -->
-<img src="logo.jpg" alt="HOTY DOG">
+<div class="header">
+HOTY DOG HR SYSTEM
 </div>
 
 <div class="container">
@@ -129,48 +118,36 @@ display:none;
 <h3 id="roleTitle"></h3>
 
 <p><b>1. FIFO nima?</b></p>
-
 <label class="option"><div class="circle">A</div>
 <input type="radio" name="q1" value="0"> maxsulotlar qushnichigi</label>
-
 <label class="option"><div class="circle">B</div>
 <input type="radio" name="q1" value="0"> maxsulotlar tami</label>
-
 <label class="option"><div class="circle">C</div>
 <input type="radio" name="q1" value="0"> Togri javob yuq</label>
-
 <label class="option"><div class="circle">D</div>
 <input type="radio" name="q1" value="2"> Birinchi kelgan mahsulot birinchi ketadi</label>
 
 <hr>
 
 <p><b>2. Mijoz hotdog sovib qoldi desa nima qilasiz?</b></p>
-
 <label class="option"><div class="circle">A</div>
 <input type="radio" name="q2" value="0"> E'tibor bermayman</label>
-
 <label class="option"><div class="circle">B</div>
 <input type="radio" name="q2" value="2"> Qayta tayyorlab beraman</label>
-
 <label class="option"><div class="circle">C</div>
 <input type="radio" name="q2" value="0"> Tashvish tugmasini bosaman</label>
-
 <label class="option"><div class="circle">D</div>
 <input type="radio" name="q2" value="0"> Togri javob yuq</label>
 
 <hr>
 
 <p><b>3. Sousnitsada ketchup saqlash muddati?</b></p>
-
 <label class="option"><div class="circle">A</div>
 <input type="radio" name="q3" value="2"> 48</label>
-
 <label class="option"><div class="circle">B</div>
 <input type="radio" name="q3" value="0"> 12</label>
-
 <label class="option"><div class="circle">C</div>
 <input type="radio" name="q3" value="0"> 60</label>
-
 <label class="option"><div class="circle">D</div>
 <input type="radio" name="q3" value="0"> 6</label>
 
@@ -180,9 +157,10 @@ display:none;
 </div>
 
 <div id="resultForm" class="hidden card">
-<h3>Ismingizni kiriting</h3>
+<h3>Ma'lumotlaringizni kiriting</h3>
 <input type="text" id="name" placeholder="Ism">
 <input type="text" id="surname" placeholder="Familiya">
+<input type="tel" id="phone" placeholder="Telefon raqam (+998...)">
 <div style="text-align:center;">
 <button onclick="saveResult()">Saqlash</button>
 </div>
@@ -222,9 +200,10 @@ document.getElementById("resultForm").classList.remove("hidden");
 function saveResult(){
 let name=document.getElementById("name").value;
 let surname=document.getElementById("surname").value;
+let phone=document.getElementById("phone").value;
 
-if(name==""||surname==""){
-alert("Ism va familiyani kiriting!");
+if(name==""||surname==""||phone==""){
+alert("Barcha maydonlarni to'ldiring!");
 return;
 }
 
@@ -238,6 +217,7 @@ headers:{
 body:JSON.stringify({
 name:name,
 surname:surname,
+phone:phone,
 role:currentRole,
 score:totalScore
 })
@@ -246,7 +226,7 @@ score:totalScore
 alert("Tabriklaymiz! Siz testdan o'tdingiz.");
 }
 else{
-alert("Afsuski 4 balldan past natija. Qayta urinib ko'ring.");
+alert("Afsuski 4 balldan past natija. Ma'lumot yuborilmadi.");
 }
 
 location.reload();
