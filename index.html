@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOTY DOG HR 2026</title>
+
+<style>
+body{
+margin:0;
+font-family: 'Segoe UI', sans-serif;
+background: linear-gradient(135deg,#FFD54F,#FFB300);
+text-align:center;
+}
+
+header{
+padding:40px;
+font-size:60px;
+font-weight:900;
+color:#ff6f00;
+letter-spacing:3px;
+text-shadow:2px 2px 10px rgba(0,0,0,0.2);
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+button{
+padding:15px 30px;
+margin:10px;
+border:none;
+border-radius:30px;
+font-size:18px;
+cursor:pointer;
+background:#ff6f00;
+color:white;
+transition:0.3s;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+button:hover{
+transform:scale(1.05);
+background:#ff8f00;
+}
+
+.card{
+background:rgba(255,255,255,0.95);
+padding:30px;
+border-radius:25px;
+margin-top:20px;
+box-shadow:0 15px 40px rgba(0,0,0,0.2);
+text-align:left;
+}
+
+input{
+padding:12px;
+width:90%;
+margin:10px 0;
+border-radius:15px;
+border:1px solid #ccc;
+font-size:16px;
+}
+
+.hidden{
+display:none;
+}
+
+table{
+width:100%;
+margin-top:20px;
+border-collapse:collapse;
+}
+
+th,td{
+border:1px solid #ddd;
+padding:12px;
+text-align:center;
+}
+
+th{
+background:#ff6f00;
+color:white;
+}
+
+h2,h3{
+text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<header>HOTY DOG</header>
+
+<div class="container">
+
+<div id="home">
+<h2>Lavozimni tanlang</h2>
+<button onclick="startTest('Повар')">Повар</button>
+<button onclick="startTest('Менеджер')">Менеджер</button>
+<button onclick="startTest('Директор')">Директор</button>
+</div>
+
+<div id="test" class="hidden card">
+<h3 id="roleTitle"></h3>
+
+<p><b>1. FIFO nima?</b></p>
+<label><input type="radio" name="q1" value="0"> A) maxsulotlar qushnichigi</label><br>
+<label><input type="radio" name="q1" value="0"> B) maxsulotlar tami</label><br>
+<label><input type="radio" name="q1" value="0"> C) Togri javob yuq</label><br>
+<label><input type="radio" name="q1" value="2"> D) Birinchi kelgan mahsulot birinchi ketadi</label>
+
+<hr>
+
+<p><b>2. Mijoz hotdog sovib qoldi desa nima qilasiz?</b></p>
+<label><input type="radio" name="q2" value="0"> A) E'tibor bermayman</label><br>
+<label><input type="radio" name="q2" value="2"> B) Qayta tayyorlab beraman</label><br>
+<label><input type="radio" name="q2" value="0"> C) Tashvish tugmasini bosaman</label><br>
+<label><input type="radio" name="q2" value="0"> D) Togri javob yuq</label>
+
+<hr>
+
+<p><b>3. Sousnitsada ketchup saqlash muddati?</b></p>
+<label><input type="radio" name="q3" value="2"> A) 48</label><br>
+<label><input type="radio" name="q3" value="0"> B) 12</label><br>
+<label><input type="radio" name="q3" value="0"> C) 60</label><br>
+<label><input type="radio" name="q3" value="0"> D) 6</label>
+
+<br><br>
+<div style="text-align:center;">
+<button onclick="finishTest()">Testni yakunlash</button>
+</div>
+</div>
+
+<div id="resultForm" class="hidden card">
+<h3>Ismingizni kiriting</h3>
+<input type="text" id="name" placeholder="Ism">
+<input type="text" id="surname" placeholder="Familiya">
+<div style="text-align:center;">
+<button onclick="saveResult()">Natijani saqlash</button>
+</div>
+</div>
+
+<div id="resultsTable" class="hidden card">
+<h3>Natijalar</h3>
+<table>
+<thead>
+<tr>
+<th>Ism</th>
+<th>Familiya</th>
+<th>Lavozim</th>
+<th>Ball</th>
+</tr>
+</thead>
+<tbody id="tableBody"></tbody>
+</table>
+</div>
+
+</div>
+
+<script>
+let totalScore = 0;
+let currentRole = "";
+
+function startTest(role){
+currentRole = role;
+document.getElementById("home").classList.add("hidden");
+document.getElementById("test").classList.remove("hidden");
+document.getElementById("roleTitle").innerText = role + " testi";
+}
+
+function finishTest(){
+let q1 = document.querySelector('input[name="q1"]:checked');
+let q2 = document.querySelector('input[name="q2"]:checked');
+let q3 = document.querySelector('input[name="q3"]:checked');
+
+if(!q1 || !q2 || !q3){
+alert("Hammasini belgilang!");
+return;
+}
+
+totalScore = Number(q1.value) + Number(q2.value) + Number(q3.value);
+
+document.getElementById("test").classList.add("hidden");
+document.getElementById("resultForm").classList.remove("hidden");
+}
+
+function saveResult(){
+let name = document.getElementById("name").value;
+let surname = document.getElementById("surname").value;
+
+if(name=="" || surname==""){
+alert("Ism va familiyani kiriting!");
+return;
+}
+
+let row = `
+<tr>
+<td>${name}</td>
+<td>${surname}</td>
+<td>${currentRole}</td>
+<td>${totalScore}/6</td>
+</tr>
+`;
+
+document.getElementById("tableBody").innerHTML += row;
+
+document.getElementById("resultForm").classList.add("hidden");
+document.getElementById("resultsTable").classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
