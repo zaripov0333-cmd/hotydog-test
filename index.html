@@ -211,7 +211,68 @@ document.getElementById("tableBody").innerHTML += row;
 document.getElementById("resultForm").classList.add("hidden");
 document.getElementById("resultsTable").classList.remove("hidden");
 }
-</script>
+<script>
+let totalScore = 0;
+let currentRole = "";
 
-</body>
-</html>
+const sheetURL = "https://script.google.com/macros/s/AKfycbxtnfZ3uyX9OQoUPeKj3L1vVanMsc9HF9qqDOp3kqw3hZIYfwPaWZ-enZzVsbS7MiZ4/exec";
+
+function startTest(role){
+currentRole = role;
+document.getElementById("home").classList.add("hidden");
+document.getElementById("test").classList.remove("hidden");
+document.getElementById("roleTitle").innerText = role + " testi";
+}
+
+function finishTest(){
+let q1 = document.querySelector('input[name="q1"]:checked');
+let q2 = document.querySelector('input[name="q2"]:checked');
+let q3 = document.querySelector('input[name="q3"]:checked');
+
+if(!q1 || !q2 || !q3){
+alert("Hammasini belgilang!");
+return;
+}
+
+totalScore = Number(q1.value)+Number(q2.value)+Number(q3.value);
+
+document.getElementById("test").classList.add("hidden");
+document.getElementById("resultForm").classList.remove("hidden");
+}
+
+function saveResult(){
+let name=document.getElementById("name").value;
+let surname=document.getElementById("surname").value;
+
+if(name==""||surname==""){
+alert("Ism va familiyani kiriting!");
+return;
+}
+
+// 🔥 5 yoki 6 ball bo‘lsa yuboradi
+if(totalScore > 4){
+
+fetch(sheetURL, {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+name: name,
+surname: surname,
+role: currentRole,
+score: totalScore
+})
+})
+.then(res => res.text())
+.then(data => console.log(data));
+
+alert("Tabriklaymiz! Siz 4 balldan yuqori natija oldingiz.");
+}
+else{
+alert("Afsuski 4 balldan past natija. Ma'lumot yuborilmadi.");
+}
+
+location.reload();
+}
+</script>
