@@ -8,36 +8,58 @@
 <style>
   body{
     margin:0;
-    font-family:'Segoe UI',sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     background:#FFD43B;
   }
 
-  .header{
-    text-align:center;
-    padding:40px 10px 10px;
-    font-size:52px;
-    font-weight:900;
-    color:#ff6a00;
-    letter-spacing:3px;
-    text-shadow:0 8px 18px rgba(0,0,0,0.15);
-    animation:pop 700ms ease;
+  .top{
+    padding:24px 16px 6px;
+    display:flex;
+    justify-content:center;
   }
-  @keyframes pop{
-    from{transform:translateY(-10px);opacity:0;}
-    to{transform:translateY(0);opacity:1;}
+
+  /* Banner rasmdagidek chiqadi */
+  .banner{
+    width:min(920px, 96vw);
+    border-radius:26px;
+    overflow:hidden;
+    box-shadow:0 18px 45px rgba(0,0,0,0.20);
+    border:1px solid rgba(255,255,255,0.7);
+    background:rgba(255,255,255,0.25);
+    animation:fadeIn 0.6s ease;
+  }
+
+  .banner img{
+    display:block;
+    width:100%;
+    height:auto;
+    transform:translateY(0);
+    animation:float 3s ease-in-out infinite;
+  }
+
+  @keyframes float{
+    0%{ transform: translateY(0px); }
+    50%{ transform: translateY(-8px); }
+    100%{ transform: translateY(0px); }
+  }
+
+  @keyframes fadeIn{
+    from{opacity:0; transform:translateY(14px);}
+    to{opacity:1; transform:translateY(0);}
   }
 
   .sub{
     text-align:center;
-    font-size:16px;
-    color:#8a3b00;
-    margin-bottom:20px;
+    font-size:14px;
+    color:#7a3a00;
+    margin:10px 0 8px;
+    font-weight:700;
   }
 
   .container{
     max-width:900px;
     margin:auto;
-    padding:20px;
+    padding:14px 20px 24px;
   }
 
   .card{
@@ -45,12 +67,8 @@
     padding:28px;
     border-radius:24px;
     box-shadow:0 18px 45px rgba(0,0,0,0.20);
-    margin-top:18px;
-    animation:fadeIn 0.6s ease;
-  }
-  @keyframes fadeIn{
-    from{opacity:0;transform:translateY(18px);}
-    to{opacity:1;transform:translateY(0);}
+    margin-top:14px;
+    animation:fadeIn 0.5s ease;
   }
 
   button{
@@ -65,9 +83,19 @@
     transition:0.25s;
     box-shadow:0 10px 25px rgba(0,0,0,0.18);
   }
+
   button:hover{
     transform:scale(1.05);
     background:#ff8800;
+  }
+
+  .center{ text-align:center; }
+
+  hr{
+    border:none;
+    height:1px;
+    background:#eee;
+    margin:18px 0;
   }
 
   .option{
@@ -80,7 +108,9 @@
     cursor:pointer;
     transition:0.2s;
     border:1px solid #f2f2f2;
+    user-select:none;
   }
+
   .option:hover{
     background:#fff3e0;
     transform:translateX(6px);
@@ -95,8 +125,13 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    font-weight:800;
+    font-weight:900;
     flex:0 0 34px;
+    box-shadow:0 10px 20px rgba(255,106,0,0.25);
+  }
+
+  .option input[type="radio"]{
+    transform:scale(1.15);
   }
 
   input[type="text"], input[type="tel"]{
@@ -108,35 +143,46 @@
     font-size:16px;
     outline:none;
   }
+
   input[type="text"]:focus, input[type="tel"]:focus{
     border-color:#ff6a00;
     box-shadow:0 0 0 3px rgba(255,106,0,0.15);
   }
 
   .hidden{ display:none; }
-  hr{
-    border:none;
-    height:1px;
-    background:#eee;
-    margin:18px 0;
-  }
-  .center{ text-align:center; }
+
   .badge{
-    display:inline-block;
-    padding:6px 12px;
+    display:inline-flex;
+    gap:8px;
+    align-items:center;
+    padding:8px 14px;
     border-radius:999px;
-    background:#fff3e0;
-    color:#8a3b00;
-    font-weight:700;
-    margin-top:6px;
+    background:rgba(255,255,255,0.65);
+    border:1px solid rgba(255,255,255,0.8);
+    box-shadow:0 10px 22px rgba(0,0,0,0.10);
+    font-weight:800;
   }
 </style>
 </head>
 
 <body>
 
-<div class="header">HOTY DOGY</div>
-<div class="sub">HR Test System •Assalomu alaykum </div>
+<!-- RASMDAGI LOGO/BANNER -->
+<div class="top">
+  <div class="banner">
+    <!-- GitHub repo ichiga yuklagan rasm nomi: banner.jpg -->
+    <img src="banner.jpg" alt="HOTY DOG" onerror="this.style.display='none'; document.getElementById('fallbackTitle').style.display='block';">
+  </div>
+</div>
+
+<!-- Agar rasm topilmasa fallback -->
+<div id="fallbackTitle" class="sub" style="display:none;">
+  HOTY DOG
+</div>
+
+<div class="sub">
+  <span class="badge">HR Test System • 5–6 ball → Google Sheet</span>
+</div>
 
 <div class="container">
 
@@ -146,7 +192,9 @@
     <button onclick="startTest('Повар')">Повар</button>
     <button onclick="startTest('Менеджер')">Менеджер</button>
     <button onclick="startTest('Директор')">Директор</button>
-    <div class="badge">3 savol • Har biri 2 ball • Max 6 ball</div>
+    <div style="margin-top:8px; font-weight:800; color:#7a3a00;">
+      3 savol • Har biri 2 ball • Max 6 ball
+    </div>
   </div>
 
   <!-- TEST -->
@@ -197,13 +245,15 @@
   let totalScore = 0;
   let currentRole = "";
 
-  const sheetURL = "https://docs.google.com/spreadsheets/d/1jI6EWYibRY4PSk6zXRIKo8YxjxEpwvdsTb6iJTJEULY/edit?usp=sharing";
+  // Siz bergan Apps Script Web App URL
+  const sheetURL = "https://script.google.com/macros/s/AKfycbxx1A7eB3K9Z4La-UwR0Q1VdWua83WOWha6z2FHJfR4Tov-6UIwkhL_Oo9girUV4_Ao/exec";
 
   function startTest(role){
     currentRole = role;
     document.getElementById("home").classList.add("hidden");
     document.getElementById("test").classList.remove("hidden");
     document.getElementById("roleTitle").innerText = role + " testi";
+    window.scrollTo({top: 0, behavior: "smooth"});
   }
 
   function finishTest(){
@@ -220,6 +270,7 @@
 
     document.getElementById("test").classList.add("hidden");
     document.getElementById("resultForm").classList.remove("hidden");
+    window.scrollTo({top: 0, behavior: "smooth"});
   }
 
   async function saveResult(){
@@ -232,7 +283,7 @@
       return;
     }
 
-    // 
+    // Faqat 5–6 ball bo‘lsa sheetga yuboramiz
     if(totalScore > 4){
       const formData = new URLSearchParams();
       formData.append("name", name);
@@ -242,7 +293,7 @@
       formData.append("score", String(totalScore));
 
       try{
-        // no-cors: CORS sabab blok bo‘lmaydi, so‘rov ketadi
+        // no-cors: CORS blok qilmaydi, so‘rov ketadi
         await fetch(sheetURL, { method: "POST", mode: "no-cors", body: formData });
         alert("Tabriklaymiz! Natijangiz Google Sheetga yuborildi.");
       }catch(e){
@@ -254,7 +305,6 @@
       alert("Afsuski 4 balldan past natija. Sheetga yuborilmadi.");
     }
 
-    // ✅ Reloadni biroz kechiktiramiz (so‘rov to‘liq ketib ulguradi)
     setTimeout(()=>location.reload(), 800);
   }
 </script>
