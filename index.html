@@ -1,236 +1,262 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>HOTY DOG HR Portal</title>
 
 <style>
-body{
-margin:0;
-font-family:'Segoe UI',sans-serif;
-background:#FFD43B;
-}
+  body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:#FFD43B;
+  }
 
-.header{
-text-align:center;
-padding:40px 10px;
-font-size:48px;
-font-weight:900;
-color:#ff6a00;
-letter-spacing:3px;
-}
+  .header{
+    text-align:center;
+    padding:40px 10px 10px;
+    font-size:52px;
+    font-weight:900;
+    color:#ff6a00;
+    letter-spacing:3px;
+    text-shadow:0 8px 18px rgba(0,0,0,0.15);
+    animation:pop 700ms ease;
+  }
+  @keyframes pop{
+    from{transform:translateY(-10px);opacity:0;}
+    to{transform:translateY(0);opacity:1;}
+  }
 
-.container{
-max-width:900px;
-margin:auto;
-padding:20px;
-}
+  .sub{
+    text-align:center;
+    font-size:16px;
+    color:#8a3b00;
+    margin-bottom:20px;
+  }
 
-.card{
-background:white;
-padding:30px;
-border-radius:25px;
-box-shadow:0 20px 50px rgba(0,0,0,0.2);
-margin-top:20px;
-animation:fadeIn 0.8s ease;
-}
+  .container{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+  }
 
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(20px);}
-to{opacity:1;}
-}
+  .card{
+    background:white;
+    padding:28px;
+    border-radius:24px;
+    box-shadow:0 18px 45px rgba(0,0,0,0.20);
+    margin-top:18px;
+    animation:fadeIn 0.6s ease;
+  }
+  @keyframes fadeIn{
+    from{opacity:0;transform:translateY(18px);}
+    to{opacity:1;transform:translateY(0);}
+  }
 
-button{
-padding:15px 30px;
-margin:10px;
-border:none;
-border-radius:30px;
-font-size:18px;
-cursor:pointer;
-background:#ff6a00;
-color:white;
-transition:0.3s;
-}
+  button{
+    padding:15px 30px;
+    margin:10px;
+    border:none;
+    border-radius:30px;
+    font-size:18px;
+    cursor:pointer;
+    background:#ff6a00;
+    color:white;
+    transition:0.25s;
+    box-shadow:0 10px 25px rgba(0,0,0,0.18);
+  }
+  button:hover{
+    transform:scale(1.05);
+    background:#ff8800;
+  }
 
-button:hover{
-transform:scale(1.05);
-background:#ff8800;
-}
+  .option{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:10px 0;
+    padding:12px 14px;
+    border-radius:16px;
+    cursor:pointer;
+    transition:0.2s;
+    border:1px solid #f2f2f2;
+  }
+  .option:hover{
+    background:#fff3e0;
+    transform:translateX(6px);
+  }
 
-.option{
-display:flex;
-align-items:center;
-margin:10px 0;
-padding:12px;
-border-radius:15px;
-cursor:pointer;
-transition:0.3s;
-}
+  .circle{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#ff6a00;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    flex:0 0 34px;
+  }
 
-.option:hover{
-background:#fff3e0;
-}
+  input[type="text"], input[type="tel"]{
+    width:96%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:14px;
+    border:1px solid #ddd;
+    font-size:16px;
+    outline:none;
+  }
+  input[type="text"]:focus, input[type="tel"]:focus{
+    border-color:#ff6a00;
+    box-shadow:0 0 0 3px rgba(255,106,0,0.15);
+  }
 
-.circle{
-width:35px;
-height:35px;
-border-radius:50%;
-background:#ff6a00;
-color:white;
-display:flex;
-align-items:center;
-justify-content:center;
-margin-right:10px;
-font-weight:bold;
-}
-
-input[type="text"], input[type="tel"]{
-width:95%;
-padding:12px;
-margin:10px 0;
-border-radius:15px;
-border:1px solid #ccc;
-}
-
-.hidden{
-display:none;
-}
+  .hidden{ display:none; }
+  hr{
+    border:none;
+    height:1px;
+    background:#eee;
+    margin:18px 0;
+  }
+  .center{ text-align:center; }
+  .badge{
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:999px;
+    background:#fff3e0;
+    color:#8a3b00;
+    font-weight:700;
+    margin-top:6px;
+  }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-HOTY DOGY 
-</div>
+<div class="header">HOTY DOG</div>
+<div class="sub">HR Test System • Faqat 5–6 ball bo‘lsa Google Sheetga tushadi</div>
 
 <div class="container">
 
-<div id="home" class="card" style="text-align:center;">
-<h2>Lavozimni tanlang</h2>
-<button onclick="startTest('Повар')">Повар</button>
-<button onclick="startTest('Менеджер')">Менеджер</button>
-<button onclick="startTest('Директор')">Директор</button>
-</div>
+  <!-- HOME -->
+  <div id="home" class="card center">
+    <h2>Lavozimni tanlang</h2>
+    <button onclick="startTest('Повар')">Повар</button>
+    <button onclick="startTest('Менеджер')">Менеджер</button>
+    <button onclick="startTest('Директор')">Директор</button>
+    <div class="badge">3 savol • Har biri 2 ball • Max 6 ball</div>
+  </div>
 
-<div id="test" class="hidden card">
-<h3 id="roleTitle"></h3>
+  <!-- TEST -->
+  <div id="test" class="hidden card">
+    <h3 id="roleTitle"></h3>
 
-<p><b>1. FIFO nima?</b></p>
-<label class="option"><div class="circle">A</div>
-<input type="radio" name="q1" value="0"> maxsulotlar qushnichigi</label>
-<label class="option"><div class="circle">B</div>
-<input type="radio" name="q1" value="0"> maxsulotlar tami</label>
-<label class="option"><div class="circle">C</div>
-<input type="radio" name="q1" value="0"> Togri javob yuq</label>
-<label class="option"><div class="circle">D</div>
-<input type="radio" name="q1" value="2"> Birinchi kelgan mahsulot birinchi ketadi</label>
+    <p><b>1. FIFO nima?</b></p>
+    <label class="option"><div class="circle">A</div><input type="radio" name="q1" value="0"> maxsulotlar qushnichigi</label>
+    <label class="option"><div class="circle">B</div><input type="radio" name="q1" value="0"> maxsulotlar tami</label>
+    <label class="option"><div class="circle">C</div><input type="radio" name="q1" value="0"> Togri javob yuq</label>
+    <label class="option"><div class="circle">D</div><input type="radio" name="q1" value="2"> Birinchi kelgan mahsulot birinchi ketadi</label>
 
-<hr>
+    <hr>
 
-<p><b>2. Mijoz hotdog sovib qoldi desa nima qilasiz?</b></p>
-<label class="option"><div class="circle">A</div>
-<input type="radio" name="q2" value="0"> E'tibor bermayman</label>
-<label class="option"><div class="circle">B</div>
-<input type="radio" name="q2" value="2"> Qayta tayyorlab beraman</label>
-<label class="option"><div class="circle">C</div>
-<input type="radio" name="q2" value="0"> Tashvish tugmasini bosaman</label>
-<label class="option"><div class="circle">D</div>
-<input type="radio" name="q2" value="0"> Togri javob yuq</label>
+    <p><b>2. Mijoz hotdog sovib qoldi desa nima qilasiz?</b></p>
+    <label class="option"><div class="circle">A</div><input type="radio" name="q2" value="0"> E'tibor bermayman</label>
+    <label class="option"><div class="circle">B</div><input type="radio" name="q2" value="2"> Qayta tayyorlab beraman</label>
+    <label class="option"><div class="circle">C</div><input type="radio" name="q2" value="0"> Tashvish tugmasini bosaman</label>
+    <label class="option"><div class="circle">D</div><input type="radio" name="q2" value="0"> Togri javob yuq</label>
 
-<hr>
+    <hr>
 
-<p><b>3. Sousnitsada ketchup saqlash muddati?</b></p>
-<label class="option"><div class="circle">A</div>
-<input type="radio" name="q3" value="2"> 48</label>
-<label class="option"><div class="circle">B</div>
-<input type="radio" name="q3" value="0"> 12</label>
-<label class="option"><div class="circle">C</div>
-<input type="radio" name="q3" value="0"> 60</label>
-<label class="option"><div class="circle">D</div>
-<input type="radio" name="q3" value="0"> 6</label>
+    <p><b>3. Sousnitsada ketchup saqlash muddati?</b></p>
+    <label class="option"><div class="circle">A</div><input type="radio" name="q3" value="2"> 48</label>
+    <label class="option"><div class="circle">B</div><input type="radio" name="q3" value="0"> 12</label>
+    <label class="option"><div class="circle">C</div><input type="radio" name="q3" value="0"> 60</label>
+    <label class="option"><div class="circle">D</div><input type="radio" name="q3" value="0"> 6</label>
 
-<div style="text-align:center;">
-<button onclick="finishTest()">Testni yakunlash</button>
-</div>
-</div>
+    <div class="center">
+      <button onclick="finishTest()">Testni yakunlash</button>
+    </div>
+  </div>
 
-<div id="resultForm" class="hidden card">
-<h3>Ma'lumotlaringizni kiriting</h3>
-<input type="text" id="name" placeholder="Ism">
-<input type="text" id="surname" placeholder="Familiya">
-<input type="tel" id="phone" placeholder="Telefon raqam (+998...)">
-<div style="text-align:center;">
-<button onclick="saveResult()">Saqlash</button>
-</div>
-</div>
+  <!-- FORM -->
+  <div id="resultForm" class="hidden card">
+    <h3>Ma'lumotlaringizni kiriting</h3>
+    <input type="text" id="name" placeholder="Ism">
+    <input type="text" id="surname" placeholder="Familiya">
+    <input type="tel" id="phone" placeholder="Telefon raqam (+998...)">
+    <div class="center">
+      <button onclick="saveResult()">Saqlash</button>
+    </div>
+  </div>
 
 </div>
 
 <script>
-let totalScore = 0;
-let currentRole = "";
+  let totalScore = 0;
+  let currentRole = "";
 
-const sheetURL = "https://script.google.com/macros/s/AKfycbzTXvDWKJuTWm2pyWk6Vqvna_-0AlgWWnllUZVww9Gprapjv33jPgxDx-L5RPl_yoZ4/exec";
+  const sheetURL = "https://script.google.com/macros/s/AKfycbxx1A7eB3K9Z4La-UwR0Q1VdWua83WOWha6z2FHJfR4Tov-6UIwkhL_Oo9girUV4_Ao/exec";
 
-function startTest(role){
-currentRole = role;
-document.getElementById("home").classList.add("hidden");
-document.getElementById("test").classList.remove("hidden");
-document.getElementById("roleTitle").innerText = role + " testi";
-}
+  function startTest(role){
+    currentRole = role;
+    document.getElementById("home").classList.add("hidden");
+    document.getElementById("test").classList.remove("hidden");
+    document.getElementById("roleTitle").innerText = role + " testi";
+  }
 
-function finishTest(){
-let q1 = document.querySelector('input[name="q1"]:checked');
-let q2 = document.querySelector('input[name="q2"]:checked');
-let q3 = document.querySelector('input[name="q3"]:checked');
+  function finishTest(){
+    const q1 = document.querySelector('input[name="q1"]:checked');
+    const q2 = document.querySelector('input[name="q2"]:checked');
+    const q3 = document.querySelector('input[name="q3"]:checked');
 
-if(!q1 || !q2 || !q3){
-alert("Hammasini belgilang!");
-return;
-}
+    if(!q1 || !q2 || !q3){
+      alert("Hammasini belgilang!");
+      return;
+    }
 
-totalScore = Number(q1.value)+Number(q2.value)+Number(q3.value);
+    totalScore = Number(q1.value) + Number(q2.value) + Number(q3.value);
 
-document.getElementById("test").classList.add("hidden");
-document.getElementById("resultForm").classList.remove("hidden");
-}
+    document.getElementById("test").classList.add("hidden");
+    document.getElementById("resultForm").classList.remove("hidden");
+  }
 
-function saveResult(){
-let name=document.getElementById("name").value;
-let surname=document.getElementById("surname").value;
-let phone=document.getElementById("phone").value;
+  async function saveResult(){
+    const name = (document.getElementById("name").value || "").trim();
+    const surname = (document.getElementById("surname").value || "").trim();
+    const phone = (document.getElementById("phone").value || "").trim();
 
-if(name==""||surname==""||phone==""){
-alert("Barcha maydonlarni to'ldiring!");
-return;
-}
+    if(name === "" || surname === "" || phone === ""){
+      alert("Ism, familiya va telefonni to'ldiring!");
+      return;
+    }
 
-if(totalScore > 4){
+    // 
+    if(totalScore > 4){
+      const formData = new URLSearchParams();
+      formData.append("name", name);
+      formData.append("surname", surname);
+      formData.append("phone", phone);
+      formData.append("role", currentRole);
+      formData.append("score", String(totalScore));
 
-fetch(sheetURL,{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-name:name,
-surname:surname,
-phone:phone,
-role:currentRole,
-score:totalScore
-})
-});
+      try{
+        // no-cors: CORS sabab blok bo‘lmaydi, so‘rov ketadi
+        await fetch(sheetURL, { method: "POST", mode: "no-cors", body: formData });
+        alert("Tabriklaymiz! Natijangiz Google Sheetga yuborildi.");
+      }catch(e){
+        alert("Xatolik: Sheetga yuborilmadi. Deploy access 'Anyone' ekanini tekshiring.");
+        console.log(e);
+        return;
+      }
+    } else {
+      alert("Afsuski 4 balldan past natija. Sheetga yuborilmadi.");
+    }
 
-alert("Tabriklaymiz! Siz testdan o'tdingiz.");
-}
-else{
-alert("Tabriklaymiz! Siz testdan o'tdingiz.");
-}
-
-location.reload();
-}
+    // ✅ Reloadni biroz kechiktiramiz (so‘rov to‘liq ketib ulguradi)
+    setTimeout(()=>location.reload(), 800);
+  }
 </script>
 
 </body>
