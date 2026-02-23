@@ -3,258 +3,520 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>HOTY DOG HR Portal</title>
+<title>HOTY DOG • HR Test</title>
 
 <style>
+  :root{
+    --bg: #FFD43B;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --brand: #ff6a00;
+    --brand2:#ff8a00;
+    --line: rgba(17,24,39,0.08);
+    --shadow: 0 18px 45px rgba(0,0,0,0.14);
+    --shadow2: 0 10px 28px rgba(255,106,0,0.18);
+    --radius: 22px;
+  }
+
+  *{ box-sizing:border-box; }
   body{
     margin:0;
-    font-family: 'Segoe UI', sans-serif;
-    background:#FFD43B;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
   }
 
-  .top{
-    padding:24px 16px 6px;
-    display:flex;
-    justify-content:center;
+  /* Light background pattern (subtle) */
+  body:before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(circle at 10% 10%, rgba(255,255,255,0.35), transparent 32%),
+      radial-gradient(circle at 90% 20%, rgba(255,255,255,0.25), transparent 28%),
+      radial-gradient(circle at 30% 90%, rgba(255,255,255,0.25), transparent 30%);
+    opacity:0.8;
   }
 
-  /* Banner rasmdagidek chiqadi */
+  .wrap{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 16px 16px 30px;
+    position:relative;
+  }
+
+  /* Banner */
   .banner{
-    width:min(920px, 96vw);
-    border-radius:26px;
+    width:100%;
+    border-radius: 26px;
     overflow:hidden;
-    box-shadow:0 18px 45px rgba(0,0,0,0.20);
+    background: rgba(255,255,255,0.35);
     border:1px solid rgba(255,255,255,0.7);
-    background:rgba(255,255,255,0.25);
-    animation:fadeIn 0.6s ease;
+    box-shadow: var(--shadow);
+    animation: appear .5s ease;
   }
-
   .banner img{
     display:block;
     width:100%;
     height:auto;
-    transform:translateY(0);
-    animation:float 3s ease-in-out infinite;
+    transform: translateY(0);
+    animation: float 3.2s ease-in-out infinite;
   }
-
   @keyframes float{
     0%{ transform: translateY(0px); }
     50%{ transform: translateY(-8px); }
     100%{ transform: translateY(0px); }
   }
-
-  @keyframes fadeIn{
-    from{opacity:0; transform:translateY(14px);}
-    to{opacity:1; transform:translateY(0);}
+  @keyframes appear{
+    from{ opacity:0; transform: translateY(10px); }
+    to{ opacity:1; transform: translateY(0px); }
   }
 
-  .sub{
-    text-align:center;
-    font-size:14px;
-    color:#7a3a00;
-    margin:10px 0 8px;
+  /* Top bar */
+  .topbar{
+    margin-top: 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .brandline{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 12px;
+    border-radius:999px;
+    background: rgba(255,255,255,0.65);
+    border: 1px solid rgba(255,255,255,0.85);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.10);
+    font-weight: 800;
+    color: #7a3a00;
+  }
+  .pill small{
     font-weight:700;
+    color: var(--muted);
   }
 
-  .container{
-    max-width:900px;
-    margin:auto;
-    padding:14px 20px 24px;
+  .rightActions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
   }
 
-  .card{
-    background:white;
-    padding:28px;
-    border-radius:24px;
-    box-shadow:0 18px 45px rgba(0,0,0,0.20);
-    margin-top:14px;
-    animation:fadeIn 0.5s ease;
-  }
-
-  button{
-    padding:15px 30px;
-    margin:10px;
-    border:none;
-    border-radius:30px;
-    font-size:18px;
+  .btn{
+    appearance:none;
+    border:0;
     cursor:pointer;
-    background:#ff6a00;
-    color:white;
-    transition:0.25s;
-    box-shadow:0 10px 25px rgba(0,0,0,0.18);
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-weight: 800;
+    background: var(--brand);
+    color: white;
+    box-shadow: var(--shadow2);
+    transition: transform .18s ease, background .18s ease;
+  }
+  .btn:hover{ transform: translateY(-1px); background: var(--brand2); }
+  .btn:active{ transform: translateY(0px); }
+
+  .btn.secondary{
+    background: rgba(255,255,255,0.7);
+    color: #7a3a00;
+    border:1px solid rgba(255,255,255,0.9);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.10);
+  }
+  .btn.secondary:hover{ background: rgba(255,255,255,0.85); }
+
+  /* Main card */
+  .card{
+    margin-top: 16px;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255,255,255,0.75);
+    overflow:hidden;
+    animation: appear .45s ease;
+  }
+  .cardHead{
+    padding: 18px 18px 14px;
+    border-bottom: 1px solid var(--line);
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .title{
+    margin:0;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: .2px;
+  }
+  .subtitle{
+    margin:6px 0 0;
+    color: var(--muted);
+    font-weight: 650;
+    font-size: 13px;
+    line-height: 1.35;
   }
 
-  button:hover{
-    transform:scale(1.05);
-    background:#ff8800;
+  .content{
+    padding: 18px;
   }
 
-  .center{ text-align:center; }
-
-  hr{
-    border:none;
-    height:1px;
-    background:#eee;
-    margin:18px 0;
+  /* Role grid */
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .role{
+    border:1px solid var(--line);
+    border-radius: 18px;
+    padding: 14px;
+    background: rgba(255,255,255,0.75);
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .role:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 14px 26px rgba(0,0,0,0.10);
+    border-color: rgba(255,106,0,0.22);
+  }
+  .roleName{
+    font-weight: 950;
+    margin: 0;
+    font-size: 16px;
+  }
+  .roleMeta{
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 650;
+  }
+  .roleActions{
+    margin-top: 12px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .tag{
+    display:inline-flex;
+    align-items:center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #fff3e0;
+    color: #7a3a00;
+    font-weight: 850;
+    font-size: 12px;
+    border: 1px solid rgba(255,106,0,0.18);
   }
 
+  /* Questions */
+  .qTitle{
+    margin: 0 0 10px;
+    font-weight: 950;
+    font-size: 16px;
+  }
   .option{
     display:flex;
     align-items:center;
     gap:10px;
-    margin:10px 0;
-    padding:12px 14px;
-    border-radius:16px;
+    margin: 10px 0;
+    padding: 12px 14px;
+    border-radius: 16px;
     cursor:pointer;
-    transition:0.2s;
-    border:1px solid #f2f2f2;
+    transition: .18s ease;
+    border: 1px solid var(--line);
+    background: #fff;
     user-select:none;
   }
-
   .option:hover{
-    background:#fff3e0;
-    transform:translateX(6px);
+    background:#fff7ea;
+    border-color: rgba(255,106,0,0.22);
+    transform: translateX(4px);
   }
-
   .circle{
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    background:#ff6a00;
-    color:white;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: white;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-weight:900;
-    flex:0 0 34px;
-    box-shadow:0 10px 20px rgba(255,106,0,0.25);
+    font-weight: 950;
+    flex: 0 0 34px;
+    box-shadow: 0 10px 22px rgba(255,106,0,0.22);
   }
-
   .option input[type="radio"]{
-    transform:scale(1.15);
+    transform: scale(1.15);
+    accent-color: var(--brand);
   }
 
+  /* Form */
+  .fields{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .label{
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 800;
+  }
   input[type="text"], input[type="tel"]{
-    width:96%;
-    padding:12px;
-    margin:10px 0;
-    border-radius:14px;
-    border:1px solid #ddd;
-    font-size:16px;
+    width:100%;
+    padding: 12px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    font-size: 15px;
     outline:none;
+    background: #fff;
+    font-weight: 650;
+  }
+  input:focus{
+    border-color: rgba(255,106,0,0.35);
+    box-shadow: 0 0 0 4px rgba(255,106,0,0.12);
   }
 
-  input[type="text"]:focus, input[type="tel"]:focus{
-    border-color:#ff6a00;
-    box-shadow:0 0 0 3px rgba(255,106,0,0.15);
+  .footerActions{
+    margin-top: 14px;
+    display:flex;
+    gap: 10px;
+    justify-content:flex-end;
+    flex-wrap:wrap;
   }
 
-  .hidden{ display:none; }
+  /* Responsive */
+  @media (max-width: 820px){
+    .grid{ grid-template-columns: 1fr; }
+    .fields{ grid-template-columns: 1fr; }
+    .topbar{ justify-content:center; }
+    .rightActions{ justify-content:center; }
+  }
 
-  .badge{
-    display:inline-flex;
-    gap:8px;
-    align-items:center;
-    padding:8px 14px;
-    border-radius:999px;
-    background:rgba(255,255,255,0.65);
-    border:1px solid rgba(255,255,255,0.8);
-    box-shadow:0 10px 22px rgba(0,0,0,0.10);
-    font-weight:800;
+  @media (max-width: 420px){
+    .btn{ width:100%; }
+    .roleActions .btn{ width:auto; }
   }
 </style>
 </head>
 
 <body>
+  <div class="wrap">
 
-<!-- RASMDAGI LOGO/BANNER -->
-<div class="top">
-  <div class="banner">
-    <!-- GitHub repo ichiga yuklagan rasm nomi: banner.jpg -->
-    <img src="banner.jpg" alt="HOTY DOG" onerror="this.style.display='none'; document.getElementById('fallbackTitle').style.display='block';">
-  </div>
-</div>
-
-<!-- Agar rasm topilmasa fallback -->
-<div id="fallbackTitle" class="sub" style="display:none;">
-  HOTY DOG
-</div>
-
-<div class="sub">
-  <span class="badge">HR Test System • 5–6 ball → Google Sheet</span>
-</div>
-
-<div class="container">
-
-  <!-- HOME -->
-  <div id="home" class="card center">
-    <h2>Lavozimni tanlang</h2>
-    <button onclick="startTest('Повар')">Повар</button>
-    <button onclick="startTest('Менеджер')">Менеджер</button>
-    <button onclick="startTest('Директор')">Директор</button>
-    <div style="margin-top:8px; font-weight:800; color:#7a3a00;">
-      3 savol • Har biri 2 ball • Max 6 ball
+    <!-- Banner (rasmdagi logotip/harflar 100% shunaqa chiqadi) -->
+    <div class="banner">
+      <img src="banner.jpg" alt="HOTY DOG" />
     </div>
-  </div>
 
-  <!-- TEST -->
-  <div id="test" class="hidden card">
-    <h3 id="roleTitle"></h3>
-
-    <p><b>1. FIFO nima?</b></p>
-    <label class="option"><div class="circle">A</div><input type="radio" name="q1" value="0"> maxsulotlar qushnichigi</label>
-    <label class="option"><div class="circle">B</div><input type="radio" name="q1" value="0"> maxsulotlar tami</label>
-    <label class="option"><div class="circle">C</div><input type="radio" name="q1" value="0"> Togri javob yuq</label>
-    <label class="option"><div class="circle">D</div><input type="radio" name="q1" value="2"> Birinchi kelgan mahsulot birinchi ketadi</label>
-
-    <hr>
-
-    <p><b>2. Mijoz hotdog sovib qoldi desa nima qilasiz?</b></p>
-    <label class="option"><div class="circle">A</div><input type="radio" name="q2" value="0"> E'tibor bermayman</label>
-    <label class="option"><div class="circle">B</div><input type="radio" name="q2" value="2"> Qayta tayyorlab beraman</label>
-    <label class="option"><div class="circle">C</div><input type="radio" name="q2" value="0"> Tashvish tugmasini bosaman</label>
-    <label class="option"><div class="circle">D</div><input type="radio" name="q2" value="0"> Togri javob yuq</label>
-
-    <hr>
-
-    <p><b>3. Sousnitsada ketchup saqlash muddati?</b></p>
-    <label class="option"><div class="circle">A</div><input type="radio" name="q3" value="2"> 48</label>
-    <label class="option"><div class="circle">B</div><input type="radio" name="q3" value="0"> 12</label>
-    <label class="option"><div class="circle">C</div><input type="radio" name="q3" value="0"> 60</label>
-    <label class="option"><div class="circle">D</div><input type="radio" name="q3" value="0"> 6</label>
-
-    <div class="center">
-      <button onclick="finishTest()">Testni yakunlash</button>
+    <div class="topbar">
+      <div class="brandline">
+        <div class="pill">HR Test <small>• Director active</small></div>
+      </div>
+      <div class="rightActions">
+        <button class="btn secondary" onclick="goHome()">Bosh sahifa</button>
+      </div>
     </div>
-  </div>
 
-  <!-- FORM -->
-  <div id="resultForm" class="hidden card">
-    <h3>Ma'lumotlaringizni kiriting</h3>
-    <input type="text" id="name" placeholder="Ism">
-    <input type="text" id="surname" placeholder="Familiya">
-    <input type="tel" id="phone" placeholder="Telefon raqam (+998...)">
-    <div class="center">
-      <button onclick="saveResult()">Saqlash</button>
+    <!-- HOME / ROLE SELECTION -->
+    <div id="home" class="card">
+      <div class="cardHead">
+        <div>
+          <p class="title">Lavozimni tanlang</p>
+          <p class="subtitle">Hozircha faqat <b>Директор</b> testi faol. Qolganlari tez orada qo‘shiladi.</p>
+        </div>
+      </div>
+      <div class="content">
+        <div class="grid">
+
+          <div class="role">
+            <p class="roleName">Директор</p>
+            <p class="roleMeta">Faol test • Natija 5–6 bo‘lsa Google Sheetga yuboriladi</p>
+            <div class="roleActions">
+              <span class="tag">ACTIVE</span>
+              <button class="btn" onclick="startTest('Директор')">Testni boshlash</button>
+            </div>
+          </div>
+
+          <div class="role">
+            <p class="roleName">Повар</p>
+            <p class="roleMeta">Tez orada • Savollar qo‘shilmoqda</p>
+            <div class="roleActions">
+              <span class="tag">COMING SOON</span>
+              <button class="btn secondary" onclick="comingSoon('Повар')">Kirish</button>
+            </div>
+          </div>
+
+          <div class="role">
+            <p class="roleName">Кассир</p>
+            <p class="roleMeta">Tez orada • Savollar qo‘shilmoqda</p>
+            <div class="roleActions">
+              <span class="tag">COMING SOON</span>
+              <button class="btn secondary" onclick="comingSoon('Кассир')">Kirish</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
-  </div>
 
-</div>
+    <!-- TEST (Director only for now) -->
+    <div id="test" class="card" style="display:none;">
+      <div class="cardHead">
+        <div>
+          <p class="title" id="roleTitle">Директор testi</p>
+          <p class="subtitle">Savollarga javob bering. Yakunda ma’lumotlaringiz so‘raladi.</p>
+        </div>
+        <div class="pill">Ball: <span id="liveScore">0</span></div>
+      </div>
+
+      <div class="content">
+        <div style="max-width: 760px; margin:0 auto;">
+          <p class="qTitle">1. FIFO nima?</p>
+
+          <label class="option"><span class="circle">A</span><input type="radio" name="q1" value="0"> maxsulotlar qushnichigi</label>
+          <label class="option"><span class="circle">B</span><input type="radio" name="q1" value="0"> maxsulotlar tami</label>
+          <label class="option"><span class="circle">C</span><input type="radio" name="q1" value="0"> Togri javob yuq</label>
+          <label class="option"><span class="circle">D</span><input type="radio" name="q1" value="2"> Birinchi kelgan mahsulot birinchi ketadi</label>
+
+          <hr>
+
+          <p class="qTitle">2. Mijoz hotdog sovib qoldi deb shikoyat qildi. Nima qilasiz?</p>
+
+          <label class="option"><span class="circle">A</span><input type="radio" name="q2" value="0"> Hech narsa qilmayman</label>
+          <label class="option"><span class="circle">B</span><input type="radio" name="q2" value="2"> To‘g‘ri tushuntirib, qaytadan tayyorlab beraman</label>
+          <label class="option"><span class="circle">C</span><input type="radio" name="q2" value="0"> Tashvish tugmasini bosaman</label>
+          <label class="option"><span class="circle">D</span><input type="radio" name="q2" value="0"> To‘g‘ri javob yo‘q</label>
+
+          <hr>
+
+          <p class="qTitle">3. Sousnitsada ketchup saqlash muddati?</p>
+
+          <label class="option"><span class="circle">A</span><input type="radio" name="q3" value="2"> 48</label>
+          <label class="option"><span class="circle">B</span><input type="radio" name="q3" value="0"> 12</label>
+          <label class="option"><span class="circle">C</span><input type="radio" name="q3" value="0"> 60</label>
+          <label class="option"><span class="circle">D</span><input type="radio" name="q3" value="0"> 6</label>
+
+          <div class="footerActions">
+            <button class="btn secondary" onclick="goHome()">Orqaga</button>
+            <button class="btn" onclick="finishTest()">Yakunlash</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div id="resultForm" class="card" style="display:none;">
+      <div class="cardHead">
+        <div>
+          <p class="title">Ma’lumotlar</p>
+          <p class="subtitle">Ism, familiya va telefon raqamingizni kiriting.</p>
+        </div>
+        <div class="pill">Natija: <span id="finalScore">0</span></div>
+      </div>
+
+      <div class="content">
+        <div style="max-width: 760px; margin:0 auto;">
+          <div class="fields">
+            <div class="field">
+              <div class="label">Ism</div>
+              <input type="text" id="name" placeholder="Ism" />
+            </div>
+            <div class="field">
+              <div class="label">Familiya</div>
+              <input type="text" id="surname" placeholder="Familiya" />
+            </div>
+            <div class="field" style="grid-column: 1 / -1;">
+              <div class="label">Telefon raqam</div>
+              <input type="tel" id="phone" placeholder="+998..." />
+            </div>
+          </div>
+
+          <div class="footerActions">
+            <button class="btn secondary" onclick="goHome()">Bekor</button>
+            <button class="btn" onclick="saveResult()">Yuborish</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
 <script>
+  // ✅ Sizning Apps Script WebApp URL (sheetga yozish uchun)
+  const sheetURL = "https://script.google.com/macros/s/AKfycbxx1A7eB3K9Z4La-UwR0Q1VdWua83WOWha6z2FHJfR4Tov-6UIwkhL_Oo9girUV4_Ao/exec";
+
   let totalScore = 0;
   let currentRole = "";
 
-  // Siz bergan Apps Script Web App URL
-  const sheetURL = "https://script.google.com/macros/s/AKfycbxx1A7eB3K9Z4La-UwR0Q1VdWua83WOWha6z2FHJfR4Tov-6UIwkhL_Oo9girUV4_Ao/exec";
+  function comingSoon(role){
+    alert(role + " bo‘limi tez orada qo‘shiladi.");
+  }
+
+  function goHome(){
+    totalScore = 0;
+    currentRole = "";
+    document.getElementById("home").style.display = "block";
+    document.getElementById("test").style.display = "none";
+    document.getElementById("resultForm").style.display = "none";
+    document.getElementById("liveScore").textContent = "0";
+    document.getElementById("finalScore").textContent = "0";
+
+    // reset radios + inputs
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    const n = document.getElementById("name"); if(n) n.value="";
+    const s = document.getElementById("surname"); if(s) s.value="";
+    const p = document.getElementById("phone"); if(p) p.value="";
+
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
 
   function startTest(role){
+    // faqat director
+    if(role !== "Директор"){
+      comingSoon(role);
+      return;
+    }
     currentRole = role;
-    document.getElementById("home").classList.add("hidden");
-    document.getElementById("test").classList.remove("hidden");
-    document.getElementById("roleTitle").innerText = role + " testi";
-    window.scrollTo({top: 0, behavior: "smooth"});
+    document.getElementById("roleTitle").textContent = role + " testi";
+    document.getElementById("home").style.display = "none";
+    document.getElementById("test").style.display = "block";
+    document.getElementById("resultForm").style.display = "none";
+    window.scrollTo({top:0, behavior:"smooth"});
   }
+
+  function calcScore(){
+    const q1 = document.querySelector('input[name="q1"]:checked');
+    const q2 = document.querySelector('input[name="q2"]:checked');
+    const q3 = document.querySelector('input[name="q3"]:checked');
+    let sc = 0;
+    if(q1) sc += Number(q1.value);
+    if(q2) sc += Number(q2.value);
+    if(q3) sc += Number(q3.value);
+    return sc;
+  }
+
+  // live score update
+  document.addEventListener("change", (e) => {
+    if(e.target && e.target.matches('input[type="radio"]')){
+      const sc = calcScore();
+      document.getElementById("liveScore").textContent = String(sc);
+    }
+  });
 
   function finishTest(){
     const q1 = document.querySelector('input[name="q1"]:checked');
@@ -262,28 +524,40 @@
     const q3 = document.querySelector('input[name="q3"]:checked');
 
     if(!q1 || !q2 || !q3){
-      alert("Hammasini belgilang!");
+      alert("Iltimos, barcha savollarga javob belgilang!");
       return;
     }
 
     totalScore = Number(q1.value) + Number(q2.value) + Number(q3.value);
+    document.getElementById("finalScore").textContent = String(totalScore);
 
-    document.getElementById("test").classList.add("hidden");
-    document.getElementById("resultForm").classList.remove("hidden");
-    window.scrollTo({top: 0, behavior: "smooth"});
+    document.getElementById("test").style.display = "none";
+    document.getElementById("resultForm").style.display = "block";
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  function normalizePhone(phone){
+    return phone.replace(/\s+/g, "");
   }
 
   async function saveResult(){
     const name = (document.getElementById("name").value || "").trim();
     const surname = (document.getElementById("surname").value || "").trim();
-    const phone = (document.getElementById("phone").value || "").trim();
+    const phoneRaw = (document.getElementById("phone").value || "").trim();
+    const phone = normalizePhone(phoneRaw);
 
-    if(name === "" || surname === "" || phone === ""){
-      alert("Ism, familiya va telefonni to'ldiring!");
+    if(!name || !surname || !phone){
+      alert("Ism, familiya va telefon raqamni to‘ldiring!");
       return;
     }
 
-    // Faqat 5–6 ball bo‘lsa sheetga yuboramiz
+    // ixtiyoriy: +998 tekshiruv
+    if(!phone.startsWith("+998")){
+      alert("Telefon raqam +998 bilan boshlansin. Masalan: +998901234567");
+      return;
+    }
+
+    // ✅ Faqat 5-6 ball bo‘lsa sheetga yuboriladi
     if(totalScore > 4){
       const formData = new URLSearchParams();
       formData.append("name", name);
@@ -293,21 +567,28 @@
       formData.append("score", String(totalScore));
 
       try{
-        // no-cors: CORS blok qilmaydi, so‘rov ketadi
-        await fetch(sheetURL, { method: "POST", mode: "no-cors", body: formData });
+        // no-cors: CORS bloklamaydi
+        await fetch(sheetURL, { method:"POST", mode:"no-cors", body: formData });
         alert("Tabriklaymiz! Natijangiz Google Sheetga yuborildi.");
-      }catch(e){
-        alert("Xatolik: Sheetga yuborilmadi. Deploy access 'Anyone' ekanini tekshiring.");
-        console.log(e);
+      }catch(err){
+        alert("Xatolik: Sheetga yuborilmadi. Apps Script deploy 'Anyone' ekanini tekshiring.");
+        console.log(err);
         return;
       }
     } else {
       alert("Afsuski 4 balldan past natija. Sheetga yuborilmadi.");
     }
 
-    setTimeout(()=>location.reload(), 800);
+    // kichik kechikish: so‘rov ulguradi
+    setTimeout(() => goHome(), 700);
   }
 </script>
-
 </body>
 </html>
+  
+   
+  
+  
+   
+    
+ 
