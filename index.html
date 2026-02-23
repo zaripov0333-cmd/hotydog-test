@@ -1,223 +1,591 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>HOTY DOGY</title>
-<style>
-  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#FFD43B}
-  .wrap{max-width:900px;margin:0 auto;padding:18px}
-  .top{font-size:52px;font-weight:900;color:#ff6a00;letter-spacing:3px;text-align:center;padding:26px 10px 10px}
-  .card{background:#fff;border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.18);padding:18px;margin-top:14px}
-  .center{text-align:center}
-  button{background:#ff6a00;color:#fff;border:0;border-radius:24px;padding:12px 18px;font-size:16px;cursor:pointer;margin:8px}
-  button:hover{background:#ff8800}
-  .q{font-weight:700;margin:14px 0 8px}
-  .opt{display:flex;align-items:center;gap:10px;border:1px solid #eee;border-radius:14px;padding:10px 12px;margin:8px 0;cursor:pointer}
-  .opt:hover{background:#fff3e0}
-  .c{width:30px;height:30px;border-radius:50%;background:#ff6a00;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;flex:0 0 30px}
-  input[type="text"],input[type="tel"]{width:96%;padding:12px;border-radius:12px;border:1px solid #ddd;font-size:16px;margin:8px 0}
-  .hidden{display:none}
-  hr{border:0;height:1px;background:#eee;margin:14px 0}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HOTY DOGY HR</title>
+  <style>
+    :root{
+      --bg:#FFD43B;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --accent:#ff8a00;
+      --accent2:#ff5a00;
+      --shadow: 0 18px 45px rgba(0,0,0,.18);
+      --radius: 22px;
+    }
+
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    /* subtle animated gradient */
+    .bg-glow{
+      position:fixed;
+      inset:-40vh -40vw;
+      background: radial-gradient(circle at 30% 20%, rgba(255,138,0,.25), transparent 55%),
+                  radial-gradient(circle at 70% 40%, rgba(255,90,0,.18), transparent 55%),
+                  radial-gradient(circle at 50% 80%, rgba(255,255,255,.20), transparent 55%);
+      filter: blur(10px);
+      animation: floaty 10s ease-in-out infinite;
+      pointer-events:none;
+      z-index:0;
+    }
+    @keyframes floaty{
+      0%,100%{transform: translate3d(0,0,0) scale(1);}
+      50%{transform: translate3d(0,-10px,0) scale(1.02);}
+    }
+
+    .wrap{
+      position:relative;
+      z-index:1;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 18px 14px 80px;
+    }
+
+    /* HEADER */
+    .header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 8px 6px 14px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 0;
+    }
+
+    .logoBox{
+      width:56px;height:56px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.55);
+      box-shadow: 0 10px 25px rgba(0,0,0,.12);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .logoBox img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      transform: scale(1.05);
+    }
+
+    /* “HOTY DOGY” retro-ish */
+    .title{
+      line-height:1;
+      letter-spacing: 2px;
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: 30px;
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color: transparent;
+      text-shadow: 0 2px 0 rgba(0,0,0,.08);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .subtitle{
+      margin-top:4px;
+      font-size: 13px;
+      color: rgba(31,41,55,.75);
+      font-weight: 700;
+      letter-spacing: .4px;
+    }
+
+    .pill{
+      background: rgba(255,255,255,.65);
+      border: 1px solid rgba(0,0,0,.08);
+      padding: 10px 12px;
+      border-radius: 999px;
+      box-shadow: 0 12px 22px rgba(0,0,0,.10);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight: 800;
+      font-size: 13px;
+      color: rgba(31,41,55,.85);
+      flex: 0 0 auto;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:99px;
+      background: #22c55e;
+      box-shadow: 0 0 0 6px rgba(34,197,94,.15);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{transform: scale(1); opacity:1;}
+      50%{transform: scale(1.2); opacity:.8;}
+    }
+
+    /* CARD */
+    .card{
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0,0,0,.06);
+      overflow:hidden;
+    }
+
+    .cardHead{
+      padding: 18px 18px 0;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .cardHead h2{
+      margin:0;
+      font-size:18px;
+      letter-spacing: .2px;
+    }
+    .cardHead p{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .content{
+      padding: 18px;
+    }
+
+    /* ROLE buttons */
+    .roles{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    @media (max-width: 720px){
+      .roles{ grid-template-columns: 1fr; }
+      .pill{display:none;}
+      .title{font-size:26px;}
+    }
+
+    .roleBtn{
+      border:none;
+      cursor:pointer;
+      border-radius: 18px;
+      padding: 14px 14px;
+      font-weight: 900;
+      letter-spacing: .6px;
+      background: linear-gradient(180deg, #fff, #fff);
+      box-shadow: 0 12px 26px rgba(0,0,0,.12);
+      border: 1px solid rgba(0,0,0,.07);
+      transition: transform .08s ease, box-shadow .2s ease;
+      position: relative;
+      overflow:hidden;
+    }
+    .roleBtn:hover{ transform: translateY(-1px); box-shadow: 0 16px 34px rgba(0,0,0,.16); }
+    .roleBtn:active{ transform: translateY(0px) scale(.99); }
+
+    .roleBtn .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:32px;height:32px;
+      border-radius: 12px;
+      background: rgba(255,138,0,.18);
+      color: #b45309;
+      font-weight: 1000;
+      margin-right: 10px;
+    }
+
+    /* QUIZ */
+    .topBar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-top: 8px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255,212,59,.24);
+      border: 1px solid rgba(0,0,0,.06);
+    }
+    .topBar .left{
+      min-width:0;
+    }
+    .topBar .roleName{
+      font-weight: 1000;
+      letter-spacing: .5px;
+      font-size: 14px;
+      margin:0;
+    }
+    .topBar .progress{
+      margin-top: 4px;
+      font-size: 12px;
+      color: rgba(31,41,55,.75);
+      font-weight: 700;
+    }
+
+    .scoreBox{
+      flex: 0 0 auto;
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,.65);
+      border: 1px solid rgba(0,0,0,.08);
+      font-weight: 1000;
+      letter-spacing: .4px;
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
+    }
+
+    .q{
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.07);
+      box-shadow: 0 10px 20px rgba(0,0,0,.08);
+      animation: pop .18s ease-out;
+    }
+    @keyframes pop{
+      from{ transform: translateY(6px); opacity:.6;}
+      to{ transform: translateY(0); opacity:1;}
+    }
+
+    .qTitle{
+      margin:0 0 10px;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+
+    .opts{
+      display:grid;
+      gap:10px;
+      margin-top: 8px;
+    }
+
+    /* Option with big A/B/C/D behind */
+    .opt{
+      position: relative;
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 16px;
+      padding: 12px 12px 12px 52px;
+      background: linear-gradient(180deg,#fff,#fff);
+      cursor:pointer;
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      transition: transform .08s ease, box-shadow .2s ease, border-color .2s ease;
+      overflow:hidden;
+    }
+    .opt:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(0,0,0,.12);
+      border-color: rgba(255,138,0,.35);
+    }
+    .opt:active{ transform: translateY(0) scale(.995); }
+
+    .opt .letterBg{
+      position:absolute;
+      left:14px;
+      top:50%;
+      transform: translateY(-50%);
+      width:30px;height:30px;
+      border-radius: 12px;
+      background: rgba(255,138,0,.18);
+      color: #b45309;
+      font-weight: 1000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex: 0 0 auto;
+    }
+    .opt .text{
+      font-size: 13px;
+      font-weight: 750;
+      color: rgba(31,41,55,.92);
+      line-height: 1.35;
+    }
+    .opt.selected{
+      border-color: rgba(255,90,0,.55);
+      box-shadow: 0 16px 32px rgba(0,0,0,.16);
+      background: linear-gradient(180deg, rgba(255,138,0,.10), #fff);
+    }
+
+    .actions{
+      margin-top: 14px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      border:none;
+      cursor:pointer;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 1000;
+      letter-spacing: .4px;
+      transition: transform .08s ease, box-shadow .2s ease, opacity .2s ease;
+      box-shadow: 0 12px 26px rgba(0,0,0,.14);
+    }
+    .btn:active{ transform: scale(.99); }
+
+    .btnPrimary{
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+      color: #fff;
+    }
+    .btnGhost{
+      background: rgba(255,255,255,.75);
+      border: 1px solid rgba(0,0,0,.08);
+      color: rgba(31,41,55,.9);
+      box-shadow: 0 10px 20px rgba(0,0,0,.10);
+    }
+    .btn:disabled{
+      opacity: .55;
+      cursor: not-allowed;
+      box-shadow:none;
+    }
+
+    .formGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top: 14px;
+    }
+    @media (max-width: 720px){
+      .formGrid{ grid-template-columns: 1fr; }
+    }
+    input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,.12);
+      font-size: 14px;
+      font-weight: 800;
+      outline:none;
+    }
+    input:focus{
+      border-color: rgba(255,90,0,.55);
+      box-shadow: 0 0 0 5px rgba(255,90,0,.12);
+    }
+
+    .hint{
+      margin-top:10px;
+      font-size: 12px;
+      color: rgba(31,41,55,.70);
+      font-weight: 700;
+    }
+
+    .toast{
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(34,197,94,.12);
+      border: 1px solid rgba(34,197,94,.28);
+      color: rgba(22,101,52,.95);
+      font-weight: 900;
+      display:none;
+    }
+    .toast.show{ display:block; }
+
+    .danger{
+      background: rgba(239,68,68,.10);
+      border-color: rgba(239,68,68,.25);
+      color: rgba(153,27,27,.95);
+    }
+  </style>
 </head>
+
 <body>
-<div class="top">HOTY DOGY</div>
+  <div class="bg-glow"></div>
 
-<div class="wrap">
-  <div id="home" class="card center">
-    <button onclick="start('KASSIR')">KASSIR</button>
-    <button onclick="start('OSHPAZ')">OSHPAZ</button>
-    <button onclick="start('BOSHQARUVCHI')">BOSHQARUVCHI</button>
-  </div>
+  <div class="wrap">
+    <div class="header">
+      <div class="brand">
+        <!-- Logo: sizda repo ichida photo_2026-02-23_14-16-36.jpg bor -->
+        <div class="logoBox" aria-hidden="true">
+          <img src="photo_2026-02-23_14-16-36.jpg" alt="HOTY DOGY" />
+        </div>
+        <div style="min-width:0;">
+          <div class="title">HOTY DOGY</div>
+          <div class="subtitle">HR Test Platform</div>
+        </div>
+      </div>
 
-  <div id="test" class="card hidden">
-    <div class="center" style="font-weight:900;font-size:18px" id="title"></div>
-    <hr>
-    <div id="questions"></div>
-    <div class="center">
-      <button onclick="finish()">YAKUNLASH</button>
+      <div class="pill" title="Sayt ishlayapti">
+        <span class="dot"></span>
+        Live
+      </div>
     </div>
-  </div>
 
-  <div id="form" class="card hidden">
-    <input id="name" type="text" placeholder="Ism">
-    <input id="surname" type="text" placeholder="Familiya">
-    <input id="phone" type="tel" placeholder="Telefon (+998...)">
-    <div class="center">
-      <button onclick="send()">YUBORISH</button>
+    <div class="card">
+      <div class="cardHead">
+        <div>
+          <h2 id="screenTitle">Lavozimni tanlang</h2>
+          <p id="screenDesc">Testni boshlash uchun kataloglardan birini bosing.</p>
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- HOME (roles) -->
+        <div id="home">
+          <div class="roles">
+            <button class="roleBtn" onclick="startRole('POVAR')">
+              <span class="badge">P</span> Повар
+            </button>
+
+            <button class="roleBtn" onclick="startRole('MENEJER')">
+              <span class="badge">M</span> Менежер
+            </button>
+
+            <button class="roleBtn" onclick="startRole('DIREKTOR')">
+              <span class="badge">D</span> Директор
+            </button>
+          </div>
+
+          <div class="hint" style="margin-top:14px;">
+            ✅ Natija <b>4 balldan yuqori</b> bo‘lsa — Telegram gruppaga yuboriladi.
+          </div>
+        </div>
+
+        <!-- QUIZ -->
+        <div id="quiz" style="display:none;">
+          <div class="topBar">
+            <div class="left">
+              <div class="roleName" id="roleLabel"></div>
+              <div class="progress" id="progressLabel"></div>
+            </div>
+            <div class="scoreBox" id="scoreLabel">Ball: 0</div>
+          </div>
+
+          <div class="q" id="qBox">
+            <!-- question injected -->
+          </div>
+
+          <div class="actions">
+            <button class="btn btnGhost" onclick="backToHome()">Orqaga</button>
+            <button class="btn btnPrimary" id="nextBtn" onclick="nextQuestion()" disabled>Keyingi</button>
+          </div>
+
+          <!-- FINISH FORM -->
+          <div id="finish" style="display:none;">
+            <div class="q" style="margin-top:14px;">
+              <div class="qTitle">Ma’lumotlaringizni kiriting</div>
+
+              <div class="formGrid">
+                <input id="name" type="text" placeholder="Ismingiz" autocomplete="given-name"/>
+                <input id="surname" type="text" placeholder="Familyangiz" autocomplete="family-name"/>
+                <input id="phone" type="tel" placeholder="Telefon raqam (+998...)" autocomplete="tel"/>
+              </div>
+
+              <div class="hint">
+                🔒 Ma’lumotlar faqat HR bo‘limi uchun. Ball <b>4 dan yuqori</b> bo‘lsa yuboriladi.
+              </div>
+
+              <div class="actions">
+                <button class="btn btnGhost" onclick="restart()">Qayta boshlash</button>
+                <button class="btn btnPrimary" id="sendBtn" onclick="sendToTelegram()">Telegramga yuborish</button>
+              </div>
+
+              <div class="toast" id="toastOk">✅ Yuborildi! Rahmat.</div>
+              <div class="toast danger" id="toastErr">❌ Xatolik. Keyinroq urinib ko‘ring.</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
   </div>
-</div>
 
 <script>
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbzFiYXPcrlzIGQqF_0jaUbNHd9JyzYIAoND740mWtm6HmpRfmDZ-hs1aCzFsmAEJOhw/exec";
-
-const TESTS = {
-  KASSIR: {
-    pass: 6,
-    questions: [
-      {p:2, text:`Savol 1 — buyurtma ustuvorligi (2 ball)
-Oldingizda Uzum kuryeri turibdi.
-Zalda mehmon 15 daqiqa kutmoqda.
-Ikkala buyurtma tayyor.
-Kimga birinchi berasiz?`,
-        opts:["Kuryerga","Zalda kutgan mehmonga","Kim yaqin bo‘lsa"], correct:1},
-      {p:2, text:`Savol 2 — navbat bosimi (2 ball)
-Katta navbat. Siz kassada va yig‘ishda ulgura olmayapsiz.
-Nima qilasiz?`,
-        opts:["Hamkasblarni yordamga chaqiraman","Avval barcha buyurtmani qabul qilaman","O‘zim yig‘aman va kutishni so‘rayman"], correct:0},
-      {p:2, text:`Savol 3 — hisob-kitob (2 ball)
-3 hot-dog 15000 dan va ichimlik 12000.
-Mijoz 100000 berdi.
-Qancha qaytim?`,
-        opts:["43000","53000","58000"], correct:1},
-      {p:1, text:`Savol 4 — mijoz shikoyati (1 ball)
-Mijoz hot-dog sovuq dedi.`,
-        opts:["Uzr so‘rab almashtiraman","Ayb oshxonada deyman","Hech narsa qilmayman"], correct:0},
-      {p:1, text:`Savol 5 — ish vaqti (1 ball)
-Kechki smena va dam olish kunlari ishlay olasizmi?`,
-        opts:["Ha","Yo‘q"], correct:0},
+  // ====== DATA ======
+  // Hozircha faqat DIRECTOR savollari bor (siz bergan)
+  // Keyin MENEJER va POVAR savollarini ham shu joyga qo‘shib ketamiz.
+  const TESTS = {
+    DIREKTOR: [
+      {
+        q: "1) FIFO nma?",
+        options: [
+          { k:"A", t:"maxsulotlar qushnichigi", points:0 },
+          { k:"B", t:"maxsulotlar tami", points:0 },
+          { k:"C", t:"Togri javob yuq", points:0 },
+          { k:"D", t:"Birinchi kelgan mahsulot birinchi ketadi", points:2 } // correct
+        ]
+      },
+      {
+        q: "2) Mijoz xoddog sovib qoldi deb jaloba qilmoqda siz nma qlasiz?",
+        options: [
+          { k:"A", t:"xech nma qilmayman va mijozga quloq solmasliga harakat qilaman", points:0 },
+          { k:"B", t:"mijozga togri tushuntirib xoddog boshidan tayyorlab beraman", points:2 }, // correct
+          { k:"C", t:"mijoz ovozini kotara versa tashvish tugmasini bosaman", points:0 },
+          { k:"D", t:"togri javob yuq", points:0 }
+        ]
+      },
+      {
+        q: "3) sousnitsada kechchup saqlash muddati?",
+        options: [
+          { k:"A", t:"48", points:2 }, // correct
+          { k:"B", t:"12", points:0 },
+          { k:"C", t:"60", points:0 },
+          { k:"D", t:"6", points:0 }
+        ]
+      }
+    ],
+    MENEJER: [
+      {
+        q: "Menejer testi hozircha tayyorlanmoqda.",
+        options: [
+          { k:"A", t:"OK", points:0 },
+          { k:"B", t:"OK", points:0 },
+          { k:"C", t:"OK", points:0 },
+          { k:"D", t:"OK", points:0 }
+        ]
+      }
+    ],
+    POVAR: [
+      {
+        q: "Povar testi hozircha tayyorlanmoqda.",
+        options: [
+          { k:"A", t:"OK", points:0 },
+          { k:"B", t:"OK", points:0 },
+          { k:"C", t:"OK", points:0 },
+          { k:"D", t:"OK", points:0 }
+        ]
+      }
     ]
-  },
-  OSHPAZ: {
-    pass: 7,
-    questions: [
-      {p:2, text:`Savol 1 — TTK nima (2 ball)
-TTK nima?`, opts:["Retsept va tayyorlash qoidasi","Ombor ro‘yxati","Marketing hujjati"], correct:0},
-      {p:2, text:`Savol 2 — FIFO (2 ball)
-FIFO nimani anglatadi?`, opts:["Birinchi kelgan birinchi ishlatiladi","Eng yangi ishlatiladi","Tasodifiy ishlatiladi"], correct:0},
-      {p:2, text:`Savol 3 — o‘lchov (2 ball)
-Retsept 5 g sous talab qiladi. Qoshiq 1 g.`, opts:["3","5","7"], correct:1},
-      {p:2, text:`Savol 4 — tovar qo‘shnichiligi (2 ball)
-Qaysi variant noto‘g‘ri saqlash?`, opts:["Go‘sht va salat yonma-yon","Souslar alohida","Ichimlik alohida"], correct:0},
-      {p:1, text:`Savol 5 — muddati o‘tgan mahsulot (1 ball)
-Muddati o‘tgan mahsulotni ko‘rdingiz.`, opts:["Darhol ishlataman","Olib tashlayman va xabar beraman","E’tibor bermayman"], correct:1},
-      {p:1, text:`Savol 6 — ish grafigi (1 ball)
-Dam olish kunlari ishlay olasizmi?`, opts:["Ha","Yo‘q"], correct:0},
-    ]
-  },
-  BOSHQARUVCHI: {
-    pass: 8,
-    questions: [
-      {p:3, text:`Savol 1 — saqlash buzilishi (3 ball)
-Ko‘rdingiz:
-tovuq sous yonida
-markirovka yo‘q
-prosrok bor
-Nima qilasiz?`,
-        opts:["Prosrok списать, tartib o‘rnatish, instruktaj","Faqat olib tashlash","Xodimga aytish"], correct:0},
-      {p:2, text:`Savol 2 — sekin kassir (2 ball)
-Sekin ishlaydi.`, opts:["Trening + muddat qo‘yaman","Jarima","E’tibor bermayman"], correct:0},
-      {p:2, text:`Savol 3 — pik vaqt (2 ball)
-Navbat 20 odam.`, opts:["O‘zim yordamga tushaman va rollarni bo‘laman","Kutaman","Tezroq ishlang deyman"], correct:0},
-      {p:2, text:`Savol 4 — mahsulot muddati nazorati (2 ball)
-Boshqaruvchi nima qilishi kerak?`, opts:["Har kuni tekshiradi","Haftada bir","Tekshirmaydi"], correct:0},
-      {p:1, text:`Savol 5 — xodim kechikdi (1 ball)
-Xodim kechikdi.`, opts:["Zaxira reja ishga tushiraman","Kutaman"], correct:0},
-      {p:1, text:`Savol 6 — ish grafigi (1 ball)
-To‘liq kun ishlay olasizmi?`, opts:["Ha","Yo‘q"], correct:0},
-    ]
-  }
-};
+  };
 
-let role = "";
-let score = 0;
-let passed = false;
+  // ====== STATE ======
+  let role = null;
+  let idx = 0;
+  let score = 0;
+  let selected = null;
 
-function start(r){
-  role = r;
-  score = 0;
-  passed = false;
+  const $ = (id) => document.getElementById(id);
 
-  document.getElementById("home").classList.add("hidden");
-  document.getElementById("form").classList.add("hidden");
-  document.getElementById("test").classList.remove("hidden");
+  function startRole(r){
+    role = r;
+    idx = 0;
+    score = 0;
+    selected = null;
 
-  document.getElementById("title").innerText = r + " TESTI";
-  render();
-}
+    $("home").style.display = "none";
+    $("quiz").style.display = "block";
+    $("finish").style.display = "none";
+    $("toastOk").classList.remove("show");
+    $("toastErr").classList.remove("show");
 
-function render(){
-  const cfg = TESTS[role];
-  const wrap = document.getElementById("questions");
-  wrap.innerHTML = "";
+    $("screenTitle").textContent = "Test";
+    $("screenDesc").textContent = "Savollarga javob bering.";
 
-  cfg.questions.forEach((q, i) => {
-    const qName = "q" + (i+1);
-    const letters = ["A","B","C","D"];
-
-    const block = document.createElement("div");
-    block.innerHTML = `<div class="q">${q.text.replaceAll("\n","<br>")}</div>`;
-
-    q.opts.forEach((opt, oi) => {
-      const lab = document.createElement("label");
-      lab.className = "opt";
-      lab.innerHTML = `
-        <div class="c">${letters[oi] || (oi+1)}</div>
-        <input type="radio" name="${qName}" value="${oi}">
-        <div>${opt}</div>
-      `;
-      block.appendChild(lab);
-    });
-
-    wrap.appendChild(block);
-    if(i !== cfg.questions.length-1) wrap.appendChild(document.createElement("hr"));
-  });
-}
-
-function finish(){
-  const cfg = TESTS[role];
-  for(let i=0;i<cfg.questions.length;i++){
-    const qName = "q"+(i+1);
-    const picked = document.querySelector(`input[name="${qName}"]:checked`);
-    if(!picked){ alert("Hammasini belgilang!"); return; }
-  }
-
-  let total = 0;
-  cfg.questions.forEach((q,i)=>{
-    const qName = "q"+(i+1);
-    const picked = Number(document.querySelector(`input[name="${qName}"]:checked`).value);
-    if(picked === q.correct) total += q.p;
-  });
-
-  score = total;
-  passed = score >= cfg.pass;
-
-  document.getElementById("test").classList.add("hidden");
-  document.getElementById("form").classList.remove("hidden");
-}
-
-async function send(){
-  const name = (document.getElementById("name").value || "").trim();
-  const surname = (document.getElementById("surname").value || "").trim();
-  const phone = (document.getElementById("phone").value || "").trim();
-  if(!name || !surname || !phone){ alert("Ism, Familiya, Telefon kiriting!"); return; }
-
-  if(!passed){
-    alert("Testni yakunladingiz");
-    setTimeout(()=>location.reload(), 600);
-    return;
-  }
-
-  const data = new URLSearchParams();
-  data.append("name", name);
-  data.append("surname", surname);
-  data.append("phone", phone);
-  data.append("role", role);
-  data.append("score", String(score));
-
-  try{
-    await fetch(SHEET_URL, { method:"POST", mode:"no-cors", body:data });
-    alert("Yuborildi");
-  }catch(e){
-    alert("Xatolik: Sheetga yuborilmadi");
-    console.log(e);
-    return;
-  }
-
-  setTimeout(()=>location.reload(), 800);
-}
-</script>
-</body>
-</html>
+    $("roleLabel").textContent = "Lavozim: " + (r === "DIREKTOR" ? "Директор" : r === "MENEJ
