@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="ru">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>HOTY DOGY HR Test</title>
+<title>HOTY DOG HR Portal</title>
 
 <style>
   body{
@@ -11,9 +11,10 @@
     font-family:'Segoe UI',sans-serif;
     background:#FFD43B;
   }
+
   .header{
     text-align:center;
-    padding:36px 10px 10px;
+    padding:40px 10px 10px;
     font-size:52px;
     font-weight:900;
     color:#ff6a00;
@@ -25,33 +26,35 @@
     from{transform:translateY(-10px);opacity:0;}
     to{transform:translateY(0);opacity:1;}
   }
+
   .sub{
     text-align:center;
     font-size:16px;
     color:#8a3b00;
-    margin-bottom:18px;
+    margin-bottom:20px;
   }
+
   .container{
-    max-width:980px;
+    max-width:900px;
     margin:auto;
-    padding:18px;
+    padding:20px;
   }
+
   .card{
     background:white;
-    padding:26px;
-    border-radius:22px;
+    padding:28px;
+    border-radius:24px;
     box-shadow:0 18px 45px rgba(0,0,0,0.20);
-    margin-top:16px;
+    margin-top:18px;
     animation:fadeIn 0.6s ease;
   }
   @keyframes fadeIn{
     from{opacity:0;transform:translateY(18px);}
     to{opacity:1;transform:translateY(0);}
   }
-  .center{ text-align:center; }
 
   button{
-    padding:14px 28px;
+    padding:15px 30px;
     margin:10px;
     border:none;
     border-radius:30px;
@@ -66,26 +69,7 @@
     transform:scale(1.05);
     background:#ff8800;
   }
-  .pill{
-    display:inline-block;
-    padding:6px 12px;
-    border-radius:999px;
-    background:#fff3e0;
-    color:#8a3b00;
-    font-weight:700;
-    margin-top:8px;
-  }
-  hr{
-    border:none;
-    height:1px;
-    background:#eee;
-    margin:16px 0;
-  }
-  .qtitle{
-    font-weight:800;
-    margin:14px 0 8px;
-    font-size:16px;
-  }
+
   .option{
     display:flex;
     align-items:center;
@@ -101,6 +85,7 @@
     background:#fff3e0;
     transform:translateX(6px);
   }
+
   .circle{
     width:34px;
     height:34px;
@@ -110,9 +95,10 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    font-weight:900;
+    font-weight:800;
     flex:0 0 34px;
   }
+
   input[type="text"], input[type="tel"]{
     width:96%;
     padding:12px;
@@ -126,15 +112,23 @@
     border-color:#ff6a00;
     box-shadow:0 0 0 3px rgba(255,106,0,0.15);
   }
-  .hidden{ display:none; }
 
-  .statusBox{
-    padding:14px;
-    border-radius:14px;
+  .hidden{ display:none; }
+  hr{
+    border:none;
+    height:1px;
+    background:#eee;
+    margin:18px 0;
+  }
+  .center{ text-align:center; }
+  .badge{
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:999px;
     background:#fff3e0;
     color:#8a3b00;
     font-weight:700;
-    margin-top:10px;
+    margin-top:6px;
   }
 </style>
 </head>
@@ -142,271 +136,93 @@
 <body>
 
 <div class="header">HOTY DOG</div>
-<div class="sub">HR Test System • O‘tgan nomzodlar Google Sheet’ga yuboriladi</div>
+<div class="sub">HR Test System • Faqat 5–6 ball bo‘lsa Google Sheetga tushadi</div>
 
 <div class="container">
 
   <!-- HOME -->
   <div id="home" class="card center">
     <h2>Lavozimni tanlang</h2>
-    <button onclick="startTest('Кассир')">Кассир</button>
-    <button onclick="startTest('Ошпаз')">Ошпаз</button>
-    <button onclick="startTest('Бошқарувчи')">Бошқарувчи</button>
-    <div class="pill">Testlar yangilandi • Ball tizimi lavozimga qarab</div>
+    <button onclick="startTest('Повар')">Повар</button>
+    <button onclick="startTest('Менеджер')">Менеджер</button>
+    <button onclick="startTest('Директор')">Директор</button>
+    <div class="badge">3 savol • Har biri 2 ball • Max 6 ball</div>
   </div>
 
   <!-- TEST -->
   <div id="test" class="hidden card">
-    <h3 id="roleTitle" class="center"></h3>
-    <div id="roleInfo" class="center"></div>
-    <hr>
-    <div id="questions"></div>
+    <h3 id="roleTitle"></h3>
 
-    <div class="center" style="margin-top:14px;">
+    <p><b>1. FIFO nima?</b></p>
+    <label class="option"><div class="circle">A</div><input type="radio" name="q1" value="0"> maxsulotlar qushnichigi</label>
+    <label class="option"><div class="circle">B</div><input type="radio" name="q1" value="0"> maxsulotlar tami</label>
+    <label class="option"><div class="circle">C</div><input type="radio" name="q1" value="0"> Togri javob yuq</label>
+    <label class="option"><div class="circle">D</div><input type="radio" name="q1" value="2"> Birinchi kelgan mahsulot birinchi ketadi</label>
+
+    <hr>
+
+    <p><b>2. Mijoz hotdog sovib qoldi desa nima qilasiz?</b></p>
+    <label class="option"><div class="circle">A</div><input type="radio" name="q2" value="0"> E'tibor bermayman</label>
+    <label class="option"><div class="circle">B</div><input type="radio" name="q2" value="2"> Qayta tayyorlab beraman</label>
+    <label class="option"><div class="circle">C</div><input type="radio" name="q2" value="0"> Tashvish tugmasini bosaman</label>
+    <label class="option"><div class="circle">D</div><input type="radio" name="q2" value="0"> Togri javob yuq</label>
+
+    <hr>
+
+    <p><b>3. Sousnitsada ketchup saqlash muddati?</b></p>
+    <label class="option"><div class="circle">A</div><input type="radio" name="q3" value="2"> 48</label>
+    <label class="option"><div class="circle">B</div><input type="radio" name="q3" value="0"> 12</label>
+    <label class="option"><div class="circle">C</div><input type="radio" name="q3" value="0"> 60</label>
+    <label class="option"><div class="circle">D</div><input type="radio" name="q3" value="0"> 6</label>
+
+    <div class="center">
       <button onclick="finishTest()">Testni yakunlash</button>
     </div>
   </div>
 
   <!-- FORM -->
   <div id="resultForm" class="hidden card">
-    <h3 class="center">Ma'lumotlaringizni kiriting</h3>
+    <h3>Ma'lumotlaringizni kiriting</h3>
     <input type="text" id="name" placeholder="Ism">
     <input type="text" id="surname" placeholder="Familiya">
     <input type="tel" id="phone" placeholder="Telefon raqam (+998...)">
-
-    <div id="finalInfo" class="statusBox"></div>
-
-    <div class="center" style="margin-top:10px;">
-      <button onclick="submitCandidate()">Yuborish</button>
+    <div class="center">
+      <button onclick="saveResult()">Saqlash</button>
     </div>
   </div>
 
 </div>
 
 <script>
-  // ✅ SIZNING WEB APP URL
-  const sheetURL = "https://script.google.com/macros/s/AKfycbxx1A7eB3K9Z4La-UwR0Q1VdWua83WOWha6z2FHJfR4Tov-6UIwkhL_Oo9girUV4_Ao/exec";
-
-  // Testlar (to‘liq yangilangan)
-  const tests = {
-    "Кассир": {
-      max: 8,
-      pass: 6,
-      questions: [
-        {
-          text: "Savol 1 — buyurtma ustuvorligi (2 ball)\nOldingizda Uzum kuryeri turibdi.\nZalda mehmon 15 daqiqa kutmoqda.\nIkkala buyurtma tayyor.\nKimga birinchi berasiz?",
-          points: 2,
-          options: ["Kuryerga", "Zalda kutgan mehmonga", "Kim yaqin bo‘lsa"],
-          correctIndex: 1
-        },
-        {
-          text: "Savol 2 — navbat bosimi (2 ball)\nKatta navbat. Siz kassada va yig‘ishda ulgura olmayapsiz.\nNima qilasiz?",
-          points: 2,
-          options: ["Hamkasblarni yordamga chaqiraman", "Avval barcha buyurtmani qabul qilaman", "O‘zim yig‘aman va kutishni so‘rayman"],
-          correctIndex: 0
-        },
-        {
-          text: "Savol 3 — hisob-kitob (2 ball)\n3 hot-dog 15000 dan va ichimlik 12000.\nMijoz 100000 berdi.\nQancha qaytim?",
-          points: 2,
-          options: ["43000", "53000", "58000"],
-          correctIndex: 1
-        },
-        {
-          text: "Savol 4 — mijoz shikoyati (1 ball)\nMijoz hot-dog sovuq dedi.",
-          points: 1,
-          options: ["Uzr so‘rab almashtiraman", "Ayb oshxonada deyman", "Hech narsa qilmayman"],
-          correctIndex: 0
-        },
-        {
-          text: "Savol 5 — ish vaqti (1 ball)\nKechki smena va dam olish kunlari ishlay olasizmi?",
-          points: 1,
-          options: ["Ha", "Yo‘q"],
-          correctIndex: 0
-        }
-      ]
-    },
-
-    "Ошпаз": {
-      max: 10,
-      pass: 7,
-      questions: [
-        {
-          text: "Savol 1 — TTK nima (2 ball)\nTTK nima?",
-          points: 2,
-          options: ["Retsept va tayyorlash qoidasi", "Ombor ro‘yxati", "Marketing hujjati"],
-          correctIndex: 0
-        },
-        {
-          text: "Savol 2 — FIFO (2 ball)\nFIFO nimani anglatadi?",
-          points: 2,
-          options: ["Birinchi kelgan birinchi ishlatiladi", "Eng yangi ishlatiladi", "Tasodifiy ishlatiladi"],
-          correctIndex: 0
-        },
-        {
-          text: "Savol 3 — o‘lchov (2 ball)\nRetsept 5 g sous talab qiladi. Qoshiq 1 g.",
-          points: 2,
-          options: ["3", "5", "7"],
-          correctIndex: 1
-        },
-        {
-          text: "Savol 4 — tovar qo‘shnichiligi (2 ball)\nQaysi variant noto‘g‘ri saqlash?",
-          points: 2,
-          options: ["Go‘sht va salat yonma-yon", "Souslar alohida", "Ichimlik alohida"],
-          correctIndex: 0
-        },
-        {
-          text: "Savol 5 — muddati o‘tgan mahsulot (1 ball)\nMuddati o‘tgan mahsulotni ko‘rdingiz.",
-          points: 1,
-          options: ["Darhol ishlataman", "Olib tashlayman va xabar beraman", "E’tibor bermayman"],
-          correctIndex: 1
-        },
-        {
-          text: "Savol 6 — ish grafigi (1 ball)\nDam olish kunlari ishlay olasizmi?",
-          points: 1,
-          options: ["Ha", "Yo‘q"],
-          correctIndex: 0
-        }
-      ]
-    },
-
-    "Бошқарувчи": {
-      max: 11,
-      pass: 8,
-      questions: [
-        {
-          text: "Savol 1 — saqlash buzilishi (3 ball)\nKo‘rdingiz:\n- tovuq sous yonida\n- markirovka yo‘q\n- prosrok bor\nNima qilasiz?",
-          points: 3,
-          options: ["Prosrok списать, tartib o‘rnatish, instruktaj", "Faqat olib tashlash", "Xodimga aytish"],
-          correctIndex: 0
-        },
-        {
-          text: "Savol 2 — sekin kassir (2 ball)\nSekin ishlaydi. Nima qilasiz?",
-          points: 2,
-          options: ["Trening + muddat qo‘yaman", "Jarima", "E’tibor bermayman"],
-          correctIndex: 0
-        },
-        {
-          text: "Savol 3 — pik vaqt (2 ball)\nNavbat 20 odam. Nima qilasiz?",
-          points: 2,
-          options: ["O‘zim yordamga tushaman va rollarni bo‘laman", "Kutaman", "Tezroq ishlang deyman"],
-          correctIndex: 0
-        },
-        {
-          text: "Savol 4 — mahsulot muddati nazorati (2 ball)\nBoshqaruvchi nima qilishi kerak?",
-          points: 2,
-          options: ["Har kuni tekshiradi", "Haftada bir", "Tekshirmaydi"],
-          correctIndex: 0
-        },
-        {
-          text: "Savol 5 — xodim kechikdi (1 ball)\nXodim kechikdi. Nima qilasiz?",
-          points: 1,
-          options: ["Zaxira reja ishga tushiraman", "Kutaman"],
-          correctIndex: 0
-        },
-        {
-          text: "Savol 6 — ish grafigi (1 ball)\nTo‘liq kun ishlay olasizmi?",
-          points: 1,
-          options: ["Ha", "Yo‘q"],
-          correctIndex: 0
-        }
-      ]
-    }
-  };
-
+  let totalScore = 0;
   let currentRole = "";
-  let scoredTotal = 0;
-  let lastResult = { pass:false, max:0, passScore:0 };
+
+  const sheetURL = "https://script.google.com/macros/s/AKfycbxx1A7eB3K9Z4La-UwR0Q1VdWua83WOWha6z2FHJfR4Tov-6UIwkhL_Oo9girUV4_Ao/exec";
 
   function startTest(role){
     currentRole = role;
-    scoredTotal = 0;
-
     document.getElementById("home").classList.add("hidden");
-    document.getElementById("resultForm").classList.add("hidden");
     document.getElementById("test").classList.remove("hidden");
-
-    const cfg = tests[role];
     document.getElementById("roleTitle").innerText = role + " testi";
-    document.getElementById("roleInfo").innerHTML = `<span class="pill">Maks ball: ${cfg.max} • O‘tish: ${cfg.pass}+</span>`;
-
-    renderQuestions(cfg.questions);
-  }
-
-  function renderQuestions(questions){
-    const qWrap = document.getElementById("questions");
-    qWrap.innerHTML = "";
-
-    questions.forEach((q, idx) => {
-      const qId = "q" + (idx+1);
-      const letters = ["A","B","C","D"];
-
-      const qBlock = document.createElement("div");
-      qBlock.innerHTML = `
-        <div class="qtitle">${q.text.replaceAll("\n","<br>")}</div>
-      `;
-
-      q.options.forEach((opt, oIdx) => {
-        const letter = letters[oIdx] || String(oIdx+1);
-        const optEl = document.createElement("label");
-        optEl.className = "option";
-        optEl.innerHTML = `
-          <div class="circle">${letter}</div>
-          <input type="radio" name="${qId}" value="${oIdx}">
-          <div>${opt}</div>
-        `;
-        qBlock.appendChild(optEl);
-      });
-
-      qWrap.appendChild(qBlock);
-
-      if(idx !== questions.length - 1){
-        const hr = document.createElement("hr");
-        qWrap.appendChild(hr);
-      }
-    });
   }
 
   function finishTest(){
-    const cfg = tests[currentRole];
-    if(!cfg){ alert("Lavozim tanlanmadi!"); return; }
+    const q1 = document.querySelector('input[name="q1"]:checked');
+    const q2 = document.querySelector('input[name="q2"]:checked');
+    const q3 = document.querySelector('input[name="q3"]:checked');
 
-    // hamma savolga javob borligini tekshirish
-    for(let i=0;i<cfg.questions.length;i++){
-      const qName = "q"+(i+1);
-      const picked = document.querySelector(`input[name="${qName}"]:checked`);
-      if(!picked){
-        alert("Hammasini belgilang!");
-        return;
-      }
+    if(!q1 || !q2 || !q3){
+      alert("Hammasini belgilang!");
+      return;
     }
 
-    // ball hisoblash
-    let total = 0;
-    cfg.questions.forEach((q, i) => {
-      const qName = "q"+(i+1);
-      const picked = document.querySelector(`input[name="${qName}"]:checked`);
-      const pickedIdx = Number(picked.value);
-      if(pickedIdx === q.correctIndex){
-        total += q.points;
-      }
-    });
-
-    scoredTotal = total;
-    const passed = scoredTotal >= cfg.pass;
-
-    lastResult = { pass: passed, max: cfg.max, passScore: cfg.pass };
+    totalScore = Number(q1.value) + Number(q2.value) + Number(q3.value);
 
     document.getElementById("test").classList.add("hidden");
     document.getElementById("resultForm").classList.remove("hidden");
-
-    const msg = passed
-      ? `✅ Natija: ${scoredTotal}/${cfg.max}. Siz o‘tdingiz (o‘tish: ${cfg.pass}+). Ma’lumotlaringiz Sheet’ga yuboriladi.`
-      : `❌ Natija: ${scoredTotal}/${cfg.max}. Siz o‘tmadingiz (o‘tish: ${cfg.pass}+). Ma’lumotlar Sheet’ga yuborilmaydi.`;
-
-    document.getElementById("finalInfo").innerText = msg;
   }
 
-  async function submitCandidate(){
+  async function saveResult(){
     const name = (document.getElementById("name").value || "").trim();
     const surname = (document.getElementById("surname").value || "").trim();
     const phone = (document.getElementById("phone").value || "").trim();
@@ -416,38 +232,36 @@
       return;
     }
 
-    // Faqat o‘tganlarni yuboramiz
-    if(!lastResult.pass){
-      alert("Siz o‘tmagansiz. Ma’lumotlar Google Sheet’ga yuborilmadi.");
-      setTimeout(()=>location.reload(), 600);
-      return;
+    // ✅ Faqat 5–6 ball bo‘lsa sheetga yuboramiz
+    if(totalScore > 4){
+      const formData = new URLSearchParams();
+      formData.append("name", name);
+      formData.append("surname", surname);
+      formData.append("phone", phone);
+      formData.append("role", currentRole);
+      formData.append("score", String(totalScore));
+
+      try{
+        // no-cors: CORS sabab blok bo‘lmaydi, so‘rov ketadi
+        await fetch(sheetURL, { method: "POST", mode: "no-cors", body: formData });
+        alert("Tabriklaymiz! Natijangiz Google Sheetga yuborildi.");
+      }catch(e){
+        alert("Xatolik: Sheetga yuborilmadi. Deploy access 'Anyone' ekanini tekshiring.");
+        console.log(e);
+        return;
+      }
+    } else {
+      alert("Afsuski 4 balldan past natija. Sheetga yuborilmadi.");
     }
 
-    const formData = new URLSearchParams();
-    formData.append("name", name);
-    formData.append("surname", surname);
-    formData.append("phone", phone);
-    formData.append("role", currentRole);
-    formData.append("score", String(scoredTotal));
-
-    try{
-      // no-cors: CORS bloklamaydi, so‘rov ketadi
-      await fetch(sheetURL, { method:"POST", mode:"no-cors", body: formData });
-      alert("✅ O‘tdingiz! Ma’lumotlar Google Sheet’ga yuborildi.");
-    }catch(e){
-      alert("Xatolik: Sheet’ga yuborilmadi. Deploy access 'Anyone' ekanini tekshiring.");
-      console.log(e);
-      return;
-    }
-
+    // ✅ Reloadni biroz kechiktiramiz (so‘rov to‘liq ketib ulguradi)
     setTimeout(()=>location.reload(), 800);
   }
 </script>
 
 </body>
 </html>
-   
-  
+
   
    
     
