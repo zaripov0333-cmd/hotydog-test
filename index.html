@@ -3,31 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HOTY DOGY HR</title>
+  <title>HOTY DOGY</title>
+
   <style>
     :root{
       --bg:#FFD43B;
       --card:#ffffff;
-      --text:#1f2937;
+      --text:#111827;
       --muted:#6b7280;
-      --accent:#ff8a00;
-      --accent2:#ff5a00;
+      --line:rgba(17,24,39,.10);
+
+      --accent:#FF8A00;
+      --accent2:#FF5A00;
+
       --shadow: 0 18px 45px rgba(0,0,0,.18);
-      --radius: 22px;
+      --shadow2: 0 12px 24px rgba(0,0,0,.12);
+      --r: 22px;
     }
+
     *{box-sizing:border-box;}
+    html,body{height:100%;}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:var(--bg);
-      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+      overflow-x:hidden;
     }
-    .bg-glow{
+
+    /* subtle animated background */
+    .bg{
       position:fixed; inset:-40vh -40vw;
       background:
-        radial-gradient(circle at 30% 20%, rgba(255,138,0,.25), transparent 55%),
-        radial-gradient(circle at 70% 40%, rgba(255,90,0,.18), transparent 55%),
-        radial-gradient(circle at 50% 80%, rgba(255,255,255,.20), transparent 55%);
+        radial-gradient(circle at 20% 15%, rgba(255,138,0,.26), transparent 55%),
+        radial-gradient(circle at 80% 30%, rgba(255,90,0,.18), transparent 55%),
+        radial-gradient(circle at 60% 85%, rgba(255,255,255,.22), transparent 55%);
       filter: blur(10px);
       animation: floaty 10s ease-in-out infinite;
       pointer-events:none;
@@ -37,91 +47,97 @@
       0%,100%{transform: translate3d(0,0,0) scale(1);}
       50%{transform: translate3d(0,-10px,0) scale(1.02);}
     }
+
     .wrap{
       position:relative;
       z-index:1;
       max-width: 980px;
       margin: 0 auto;
-      padding: 18px 14px 80px;
+      padding: 18px 14px 70px;
     }
+
+    /* Header */
     .header{
       display:flex;
       align-items:center;
-      justify-content:space-between;
+      justify-content:center;
+      padding: 14px 6px 12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
       gap:12px;
-      padding: 8px 6px 14px;
-    }
-    .brand{display:flex;align-items:center;gap:12px;min-width:0;}
-    .logoBox{
-      width:56px;height:56px;border-radius:18px;
+      padding: 10px 12px;
       background: rgba(255,255,255,.55);
-      box-shadow: 0 10px 25px rgba(0,0,0,.12);
-      display:flex;align-items:center;justify-content:center;
-      overflow:hidden; flex:0 0 auto;
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 999px;
+      box-shadow: 0 12px 26px rgba(0,0,0,.12);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
     }
-    .logoBox img{width:100%;height:100%;object-fit:cover;transform:scale(1.05);}
+    .logo{
+      width:48px;height:48px;border-radius: 16px;
+      overflow:hidden;
+      box-shadow: 0 12px 22px rgba(0,0,0,.12);
+      flex:0 0 auto;
+      background:#fff;
+    }
+    .logo img{
+      width:100%;height:100%;
+      object-fit:cover;
+      transform: scale(1.05);
+      display:block;
+    }
+
+    .brandText{min-width:0;}
     .title{
-      line-height:1;
-      letter-spacing: 2px;
-      font-weight: 900;
+      margin:0;
+      font-weight: 1000;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
-      font-size: 30px;
+      font-size: 28px;
+      line-height: 1;
       background: linear-gradient(180deg, var(--accent), var(--accent2));
       -webkit-background-clip:text;
       background-clip:text;
       color: transparent;
       text-shadow: 0 2px 0 rgba(0,0,0,.08);
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
+      white-space:nowrap;
     }
-    .subtitle{
-      margin-top:4px;
-      font-size: 13px;
-      color: rgba(31,41,55,.75);
-      font-weight: 700;
-      letter-spacing: .4px;
-    }
-    .pill{
-      background: rgba(255,255,255,.65);
-      border: 1px solid rgba(0,0,0,.08);
-      padding: 10px 12px;
-      border-radius: 999px;
-      box-shadow: 0 12px 22px rgba(0,0,0,.10);
-      display:flex;align-items:center;gap:10px;
+    .sub{
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: rgba(17,24,39,.70);
       font-weight: 800;
-      font-size: 13px;
-      color: rgba(31,41,55,.85);
-      flex: 0 0 auto;
+      letter-spacing: .2px;
     }
-    .dot{
-      width:10px;height:10px;border-radius:99px;
-      background: #22c55e;
-      box-shadow: 0 0 0 6px rgba(34,197,94,.15);
-      animation: pulse 1.6s ease-in-out infinite;
-    }
-    @keyframes pulse{
-      0%,100%{transform: scale(1); opacity:1;}
-      50%{transform: scale(1.2); opacity:.8;}
-    }
+
+    /* Card */
     .card{
       background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
       border: 1px solid rgba(0,0,0,.06);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
       overflow:hidden;
     }
     .cardHead{
       padding: 18px 18px 0;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
     }
-    .cardHead h2{margin:0;font-size:18px;letter-spacing:.2px;}
-    .cardHead p{margin:6px 0 0;color:var(--muted);font-size:13px;font-weight:600;}
-    .content{padding:18px;}
+    .cardHead h2{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: .2px;
+      font-weight: 1000;
+    }
+    .cardHead p{
+      margin: 6px 0 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(17,24,39,.65);
+    }
+    .content{padding: 18px;}
 
+    /* Roles */
     .roles{
       display:grid;
       grid-template-columns: repeat(2, minmax(0,1fr));
@@ -129,132 +145,188 @@
       margin-top: 12px;
     }
     @media (max-width: 720px){
-      .roles{ grid-template-columns: 1fr; }
-      .pill{display:none;}
-      .title{font-size:26px;}
-    }
-    .roleBtn{
-      border:none; cursor:pointer;
-      border-radius: 18px;
-      padding: 14px 14px;
-      font-weight: 900;
-      letter-spacing: .6px;
-      background: linear-gradient(180deg, #fff, #fff);
-      box-shadow: 0 12px 26px rgba(0,0,0,.12);
-      border: 1px solid rgba(0,0,0,.07);
-      transition: transform .08s ease, box-shadow .2s ease;
-      position: relative;
-      overflow:hidden;
-      text-align:left;
-    }
-    .roleBtn:hover{ transform: translateY(-1px); box-shadow: 0 16px 34px rgba(0,0,0,.16); }
-    .roleBtn:active{ transform: translateY(0px) scale(.99); }
-    .roleBtn .badge{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:32px;height:32px;
-      border-radius: 12px;
-      background: rgba(255,138,0,.18);
-      color: #b45309;
-      font-weight: 1000;
-      margin-right: 10px;
-    }
-    .roleBtn .small{
-      display:block;
-      margin-top:6px;
-      font-size:12px;
-      color:rgba(31,41,55,.70);
-      font-weight:800;
-      letter-spacing:.2px;
+      .roles{grid-template-columns: 1fr;}
+      .title{font-size: 26px;}
     }
 
+    .roleBtn{
+      border:none;
+      cursor:pointer;
+      text-align:left;
+      background: linear-gradient(180deg, #fff, #fff);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 20px;
+      padding: 14px 14px;
+      box-shadow: var(--shadow2);
+      transition: transform .09s ease, box-shadow .2s ease, border-color .2s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .roleBtn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 16px 34px rgba(0,0,0,.16);
+      border-color: rgba(255,138,0,.30);
+    }
+    .roleBtn:active{transform: scale(.99);}
+    .roleBtn:before{
+      content:"";
+      position:absolute; inset:-2px -20%;
+      background: radial-gradient(circle at 20% 0%, rgba(255,138,0,.22), transparent 55%),
+                  radial-gradient(circle at 80% 100%, rgba(255,90,0,.12), transparent 55%);
+      transform: translateY(10px);
+      opacity:.8;
+      pointer-events:none;
+    }
+    .roleTop{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .roleName{
+      font-weight:1000;
+      letter-spacing:.6px;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+    .chip{
+      position:relative;
+      font-size: 12px;
+      font-weight: 1000;
+      color: rgba(17,24,39,.75);
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,212,59,.30);
+      border: 1px solid rgba(0,0,0,.07);
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
+      flex: 0 0 auto;
+    }
+    .roleSub{
+      position:relative;
+      margin-top: 8px;
+      font-size: 12px;
+      color: rgba(17,24,39,.68);
+      font-weight: 800;
+    }
+
+    /* Quiz header */
     .topBar{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      margin-top: 8px;
+      margin-top: 6px;
       padding: 12px 14px;
       border-radius: 18px;
       background: rgba(255,212,59,.24);
       border: 1px solid rgba(0,0,0,.06);
     }
-    .topBar .left{min-width:0;}
-    .topBar .roleName{font-weight:1000;letter-spacing:.5px;font-size:14px;margin:0;}
-    .topBar .progress{margin-top:4px;font-size:12px;color:rgba(31,41,55,.75);font-weight:700;}
-    .scoreBox{
-      flex: 0 0 auto;
-      border-radius: 14px;
-      padding: 10px 12px;
-      background: rgba(255,255,255,.65);
-      border: 1px solid rgba(0,0,0,.08);
+    .roleLabel{
+      margin:0;
       font-weight: 1000;
-      letter-spacing: .4px;
+      font-size: 13px;
+      letter-spacing: .35px;
+      text-transform: uppercase;
+    }
+    .progress{
+      margin-top:4px;
+      color: rgba(17,24,39,.70);
+      font-weight: 800;
+      font-size: 12px;
+    }
+    .miniPill{
+      flex:0 0 auto;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.70);
+      border: 1px solid rgba(0,0,0,.08);
       box-shadow: 0 10px 18px rgba(0,0,0,.08);
-      text-align:right;
+      font-weight: 1000;
+      color: rgba(17,24,39,.85);
+      font-size: 12px;
+      white-space:nowrap;
     }
 
+    /* Question */
     .q{
       margin-top: 14px;
       padding: 14px;
-      border-radius: 18px;
+      border-radius: 20px;
       background: #fff;
       border: 1px solid rgba(0,0,0,.07);
       box-shadow: 0 10px 20px rgba(0,0,0,.08);
-      animation: pop .18s ease-out;
+      animation: pop .16s ease-out;
     }
     @keyframes pop{
-      from{ transform: translateY(6px); opacity:.6;}
-      to{ transform: translateY(0); opacity:1;}
+      from{transform: translateY(8px); opacity:.6;}
+      to{transform: translateY(0); opacity:1;}
     }
-    .qTitle{margin:0 0 10px;font-size:15px;font-weight:900;letter-spacing:.2px;}
-    .opts{display:grid;gap:10px;margin-top:8px;}
+    .qTitle{
+      margin:0 0 10px;
+      font-size: 15px;
+      font-weight: 1000;
+      letter-spacing: .15px;
+      line-height: 1.35;
+    }
+    .opts{
+      display:grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    /* Option card with letter behind */
     .opt{
-      position: relative;
+      position:relative;
       border: 1px solid rgba(0,0,0,.08);
-      border-radius: 16px;
-      padding: 12px 12px 12px 52px;
+      border-radius: 18px;
+      padding: 12px 12px 12px 56px;
       background: linear-gradient(180deg,#fff,#fff);
       cursor:pointer;
-      display:flex;
-      align-items:flex-start;
-      gap:10px;
       transition: transform .08s ease, box-shadow .2s ease, border-color .2s ease;
       overflow:hidden;
+      user-select:none;
     }
     .opt:hover{
       transform: translateY(-1px);
       box-shadow: 0 14px 26px rgba(0,0,0,.12);
-      border-color: rgba(255,138,0,.35);
+      border-color: rgba(255,138,0,.33);
     }
-    .opt:active{ transform: translateY(0) scale(.995); }
-    .opt .letterBg{
+    .opt:active{transform: scale(.995);}
+
+    /* big letter behind */
+    .opt .bigLetter{
       position:absolute;
-      left:14px;
-      top:50%;
+      left:14px; top:50%;
       transform: translateY(-50%);
-      width:30px;height:30px;
-      border-radius: 12px;
+      width:34px; height:34px;
+      border-radius: 14px;
       background: rgba(255,138,0,.18);
       color: #b45309;
       font-weight: 1000;
       display:flex;
       align-items:center;
       justify-content:center;
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
     }
     .opt .text{
       font-size: 13px;
-      font-weight: 750;
-      color: rgba(31,41,55,.92);
+      font-weight: 850;
+      color: rgba(17,24,39,.92);
       line-height: 1.35;
     }
+
     .opt.selected{
       border-color: rgba(255,90,0,.55);
       box-shadow: 0 16px 32px rgba(0,0,0,.16);
       background: linear-gradient(180deg, rgba(255,138,0,.10), #fff);
     }
+    .opt.selected .bigLetter{
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+      color:#fff;
+    }
 
+    /* Actions */
     .actions{
       margin-top: 14px;
       display:flex;
@@ -263,55 +335,59 @@
       justify-content:flex-end;
     }
     .btn{
-      border:none; cursor:pointer;
+      border:none;
+      cursor:pointer;
       border-radius: 16px;
       padding: 12px 14px;
       font-weight: 1000;
-      letter-spacing: .4px;
+      letter-spacing: .35px;
       transition: transform .08s ease, box-shadow .2s ease, opacity .2s ease;
-      box-shadow: 0 12px 26px rgba(0,0,0,.14);
     }
-    .btn:active{ transform: scale(.99); }
+    .btn:active{transform: scale(.99);}
     .btnPrimary{
       background: linear-gradient(180deg, var(--accent), var(--accent2));
-      color: #fff;
+      color:#fff;
+      box-shadow: 0 12px 26px rgba(0,0,0,.14);
     }
     .btnGhost{
-      background: rgba(255,255,255,.75);
+      background: rgba(255,255,255,.80);
       border: 1px solid rgba(0,0,0,.08);
-      color: rgba(31,41,55,.9);
+      color: rgba(17,24,39,.92);
       box-shadow: 0 10px 20px rgba(0,0,0,.10);
     }
     .btn:disabled{opacity:.55;cursor:not-allowed;box-shadow:none;}
 
+    /* Form */
     .formGrid{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap:10px;
-      margin-top: 14px;
+      margin-top: 12px;
     }
-    @media (max-width: 720px){
-      .formGrid{ grid-template-columns: 1fr; }
-    }
+    @media (max-width:720px){ .formGrid{grid-template-columns:1fr;} }
+
     input{
       width:100%;
       padding: 12px 12px;
       border-radius: 14px;
       border: 1px solid rgba(0,0,0,.12);
       font-size: 14px;
-      font-weight: 800;
+      font-weight: 850;
       outline:none;
     }
     input:focus{
       border-color: rgba(255,90,0,.55);
       box-shadow: 0 0 0 5px rgba(255,90,0,.12);
     }
+
     .hint{
       margin-top:10px;
       font-size: 12px;
-      color: rgba(31,41,55,.70);
-      font-weight: 700;
+      color: rgba(17,24,39,.70);
+      font-weight: 800;
+      line-height: 1.4;
     }
+
     .toast{
       margin-top: 10px;
       padding: 12px 14px;
@@ -319,98 +395,82 @@
       background: rgba(34,197,94,.12);
       border: 1px solid rgba(34,197,94,.28);
       color: rgba(22,101,52,.95);
-      font-weight: 900;
+      font-weight: 1000;
       display:none;
     }
-    .toast.show{ display:block; }
-    .danger{
+    .toast.show{display:block;}
+    .toast.danger{
       background: rgba(239,68,68,.10);
       border-color: rgba(239,68,68,.25);
       color: rgba(153,27,27,.95);
-    }
-    .miniLine{
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius:16px;
-      background: rgba(255,255,255,.65);
-      border: 1px solid rgba(0,0,0,.08);
-      font-weight: 900;
-      color: rgba(31,41,55,.85);
     }
   </style>
 </head>
 
 <body>
-  <div class="bg-glow"></div>
+  <div class="bg"></div>
 
   <div class="wrap">
     <div class="header">
       <div class="brand">
-        <div class="logoBox" aria-hidden="true">
-          <!-- Sizda repo ichida photo_2026-02-23_14-16-36.jpg bor -->
-          <img src="photo_2026-02-23_14-16-36.jpg" alt="HOTY DOGY" />
+        <div class="logo">
+          <!-- repo ichidagi rasm: photo_2026-02-23_14-16-36.jpg -->
+          <img src="photo_2026-02-23_14-16-36.jpg" alt="HOTY DOGY">
         </div>
-        <div style="min-width:0;">
-          <div class="title">HOTY DOGY</div>
-          <div class="subtitle">HR Test Platform</div>
+        <div class="brandText">
+          <h1 class="title">HOTY DOGY</h1>
+          <div class="sub">HR Test Platform</div>
         </div>
-      </div>
-
-      <div class="pill" title="Sayt ishlayapti">
-        <span class="dot"></span>
-        Live
       </div>
     </div>
 
     <div class="card">
       <div class="cardHead">
-        <div>
-          <h2 id="screenTitle">Lavozimni tanlang</h2>
-          <p id="screenDesc">Testni boshlash uchun kataloglardan birini bosing.</p>
-        </div>
+        <h2 id="screenTitle">Lavozimni tanlang</h2>
+        <p id="screenDesc">Testni boshlash uchun kataloglardan birini bosing.</p>
       </div>
 
       <div class="content">
+
         <!-- HOME -->
         <div id="home">
           <div class="roles">
             <button class="roleBtn" onclick="startRole('KASSIR')">
-              <span class="badge">K</span> Кассир
-              <span class="small">Maks: 8 • O‘tish: 6+</span>
+              <div class="roleTop">
+                <div class="roleName">Кассир</div>
+                <div class="chip">Maks 8 • O‘tish 6+</div>
+              </div>
+              <div class="roleSub">Navbat, servis, hisob-kitob, shikoyat bilan ishlash.</div>
             </button>
 
             <button class="roleBtn" onclick="startRole('OSHPAZ')">
-              <span class="badge">O</span> Ошпаз
-              <span class="small">Maks: 10 • O‘tish: 7+</span>
+              <div class="roleTop">
+                <div class="roleName">Ошпаз</div>
+                <div class="chip">Maks 10 • O‘tish 7+</div>
+              </div>
+              <div class="roleSub">TTK, FIFO, o‘lchov, saqlash va prosrok nazorati.</div>
             </button>
 
             <button class="roleBtn" onclick="startRole('BOSHQARUVCHI')">
-              <span class="badge">B</span> Бошқарувчи
-              <span class="small">Maks: 11 • O‘tish: 8+</span>
+              <div class="roleTop">
+                <div class="roleName">Бошқарувчи</div>
+                <div class="chip">Maks 11 • O‘tish 8+</div>
+              </div>
+              <div class="roleSub">Kuchli filtr: nazorat, pik vaqt, intizom, jarayon.</div>
             </button>
-
-            <button class="roleBtn" onclick="startRole('DIREKTOR')">
-              <span class="badge">D</span> Директор
-              <span class="small">Maks: 6 • O‘tish: 5+</span>
-            </button>
-          </div>
-
-          <div class="hint" style="margin-top:14px;">
-            ✅ Kandidat <b>o‘tish balidan yuqori yoki teng</b> olsa — natija Telegram gruppaga yuboriladi.
           </div>
         </div>
 
         <!-- QUIZ -->
         <div id="quiz" style="display:none;">
           <div class="topBar">
-            <div class="left">
-              <div class="roleName" id="roleLabel"></div>
+            <div>
+              <div class="roleLabel" id="roleLabel"></div>
               <div class="progress" id="progressLabel"></div>
             </div>
-            <div class="scoreBox" id="scoreLabel">Ball: 0</div>
+            <!-- Ball ko‘rsatilmaydi -->
+            <div class="miniPill" id="miniInfo">Test</div>
           </div>
-
-          <div class="miniLine" id="ruleLine"></div>
 
           <div class="q" id="qBox"></div>
 
@@ -419,9 +479,9 @@
             <button class="btn btnPrimary" id="nextBtn" onclick="nextQuestion()" disabled>Keyingi</button>
           </div>
 
-          <!-- FINISH FORM -->
+          <!-- FINISH -->
           <div id="finish" style="display:none;">
-            <div class="q" style="margin-top:14px;">
+            <div class="q">
               <div class="qTitle">Ma’lumotlaringizni kiriting</div>
 
               <div class="formGrid">
@@ -430,33 +490,37 @@
                 <input id="phone" type="tel" placeholder="Telefon raqam (+998...)" autocomplete="tel"/>
               </div>
 
-              <div class="hint" id="finishHint"></div>
+              <div class="hint">Ma’lumotlar to‘g‘ri kiritilganiga ishonch hosil qiling.</div>
 
               <div class="actions">
-                <button class="btn btnGhost" onclick="restart()">Qayta boshlash</button>
-                <button class="btn btnPrimary" id="sendBtn" onclick="sendToTelegram()">Yakunlash</button>
+                <button class="btn btnGhost" onclick="restart()">Qayta</button>
+                <button class="btn btnPrimary" id="sendBtn" onclick="submitResult()">Yakunlash</button>
               </div>
 
-              <div class="toast" id="toastOk">✅ Tayyor! Natija yuborildi (yoki o‘tish baliga yetmagan bo‘lsa yuborilmadi).</div>
-              <div class="toast danger" id="toastErr">❌ Xatolik. Keyinroq urinib ko‘ring.</div>
+              <div class="toast" id="toastOk">✅ Qabul qilindi.</div>
+              <div class="toast danger" id="toastErr">❌ Xatolik.</div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
-
   </div>
 
 <script>
-  // ====== CONFIG (max & pass) ======
-  const ROLE_RULES = {
+  /* =========================
+     1) SHU URL NI O'ZGARTIRING
+     ========================= */
+  const SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_WEBAPP_URL_HERE"; // https://script.google.com/macros/s/XXXX/exec
+
+  /* ====== RULES ====== */
+  const RULES = {
     KASSIR: { label: "Кассир", max: 8, pass: 6 },
     OSHPAZ: { label: "Ошпаз", max: 10, pass: 7 },
-    BOSHQARUVCHI: { label: "Бошқарувчи", max: 11, pass: 8 },
-    DIREKTOR: { label: "Директор", max: 6, pass: 5 } // avvalgi 3 savol (2+2+2)
+    BOSHQARUVCHI: { label: "Бошқарувчи", max: 11, pass: 8 }
   };
 
-  // ====== TEST DATA ======
+  /* ====== TESTS (siz bergan) ====== */
   const TESTS = {
     KASSIR: [
       {
@@ -478,7 +542,7 @@
       {
         q: "Savol 3 — hisob-kitob (2 ball)\n3 hot-dog 15000 dan va ichimlik 12000.\nMijoz 100000 berdi.\nQancha qaytim?",
         options: [
-          { k:"A", t:"43000", points:2 }, // ✅ (100000-57000=43000)
+          { k:"A", t:"43000", points:2 }, // ✅
           { k:"B", t:"53000", points:0 },
           { k:"C", t:"58000", points:0 }
         ]
@@ -502,7 +566,7 @@
 
     OSHPAZ: [
       {
-        q: "Savol 1 — TTK nima? (2 ball)\nTTK nima?",
+        q: "Savol 1 — TTK nima (2 ball)\nTTK nima?",
         options: [
           { k:"A", t:"Retsept va tayyorlash qoidasi", points:2 }, // ✅
           { k:"B", t:"Ombor ro‘yxati", points:0 },
@@ -560,7 +624,7 @@
         ]
       },
       {
-        q: "Savol 2 — sekin kassir (2 ball)\nSekin ishlaydi. Nima qilasiz?",
+        q: "Savol 2 — sekin kassir (2 ball)\nSekin ishlaydi.",
         options: [
           { k:"A", t:"Trening + muddat qo‘yaman", points:2 }, // ✅
           { k:"B", t:"Jarima", points:0 },
@@ -598,48 +662,15 @@
         ]
       }
     ],
-
-    // Avvalgi direktor savollari (2+2+2 = 6)
-    DIREKTOR: [
-      {
-        q: "1) FIFO nma?",
-        options: [
-          { k:"A", t:"maxsulotlar qushnichigi", points:0 },
-          { k:"B", t:"maxsulotlar tami", points:0 },
-          { k:"C", t:"Togri javob yuq", points:0 },
-          { k:"D", t:"Birinchi kelgan mahsulot birinchi ketadi", points:2 } // ✅
-        ]
-      },
-      {
-        q: "2) Mijoz xoddog sovib qoldi deb jaloba qilmoqda siz nma qlasiz?",
-        options: [
-          { k:"A", t:"xech nma qilmayman va mijozga quloqsolmasliga harakat qilaman", points:0 },
-          { k:"B", t:"mijozga togri tushuntirib xoddog boshidan tayyorlab beraman", points:2 }, // ✅
-          { k:"C", t:"mijoz ovozini kotara versa tashvish tugmasini bosaman", points:0 },
-          { k:"D", t:"togri javob yuq", points:0 }
-        ]
-      },
-      {
-        q: "3) sousnitsada kechchup saqlash muddatii",
-        options: [
-          { k:"A", t:"48", points:2 }, // ✅
-          { k:"B", t:"12", points:0 },
-          { k:"C", t:"60", points:0 },
-          { k:"D", t:"6", points:0 }
-        ]
-      }
-    ]
   };
 
-  // ====== STATE ======
+  /* ====== STATE ====== */
   let role = null;
   let idx = 0;
   let score = 0;
   let selectedIndex = null;
 
   const $ = (id) => document.getElementById(id);
-
-  function roleText(r){ return ROLE_RULES[r]?.label || r; }
 
   function startRole(r){
     role = r;
@@ -656,11 +687,8 @@
     $("screenTitle").textContent = "Test";
     $("screenDesc").textContent = "Savollarga javob bering.";
 
-    $("roleLabel").textContent = "Lavozim: " + roleText(r);
-    $("scoreLabel").textContent = "Ball: 0";
-
-    const rules = ROLE_RULES[r];
-    $("ruleLine").textContent = `Maks ball: ${rules.max} • O‘tish: ${rules.pass}+ • O‘tganlar Telegramga yuboriladi`;
+    $("roleLabel").textContent = "Lavozim: " + RULES[r].label;
+    $("miniInfo").textContent = "Savol 1 / " + TESTS[r].length;
 
     renderQuestion();
   }
@@ -673,21 +701,16 @@
   }
 
   function renderQuestion(){
-    const questions = TESTS[role] || [];
-    const q = questions[idx];
-    if(!q){
-      showFinish();
-      return;
-    }
-
+    const q = TESTS[role][idx];
     selectedIndex = null;
     $("nextBtn").disabled = true;
 
-    $("progressLabel").textContent = `Savol: ${idx+1} / ${questions.length}`;
+    $("progressLabel").textContent = `Savol: ${idx+1} / ${TESTS[role].length}`;
+    $("miniInfo").textContent = `Savol ${idx+1}`;
 
     const optsHtml = q.options.map((o, i) => `
       <div class="opt" onclick="selectOpt(${i})" id="opt_${i}">
-        <div class="letterBg">${o.k}</div>
+        <div class="bigLetter">${o.k}</div>
         <div class="text">${escapeHtml(o.t)}</div>
       </div>
     `).join("");
@@ -711,16 +734,13 @@
   }
 
   function nextQuestion(){
-    const q = TESTS[role][idx];
     if(selectedIndex === null) return;
 
-    // add points
-    const pts = Number(q.options[selectedIndex]?.points || 0);
-    score += pts;
-    $("scoreLabel").textContent = `Ball: ${score}`;
+    const q = TESTS[role][idx];
+    score += Number(q.options[selectedIndex].points || 0);
 
     idx++;
-    if(idx >= (TESTS[role]?.length || 0)){
+    if(idx >= TESTS[role].length){
       showFinish();
       return;
     }
@@ -729,23 +749,13 @@
 
   function showFinish(){
     $("finish").style.display = "block";
-    $("qBox").innerHTML = `
-      <div class="qTitle">Test tugadi ✅</div>
-      <div class="hint">Endi ism, familiya va telefon raqamingizni kiriting.</div>
-    `;
     $("nextBtn").disabled = true;
 
-    const rules = ROLE_RULES[role];
-    const pass = score >= rules.pass;
-
-    $("finishHint").innerHTML =
-      `Natija: <b>${score} / ${rules.max}</b>. O‘tish bali: <b>${rules.pass}+</b>.<br>` +
-      (pass
-        ? `✅ Siz o‘tdingiz — natija Telegramga yuboriladi.`
-        : `❌ Siz o‘tmadingiz — Telegramga yuborilmaydi.`);
-
-    $("toastOk").classList.remove("show");
-    $("toastErr").classList.remove("show");
+    // Ball ko‘rsatmaymiz — faqat ichkarida hisoblaymiz
+    $("qBox").innerHTML = `
+      <div class="qTitle">Test tugadi ✅</div>
+      <div class="hint">Iltimos, ism, familiya va telefon raqamingizni kiriting.</div>
+    `;
   }
 
   function restart(){
@@ -755,17 +765,13 @@
     backToHome();
   }
 
-  function normalizePhone(p){
-    return (p || "").replace(/\s+/g,' ').trim();
-  }
-
-  async function sendToTelegram(){
+  async function submitResult(){
     $("toastOk").classList.remove("show");
     $("toastErr").classList.remove("show");
 
     const name = ($("name").value || "").trim();
     const surname = ($("surname").value || "").trim();
-    const phone = normalizePhone($("phone").value);
+    const phone = ($("phone").value || "").trim();
 
     if(!name || !surname || !phone){
       $("toastErr").textContent = "❌ Ism, familiya va telefon raqamni to‘ldiring.";
@@ -773,32 +779,38 @@
       return;
     }
 
-    const rules = ROLE_RULES[role];
-    const payload = {
-      name, surname, phone,
-      role,
-      roleLabel: roleText(role),
-      score,
-      maxScore: rules.max,
-      passScore: rules.pass
-    };
+    if(!SCRIPT_URL || SCRIPT_URL.includes("PASTE_YOUR")){
+      $("toastErr").textContent = "❌ Script URL qo‘yilmagan.";
+      $("toastErr").classList.add("show");
+      return;
+    }
+
+    const passScore = RULES[role].pass;
+    const passed = score >= passScore;
+
+    // O‘tmagan bo‘lsa — umuman yubormaymiz (sayt ichida jim)
+    if(!passed){
+      $("toastOk").textContent = "✅ Qabul qilindi.";
+      $("toastOk").classList.add("show");
+      return;
+    }
+
+    const payload = { name, surname, phone, role, score };
 
     try{
-      const r = await fetch("/api/submit", {
+      const r = await fetch(SCRIPT_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
-      const data = await r.json().catch(()=> ({}));
+      // Apps Script ba’zan text qaytaradi — json shart emas
+      if(!r.ok) throw new Error("Server error");
 
-      if(!r.ok){
-        throw new Error(data?.error || "Server error");
-      }
-
+      $("toastOk").textContent = "✅ Qabul qilindi.";
       $("toastOk").classList.add("show");
     }catch(e){
-      $("toastErr").textContent = "❌ Xatolik: " + String(e.message || e);
+      $("toastErr").textContent = "❌ Xatolik. Keyinroq urinib ko‘ring.";
       $("toastErr").classList.add("show");
     }
   }
