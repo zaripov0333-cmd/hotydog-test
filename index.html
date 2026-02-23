@@ -1,268 +1,223 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uz">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>HOTY DOG HR Portal</title>
-
+<title>HOTY DOG</title>
 <style>
-  body{
-    margin:0;
-    font-family:'Segoe UI',sans-serif;
-    background:#FFD43B;
-  }
-
-  .header{
-    text-align:center;
-    padding:40px 10px 10px;
-    font-size:52px;
-    font-weight:900;
-    color:#ff6a00;
-    letter-spacing:3px;
-    text-shadow:0 8px 18px rgba(0,0,0,0.15);
-    animation:pop 700ms ease;
-  }
-  @keyframes pop{
-    from{transform:translateY(-10px);opacity:0;}
-    to{transform:translateY(0);opacity:1;}
-  }
-
-  .sub{
-    text-align:center;
-    font-size:16px;
-    color:#8a3b00;
-    margin-bottom:20px;
-  }
-
-  .container{
-    max-width:900px;
-    margin:auto;
-    padding:20px;
-  }
-
-  .card{
-    background:white;
-    padding:28px;
-    border-radius:24px;
-    box-shadow:0 18px 45px rgba(0,0,0,0.20);
-    margin-top:18px;
-    animation:fadeIn 0.6s ease;
-  }
-  @keyframes fadeIn{
-    from{opacity:0;transform:translateY(18px);}
-    to{opacity:1;transform:translateY(0);}
-  }
-
-  button{
-    padding:15px 30px;
-    margin:10px;
-    border:none;
-    border-radius:30px;
-    font-size:18px;
-    cursor:pointer;
-    background:#ff6a00;
-    color:white;
-    transition:0.25s;
-    box-shadow:0 10px 25px rgba(0,0,0,0.18);
-  }
-  button:hover{
-    transform:scale(1.05);
-    background:#ff8800;
-  }
-
-  .option{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin:10px 0;
-    padding:12px 14px;
-    border-radius:16px;
-    cursor:pointer;
-    transition:0.2s;
-    border:1px solid #f2f2f2;
-  }
-  .option:hover{
-    background:#fff3e0;
-    transform:translateX(6px);
-  }
-
-  .circle{
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    background:#ff6a00;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:800;
-    flex:0 0 34px;
-  }
-
-  input[type="text"], input[type="tel"]{
-    width:96%;
-    padding:12px;
-    margin:10px 0;
-    border-radius:14px;
-    border:1px solid #ddd;
-    font-size:16px;
-    outline:none;
-  }
-  input[type="text"]:focus, input[type="tel"]:focus{
-    border-color:#ff6a00;
-    box-shadow:0 0 0 3px rgba(255,106,0,0.15);
-  }
-
-  .hidden{ display:none; }
-  hr{
-    border:none;
-    height:1px;
-    background:#eee;
-    margin:18px 0;
-  }
-  .center{ text-align:center; }
-  .badge{
-    display:inline-block;
-    padding:6px 12px;
-    border-radius:999px;
-    background:#fff3e0;
-    color:#8a3b00;
-    font-weight:700;
-    margin-top:6px;
-  }
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#FFD43B}
+  .wrap{max-width:900px;margin:0 auto;padding:18px}
+  .top{font-size:52px;font-weight:900;color:#ff6a00;letter-spacing:3px;text-align:center;padding:26px 10px 10px}
+  .card{background:#fff;border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.18);padding:18px;margin-top:14px}
+  .center{text-align:center}
+  button{background:#ff6a00;color:#fff;border:0;border-radius:24px;padding:12px 18px;font-size:16px;cursor:pointer;margin:8px}
+  button:hover{background:#ff8800}
+  .q{font-weight:700;margin:14px 0 8px}
+  .opt{display:flex;align-items:center;gap:10px;border:1px solid #eee;border-radius:14px;padding:10px 12px;margin:8px 0;cursor:pointer}
+  .opt:hover{background:#fff3e0}
+  .c{width:30px;height:30px;border-radius:50%;background:#ff6a00;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;flex:0 0 30px}
+  input[type="text"],input[type="tel"]{width:96%;padding:12px;border-radius:12px;border:1px solid #ddd;font-size:16px;margin:8px 0}
+  .hidden{display:none}
+  hr{border:0;height:1px;background:#eee;margin:14px 0}
 </style>
 </head>
-
 <body>
+<div class="top">HOTY DOG</div>
 
-<div class="header">HOTY DOG</div>
-<div class="sub">HR Test System • Faqat 5–6 ball bo‘lsa Google Sheetga tushadi</div>
-
-<div class="container">
-
-  <!-- HOME -->
+<div class="wrap">
   <div id="home" class="card center">
-    <h2>Lavozimni tanlang</h2>
-    <button onclick="startTest('Повар')">Повар</button>
-    <button onclick="startTest('Менеджер')">Менеджер</button>
-    <button onclick="startTest('Директор')">Директор</button>
-    <div class="badge">3 savol • Har biri 2 ball • Max 6 ball</div>
+    <button onclick="start('KASSIR')">KASSIR</button>
+    <button onclick="start('OSHPAZ')">OSHPAZ</button>
+    <button onclick="start('BOSHQARUVCHI')">BOSHQARUVCHI</button>
   </div>
 
-  <!-- TEST -->
-  <div id="test" class="hidden card">
-    <h3 id="roleTitle"></h3>
-
-    <p><b>1. FIFO nima?</b></p>
-    <label class="option"><div class="circle">A</div><input type="radio" name="q1" value="0"> maxsulotlar qushnichigi</label>
-    <label class="option"><div class="circle">B</div><input type="radio" name="q1" value="0"> maxsulotlar tami</label>
-    <label class="option"><div class="circle">C</div><input type="radio" name="q1" value="0"> Togri javob yuq</label>
-    <label class="option"><div class="circle">D</div><input type="radio" name="q1" value="2"> Birinchi kelgan mahsulot birinchi ketadi</label>
-
+  <div id="test" class="card hidden">
+    <div class="center" style="font-weight:900;font-size:18px" id="title"></div>
     <hr>
-
-    <p><b>2. Mijoz hotdog sovib qoldi desa nima qilasiz?</b></p>
-    <label class="option"><div class="circle">A</div><input type="radio" name="q2" value="0"> E'tibor bermayman</label>
-    <label class="option"><div class="circle">B</div><input type="radio" name="q2" value="2"> Qayta tayyorlab beraman</label>
-    <label class="option"><div class="circle">C</div><input type="radio" name="q2" value="0"> Tashvish tugmasini bosaman</label>
-    <label class="option"><div class="circle">D</div><input type="radio" name="q2" value="0"> Togri javob yuq</label>
-
-    <hr>
-
-    <p><b>3. Sousnitsada ketchup saqlash muddati?</b></p>
-    <label class="option"><div class="circle">A</div><input type="radio" name="q3" value="2"> 48</label>
-    <label class="option"><div class="circle">B</div><input type="radio" name="q3" value="0"> 12</label>
-    <label class="option"><div class="circle">C</div><input type="radio" name="q3" value="0"> 60</label>
-    <label class="option"><div class="circle">D</div><input type="radio" name="q3" value="0"> 6</label>
-
+    <div id="questions"></div>
     <div class="center">
-      <button onclick="finishTest()">Testni yakunlash</button>
+      <button onclick="finish()">YAKUNLASH</button>
     </div>
   </div>
 
-  <!-- FORM -->
-  <div id="resultForm" class="hidden card">
-    <h3>Ma'lumotlaringizni kiriting</h3>
-    <input type="text" id="name" placeholder="Ism">
-    <input type="text" id="surname" placeholder="Familiya">
-    <input type="tel" id="phone" placeholder="Telefon raqam (+998...)">
+  <div id="form" class="card hidden">
+    <input id="name" type="text" placeholder="Ism">
+    <input id="surname" type="text" placeholder="Familiya">
+    <input id="phone" type="tel" placeholder="Telefon (+998...)">
     <div class="center">
-      <button onclick="saveResult()">Saqlash</button>
+      <button onclick="send()">YUBORISH</button>
     </div>
   </div>
-
 </div>
 
 <script>
-  let totalScore = 0;
-  let currentRole = "";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxrpzKW-tr2J_TJPmA_O9IFcAno4jcTkuPmTaEIQ9WN/dev";
 
-  const sheetURL = "https://script.google.com/macros/s/AKfycbxx1A7eB3K9Z4La-UwR0Q1VdWua83WOWha6z2FHJfR4Tov-6UIwkhL_Oo9girUV4_Ao/exec";
+const TESTS = {
+  KASSIR: {
+    pass: 6,
+    questions: [
+      {p:2, text:`Savol 1 — buyurtma ustuvorligi (2 ball)
+Oldingizda Uzum kuryeri turibdi.
+Zalda mehmon 15 daqiqa kutmoqda.
+Ikkala buyurtma tayyor.
+Kimga birinchi berasiz?`,
+        opts:["Kuryerga","Zalda kutgan mehmonga","Kim yaqin bo‘lsa"], correct:1},
+      {p:2, text:`Savol 2 — navbat bosimi (2 ball)
+Katta navbat. Siz kassada va yig‘ishda ulgura olmayapsiz.
+Nima qilasiz?`,
+        opts:["Hamkasblarni yordamga chaqiraman","Avval barcha buyurtmani qabul qilaman","O‘zim yig‘aman va kutishni so‘rayman"], correct:0},
+      {p:2, text:`Savol 3 — hisob-kitob (2 ball)
+3 hot-dog 15000 dan va ichimlik 12000.
+Mijoz 100000 berdi.
+Qancha qaytim?`,
+        opts:["43000","53000","58000"], correct:1},
+      {p:1, text:`Savol 4 — mijoz shikoyati (1 ball)
+Mijoz hot-dog sovuq dedi.`,
+        opts:["Uzr so‘rab almashtiraman","Ayb oshxonada deyman","Hech narsa qilmayman"], correct:0},
+      {p:1, text:`Savol 5 — ish vaqti (1 ball)
+Kechki smena va dam olish kunlari ishlay olasizmi?`,
+        opts:["Ha","Yo‘q"], correct:0},
+    ]
+  },
+  OSHPAZ: {
+    pass: 7,
+    questions: [
+      {p:2, text:`Savol 1 — TTK nima (2 ball)
+TTK nima?`, opts:["Retsept va tayyorlash qoidasi","Ombor ro‘yxati","Marketing hujjati"], correct:0},
+      {p:2, text:`Savol 2 — FIFO (2 ball)
+FIFO nimani anglatadi?`, opts:["Birinchi kelgan birinchi ishlatiladi","Eng yangi ishlatiladi","Tasodifiy ishlatiladi"], correct:0},
+      {p:2, text:`Savol 3 — o‘lchov (2 ball)
+Retsept 5 g sous talab qiladi. Qoshiq 1 g.`, opts:["3","5","7"], correct:1},
+      {p:2, text:`Savol 4 — tovar qo‘shnichiligi (2 ball)
+Qaysi variant noto‘g‘ri saqlash?`, opts:["Go‘sht va salat yonma-yon","Souslar alohida","Ichimlik alohida"], correct:0},
+      {p:1, text:`Savol 5 — muddati o‘tgan mahsulot (1 ball)
+Muddati o‘tgan mahsulotni ko‘rdingiz.`, opts:["Darhol ishlataman","Olib tashlayman va xabar beraman","E’tibor bermayman"], correct:1},
+      {p:1, text:`Savol 6 — ish grafigi (1 ball)
+Dam olish kunlari ishlay olasizmi?`, opts:["Ha","Yo‘q"], correct:0},
+    ]
+  },
+  BOSHQARUVCHI: {
+    pass: 8,
+    questions: [
+      {p:3, text:`Savol 1 — saqlash buzilishi (3 ball)
+Ko‘rdingiz:
+tovuq sous yonida
+markirovka yo‘q
+prosrok bor
+Nima qilasiz?`,
+        opts:["Prosrok списать, tartib o‘rnatish, instruktaj","Faqat olib tashlash","Xodimga aytish"], correct:0},
+      {p:2, text:`Savol 2 — sekin kassir (2 ball)
+Sekin ishlaydi.`, opts:["Trening + muddat qo‘yaman","Jarima","E’tibor bermayman"], correct:0},
+      {p:2, text:`Savol 3 — pik vaqt (2 ball)
+Navbat 20 odam.`, opts:["O‘zim yordamga tushaman va rollarni bo‘laman","Kutaman","Tezroq ishlang deyman"], correct:0},
+      {p:2, text:`Savol 4 — mahsulot muddati nazorati (2 ball)
+Boshqaruvchi nima qilishi kerak?`, opts:["Har kuni tekshiradi","Haftada bir","Tekshirmaydi"], correct:0},
+      {p:1, text:`Savol 5 — xodim kechikdi (1 ball)
+Xodim kechikdi.`, opts:["Zaxira reja ishga tushiraman","Kutaman"], correct:0},
+      {p:1, text:`Savol 6 — ish grafigi (1 ball)
+To‘liq kun ishlay olasizmi?`, opts:["Ha","Yo‘q"], correct:0},
+    ]
+  }
+};
 
-  function startTest(role){
-    currentRole = role;
-    document.getElementById("home").classList.add("hidden");
-    document.getElementById("test").classList.remove("hidden");
-    document.getElementById("roleTitle").innerText = role + " testi";
+let role = "";
+let score = 0;
+let passed = false;
+
+function start(r){
+  role = r;
+  score = 0;
+  passed = false;
+
+  document.getElementById("home").classList.add("hidden");
+  document.getElementById("form").classList.add("hidden");
+  document.getElementById("test").classList.remove("hidden");
+
+  document.getElementById("title").innerText = r + " TESTI";
+  render();
+}
+
+function render(){
+  const cfg = TESTS[role];
+  const wrap = document.getElementById("questions");
+  wrap.innerHTML = "";
+
+  cfg.questions.forEach((q, i) => {
+    const qName = "q" + (i+1);
+    const letters = ["A","B","C","D"];
+
+    const block = document.createElement("div");
+    block.innerHTML = `<div class="q">${q.text.replaceAll("\n","<br>")}</div>`;
+
+    q.opts.forEach((opt, oi) => {
+      const lab = document.createElement("label");
+      lab.className = "opt";
+      lab.innerHTML = `
+        <div class="c">${letters[oi] || (oi+1)}</div>
+        <input type="radio" name="${qName}" value="${oi}">
+        <div>${opt}</div>
+      `;
+      block.appendChild(lab);
+    });
+
+    wrap.appendChild(block);
+    if(i !== cfg.questions.length-1) wrap.appendChild(document.createElement("hr"));
+  });
+}
+
+function finish(){
+  const cfg = TESTS[role];
+  for(let i=0;i<cfg.questions.length;i++){
+    const qName = "q"+(i+1);
+    const picked = document.querySelector(`input[name="${qName}"]:checked`);
+    if(!picked){ alert("Hammasini belgilang!"); return; }
   }
 
-  function finishTest(){
-    const q1 = document.querySelector('input[name="q1"]:checked');
-    const q2 = document.querySelector('input[name="q2"]:checked');
-    const q3 = document.querySelector('input[name="q3"]:checked');
+  let total = 0;
+  cfg.questions.forEach((q,i)=>{
+    const qName = "q"+(i+1);
+    const picked = Number(document.querySelector(`input[name="${qName}"]:checked`).value);
+    if(picked === q.correct) total += q.p;
+  });
 
-    if(!q1 || !q2 || !q3){
-      alert("Hammasini belgilang!");
-      return;
-    }
+  score = total;
+  passed = score >= cfg.pass;
 
-    totalScore = Number(q1.value) + Number(q2.value) + Number(q3.value);
+  document.getElementById("test").classList.add("hidden");
+  document.getElementById("form").classList.remove("hidden");
+}
 
-    document.getElementById("test").classList.add("hidden");
-    document.getElementById("resultForm").classList.remove("hidden");
+async function send(){
+  const name = (document.getElementById("name").value || "").trim();
+  const surname = (document.getElementById("surname").value || "").trim();
+  const phone = (document.getElementById("phone").value || "").trim();
+  if(!name || !surname || !phone){ alert("Ism, Familiya, Telefon kiriting!"); return; }
+
+  if(!passed){
+    alert("O‘tmadingiz");
+    setTimeout(()=>location.reload(), 600);
+    return;
   }
 
-  async function saveResult(){
-    const name = (document.getElementById("name").value || "").trim();
-    const surname = (document.getElementById("surname").value || "").trim();
-    const phone = (document.getElementById("phone").value || "").trim();
+  const data = new URLSearchParams();
+  data.append("name", name);
+  data.append("surname", surname);
+  data.append("phone", phone);
+  data.append("role", role);
+  data.append("score", String(score));
 
-    if(name === "" || surname === "" || phone === ""){
-      alert("Ism, familiya va telefonni to'ldiring!");
-      return;
-    }
-
-    // ✅ Faqat 5–6 ball bo‘lsa sheetga yuboramiz
-    if(totalScore > 4){
-      const formData = new URLSearchParams();
-      formData.append("name", name);
-      formData.append("surname", surname);
-      formData.append("phone", phone);
-      formData.append("role", currentRole);
-      formData.append("score", String(totalScore));
-
-      try{
-        // no-cors: CORS sabab blok bo‘lmaydi, so‘rov ketadi
-        await fetch(sheetURL, { method: "POST", mode: "no-cors", body: formData });
-        alert("Tabriklaymiz! Natijangiz Google Sheetga yuborildi.");
-      }catch(e){
-        alert("Xatolik: Sheetga yuborilmadi. Deploy access 'Anyone' ekanini tekshiring.");
-        console.log(e);
-        return;
-      }
-    } else {
-      alert("Afsuski 4 balldan past natija. Sheetga yuborilmadi.");
-    }
-
-    // ✅ Reloadni biroz kechiktiramiz (so‘rov to‘liq ketib ulguradi)
-    setTimeout(()=>location.reload(), 800);
+  try{
+    await fetch(SHEET_URL, { method:"POST", mode:"no-cors", body:data });
+    alert("Yuborildi");
+  }catch(e){
+    alert("Xatolik: Sheetga yuborilmadi");
+    console.log(e);
+    return;
   }
+
+  setTimeout(()=>location.reload(), 800);
+}
 </script>
-
 </body>
 </html>
-
-  
-   
-    
- 
