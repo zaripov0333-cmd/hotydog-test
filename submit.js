@@ -1,22 +1,5 @@
-const scriptURL = "https://script.google.com/macros/s/AKfycbzqFiYXPcrIzIGIQqF_0jaUbNHd9JyzYIAoND740mWtm6HmpRfmDZ-hs1aCZfSmAEJOhw/exec";
-
-function next(step){
-
-  if(step === 1){
-    if(!district.value) return alert("Manzilni tanlang");
-  }
-
-  if(step === 2){
-    if(!transport.value) return alert("Tanlang");
-  }
-
-  if(step === 3){
-    if(!salary.value) return alert("Tanlang");
-  }
-
-  document.getElementById("q"+step).classList.remove("active");
-  document.getElementById("q"+(step+1)).classList.add("active");
-}
+const BOT_TOKEN = "8723692215:AAECHULu5H76njzlVBisVbkCGWi9Tjfrnvc";
+const CHAT_ID = "-5125266750";
 
 function sendData(){
 
@@ -26,23 +9,39 @@ function sendData(){
     return;
   }
 
-  fetch(scriptURL,{
+  if(!name.value || !age.value || !phone.value){
+    alert("Ma'lumotlarni to‘ldiring");
+    return;
+  }
+
+  const text = `
+🚴 YANGI KURIER ARIZA
+
+📍 Manzil: ${district.value}
+🚗 Transport: ${transport.value}
+💰 Maosh: ${salary.value}
+
+👤 Ism: ${name.value}
+🎂 Yosh: ${age.value}
+📞 Telefon: ${phone.value}
+`;
+
+  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
     method:"POST",
-    body:JSON.stringify({
-      district:district.value,
-      transport:transport.value,
-      salary:salary.value,
-      name:name.value,
-      age:age.value,
-      phone:phone.value
-    }),
-    headers:{ "Content-Type":"application/json" }
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body: JSON.stringify({
+      chat_id: CHAT_ID,
+      text: text
+    })
   })
-  .then(()=> {
+  .then(res => res.json())
+  .then(() => {
     msg.innerText="Ariza yuborildi!";
     msg.style.color="green";
   })
-  .catch(()=> {
+  .catch(() => {
     msg.innerText="Xatolik yuz berdi";
     msg.style.color="red";
   });
