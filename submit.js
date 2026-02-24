@@ -1,47 +1,49 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzqFiYXPcrIzIGIQqF_0jaUbNHd9JyzYIAoND740mWtm6HmpRfmDZ-hs1aCZfSmAEJOhw/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbzqFiYXPcrIzIGIQqF_0jaUbNHd9JyzYIAoND740mWtm6HmpRfmDZ-hs1aCZfSmAEJOhw/exec";
 
-document.getElementById("submitBtn").addEventListener("click", async function () {
+function sendData(){
 
-  const firstName = document.getElementById("firstName").value.trim();
-  const lastName = document.getElementById("lastName").value.trim();
-  const phone = document.getElementById("phone").value.trim();
+  const district = document.getElementById("district").value;
+  const transport = document.getElementById("transport").value;
+  const salary = document.getElementById("salary").value;
 
-  const errorBox = document.getElementById("errorBox");
-  const successBox = document.getElementById("successBox");
+  const name = document.getElementById("name").value;
+  const age = document.getElementById("age").value;
+  const phone = document.getElementById("phone").value;
 
-  errorBox.style.display = "none";
-  successBox.style.display = "none";
+  const msg = document.getElementById("msg");
+  const extra = document.getElementById("extra");
 
-  if (!firstName || !lastName || !phone) {
-    errorBox.innerText = "Barcha maydonlarni to‘ldiring!";
-    errorBox.style.display = "block";
-    return;
+  if(transport === "HA" && salary === "HA"){
+      extra.classList.remove("hidden");
+
+      if(name && age && phone){
+
+        fetch(scriptURL, {
+          method: "POST",
+          body: JSON.stringify({
+            district: district,
+            transport: transport,
+            salary: salary,
+            name: name,
+            age: age,
+            phone: phone
+          }),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(res => {
+          msg.style.color = "green";
+          msg.innerText = "Arizangiz qabul qilindi!";
+        })
+        .catch(err => {
+          msg.style.color = "red";
+          msg.innerText = "Xatolik yuz berdi!";
+        });
+      }
+
+  } else {
+      msg.style.color = "red";
+      msg.innerText = "Faqat transporti bor va ish haqi to'g'ri keladiganlar qabul qilinadi!";
   }
-
-  try {
-    await fetch(SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-        date: new Date().toLocaleString()
-      })
-    });
-
-    successBox.style.display = "block";
-
-    document.getElementById("firstName").value = "";
-    document.getElementById("lastName").value = "";
-    document.getElementById("phone").value = "";
-
-  } catch (error) {
-    errorBox.innerText = "Xatolik yuz berdi!";
-    errorBox.style.display = "block";
-  }
-
-});
+}
