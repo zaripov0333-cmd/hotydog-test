@@ -299,25 +299,47 @@ status.style.color="red";
 
 function finishAudit(){
 
-let score=100;
-
-Object.keys(tempMarks).forEach(k=>{
-if(tempMarks[k]==="bad"){
-score-=questions[k].minus;
+if(!currentBranch){
+alert("Filial tanlanmagan");
+return;
 }
-});
 
-let data=getData();
+let month = document.getElementById("monthSelect").value;
+if(!month){
+alert("Oy tanlanmagan");
+return;
+}
 
-if(!data[currentMonth][currentBranch])
-data[currentMonth][currentBranch]={audits:[null,null]};
+let score = 100;
 
-data[currentMonth][currentBranch].audits[currentIndex]={score};
+for(let i=0;i<questions.length;i++){
+if(tempMarks[i] === "bad"){
+score -= questions[i].minus;
+}
+}
+
+let data = getData();
+
+if(!data[month]){
+data[month] = {};
+}
+
+if(!data[month][currentBranch]){
+data[month][currentBranch] = {audits:[null,null]};
+}
+
+data[month][currentBranch].audits[currentAudit] = {
+score: score,
+images: tempMarks
+};
 
 saveData(data);
 
-alert("Ball: "+score);
-openAudit();
+alert("Yakunladingiz ✅ Ball: " + score);
+
+/* Audit tugagandan keyin filialga qaytadi */
+openBranch(currentBranch);
+
 }
 
 /* ================= AUDIT BALL ================= */
