@@ -259,17 +259,36 @@ questions.forEach((q,i)=>{
 html+=`
 <div class="question">
 ${q.text}<br>
-<button onclick="mark(${i},'good')">✔</button>
-<button onclick="mark(${i},'bad')">❌</button>
+<button id="good-${i}" onclick="mark(${i},'good')">✔</button>
+<button id="bad-${i}" onclick="mark(${i},'bad')">❌</button>
+<span id="status-${i}"></span>
 </div>`;
 });
-
 html+=`<button onclick="finishAudit()">Tugatish</button>`;
 document.getElementById("content").innerHTML=html;
 }
 
 function mark(i,type){
+
 tempMarks[i]=type;
+
+let goodBtn=document.getElementById("good-"+i);
+let badBtn=document.getElementById("bad-"+i);
+let status=document.getElementById("status-"+i);
+
+if(type==="good"){
+goodBtn.style.background="green";
+badBtn.style.background="black";
+status.innerHTML=" ✔";
+status.style.color="green";
+}
+else{
+badBtn.style.background="red";
+goodBtn.style.background="black";
+status.innerHTML=" ❌";
+status.style.color="red";
+}
+
 }
 
 function finishAudit(){
