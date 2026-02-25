@@ -66,32 +66,7 @@ Hoty Dogy System
 </div>
 
 <script>
-  function uploadImage(event,i){
-
-if(role==="viewer"){
-alert("Siz rasm qo‘sha olmaysiz");
-return;
-}
-
-let file=event.target.files[0];
-if(!file) return;
-
-let reader=new FileReader();
-
-reader.onload=function(e){
-
-if(!tempMarks["images"]) tempMarks["images"]={};
-
-tempMarks["images"][i]=e.target.result;
-
-document.getElementById("preview-"+i).innerHTML=
-`<img src="${e.target.result}" width="100" style="margin-top:5px;border-radius:8px;">`;
-
-};
-
-reader.readAsDataURL(file);
-}
-
+ 
 /* ================= ROLE ================= */
 
 const role=localStorage.getItem("role");
