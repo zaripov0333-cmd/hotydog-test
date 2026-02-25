@@ -3,37 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hoty Dogy Audit System</title>
+<title>Hoty Dogy Audit</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI;}
 body{background:#FFD43B;}
 .header{
-background:black;color:#FFD43B;padding:15px;
-display:flex;justify-content:space-between;font-weight:bold;
+background:black;color:#FFD43B;
+padding:15px;display:flex;
+justify-content:space-between;
+font-weight:bold;
 }
 .container{padding:15px;}
 .menu{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .btn{
-background:white;padding:18px;border-radius:18px;
-text-align:center;font-weight:bold;cursor:pointer;
+background:white;padding:15px;
+border-radius:15px;text-align:center;
+font-weight:bold;cursor:pointer;
 box-shadow:0 5px 20px rgba(0,0,0,0.2);
 }
 .card{
-background:white;padding:15px;border-radius:15px;
-margin-bottom:15px;
+background:white;padding:15px;
+border-radius:15px;margin-bottom:10px;
 }
 .question{
-padding:8px;border-bottom:1px solid #eee;
-font-size:14px;
+border-bottom:1px solid #eee;
+padding:8px;font-size:13px;
 }
 .back{
 background:black;color:#FFD43B;
-padding:8px 12px;border-radius:20px;
-display:inline-block;margin-bottom:10px;cursor:pointer;
+padding:6px 10px;border-radius:15px;
+display:inline-block;margin-bottom:10px;
+cursor:pointer;
 }
-select,input{width:100%;padding:8px;margin:6px 0;border-radius:8px;}
-button{padding:6px 10px;border:none;border-radius:8px;background:black;color:#FFD43B;cursor:pointer;margin:3px;}
+button{
+margin:3px;padding:5px 8px;
+border:none;border-radius:6px;
+background:black;color:#FFD43B;
+cursor:pointer;
+}
+select,input{
+width:100%;padding:8px;
+margin:5px 0;border-radius:8px;
+}
 </style>
 </head>
 
@@ -57,8 +69,8 @@ Hoty Dogy System
 
 /* ================= ROLE ================= */
 
-const role = localStorage.getItem("role");
-if(!role) window.location="/index.html";
+const role=localStorage.getItem("role");
+if(!role) window.location="index.html";
 
 /* ================= FILIALS ================= */
 
@@ -141,6 +153,7 @@ const questions = [
 
 ];
 
+
 /* ================= DATA ================= */
 
 function getData(){
@@ -151,35 +164,35 @@ function saveData(d){
 localStorage.setItem("data",JSON.stringify(d));
 }
 
-function getCurrentMonth(){
+function getMonth(){
 let d=new Date();
 return d.getFullYear()+"-"+(d.getMonth()+1);
 }
 
-let currentMonth=getCurrentMonth();
+let currentMonth=getMonth();
 
 /* ================= OY ================= */
 
 function loadMonths(){
 let data=getData();
-let select=document.getElementById("monthSelect");
-select.innerHTML="";
-
 if(!data[currentMonth]){
 data[currentMonth]={};
 saveData(data);
 }
-
+let select=document.getElementById("monthSelect");
+select.innerHTML="";
 Object.keys(data).forEach(m=>{
 select.innerHTML+=`<option value="${m}">${m}</option>`;
 });
-
 select.value=currentMonth;
 }
 
 function addMonth(){
-if(role!=="superadmin") return;
-let name=prompt("Yangi oy (masalan 2025-3)");
+if(role!=="superadmin"){
+alert("Faqat superadmin");
+return;
+}
+let name=prompt("Yangi oy (2025-3)");
 if(!name) return;
 let data=getData();
 if(!data[name]) data[name]={};
@@ -195,14 +208,14 @@ currentMonth=document.getElementById("monthSelect").value;
 /* ================= MENU ================= */
 
 function loadMenu(){
-let menu=document.getElementById("menu");
-menu.innerHTML="";
-menu.innerHTML+=`<div class="btn" onclick="openAudit()">Аудит</div>`;
-menu.innerHTML+=`<div class="btn" onclick="openAuditBall()">Аудит Балл</div>`;
+let m=document.getElementById("menu");
+m.innerHTML="";
+m.innerHTML+=`<div class="btn" onclick="openAudit()">Аудит</div>`;
+m.innerHTML+=`<div class="btn" onclick="openAuditBall()">Аудит Балл</div>`;
 
 if(role==="superadmin"){
-menu.innerHTML+=`<div class="btn" onclick="openUsers()">Admin Qo‘shish</div>`;
-menu.innerHTML+=`<div class="btn" onclick="addMonth()">+ Yangi Oy</div>`;
+m.innerHTML+=`<div class="btn" onclick="openUsers()">User Qo‘shish</div>`;
+m.innerHTML+=`<div class="btn" onclick="addMonth()">+ Oy</div>`;
 }
 }
 
@@ -231,7 +244,7 @@ let currentIndex=0;
 function startAudit(branch,index){
 
 if(role==="viewer"){
-alert("Siz audit qila olmaysiz");
+alert("Siz faqat ko‘ra olasiz");
 return;
 }
 
@@ -248,7 +261,6 @@ html+=`
 ${q.text}<br>
 <button onclick="mark(${i},'good')">✔</button>
 <button onclick="mark(${i},'bad')">❌</button>
-<div id="res-${i}"></div>
 </div>`;
 });
 
@@ -258,7 +270,6 @@ document.getElementById("content").innerHTML=html;
 
 function mark(i,type){
 tempMarks[i]=type;
-document.getElementById("res-"+i).innerHTML= type==="good"?"✔":"❌";
 }
 
 function finishAudit(){
@@ -272,6 +283,7 @@ score-=questions[k].minus;
 });
 
 let data=getData();
+
 if(!data[currentMonth][currentBranch])
 data[currentMonth][currentBranch]={audits:[null,null]};
 
@@ -293,7 +305,6 @@ let html=`<div class="back" onclick="back()">Orqaga</div>`;
 branches.forEach(b=>{
 let audits=data[currentMonth]?.[b]?.audits||[null,null];
 let avg=0;
-
 if(audits[0]&&audits[1]){
 avg=(audits[0].score+audits[1].score)/2;
 }else if(audits[0]){
@@ -301,7 +312,6 @@ avg=audits[0].score;
 }else if(audits[1]){
 avg=audits[1].score;
 }
-
 html+=`<div class="card">${b} : ${avg}</div>`;
 });
 
@@ -311,12 +321,33 @@ document.getElementById("content").innerHTML=html;
 /* ================= USERS ================= */
 
 function openUsers(){
+if(role!=="superadmin") return;
 document.getElementById("menu").style.display="none";
 document.getElementById("content").innerHTML=`
 <div class="back" onclick="back()">Orqaga</div>
 <div class="card">
-Yangi user qo‘shish backend login.js orqali ishlaydi
+<input id="newLogin" placeholder="Login">
+<input id="newPass" placeholder="Parol">
+<select id="newRole">
+<option value="admin">Admin</option>
+<option value="viewer">Viewer</option>
+</select>
+<button onclick="addUser()">Qo‘shish</button>
 </div>`;
+}
+
+function addUser(){
+let login=document.getElementById("newLogin").value;
+let pass=document.getElementById("newPass").value;
+let roleSelect=document.getElementById("newRole").value;
+
+let users=JSON.parse(localStorage.getItem("users"));
+
+users.push({login,password:pass,role:roleSelect});
+localStorage.setItem("users",JSON.stringify(users));
+
+alert("Qo‘shildi");
+back();
 }
 
 /* ================= GENERAL ================= */
@@ -328,7 +359,7 @@ document.getElementById("menu").style.display="grid";
 
 function logout(){
 localStorage.removeItem("role");
-window.location="/index.html";
+window.location="index.html";
 }
 
 loadMonths();
