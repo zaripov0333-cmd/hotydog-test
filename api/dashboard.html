@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+</head>
+<body style="background:black;color:white;font-family:sans-serif">
+
+<h1>Hoty Dogy Admin Panel</h1>
+
+<button onclick="logout()">Chiqish</button>
+
+<script>
+if(!localStorage.getItem("role")){
+  window.location="index.html";
+}
+
+function logout(){
+  localStorage.clear();
+  window.location="index.html";
+}
+</script>
+
+</body>
+</html>
