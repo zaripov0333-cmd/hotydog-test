@@ -334,7 +334,10 @@ let data=getData();
 if(!data[currentMonth][currentBranch])
 data[currentMonth][currentBranch]={audits:[null,null]};
 
-data[currentMonth][currentBranch].audits[currentIndex]={score};
+data[currentMonth][currentBranch].audits[currentIndex]={
+score: score,
+images: tempMarks.images || {}
+};
 
 saveData(data);
 
