@@ -66,7 +66,69 @@ Hoty Dogy System
 </div>
 
 <script>
+/* ===== GLOBAL ===== */
+let tempMarks = {};
+let currentBranch = "";
+let currentAudit = 0;
 
+/* ===== START AUDIT ===== */
+function startAudit(branch, auditIndex){
+
+if(role !== "superadmin"){
+alert("Siz audit o‘zgartira olmaysiz");
+return;
+}
+
+currentBranch = branch;
+currentAudit = auditIndex;
+tempMarks = {};
+
+let html = `<h3>${branch} - Audit ${auditIndex+1}</h3>`;
+
+questions.forEach((q,i)=>{
+
+html += `
+<div class="card">
+<p>${q.text}</p>
+
+<button onclick="mark(${i},'good')">✔</button>
+<button onclick="mark(${i},'bad')">✖</button>
+
+<br>
+<input type="file" accept="image/*" 
+onchange="uploadImage(event, ${i})">
+
+</div>
+`;
+
+});
+
+html += `<button onclick="finishAudit()">Yakunlash</button>`;
+
+document.getElementById("content").innerHTML = html;
+
+}
+
+/* ===== MARK ===== */
+function mark(i,type){
+tempMarks[i] = type;
+}
+
+/* ===== UPLOAD IMAGE ===== */
+function uploadImage(event, i){
+
+let file = event.target.files[0];
+if(!file) return;
+
+let reader = new FileReader();
+
+reader.onload = function(e){
+tempMarks["img_"+i] = e.target.result;
+};
+
+reader.readAsDataURL(file);
+
+}
 /* ================= ROLE ================= */
 
 const role=localStorage.getItem("role");
