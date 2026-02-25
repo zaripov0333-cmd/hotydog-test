@@ -2,15 +2,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Hoty Dogy Admin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hoty Dogy Admin</title>
 
 <style>
 body{
   margin:0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family:Segoe UI;
   background:#FFD43B;
-  overflow-x:hidden;
 }
 
 .header{
@@ -18,22 +17,11 @@ body{
   padding:15px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
   font-weight:bold;
   font-size:18px;
 }
 
-.container{
-  padding:15px;
-}
-
-.card{
-  background:white;
-  padding:15px;
-  border-radius:15px;
-  margin-bottom:15px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.15);
-}
+.container{ padding:15px; }
 
 .menu-grid{
   display:grid;
@@ -42,28 +30,36 @@ body{
 }
 
 .menu-btn{
+  background:white;
   padding:15px;
-  background:#fff;
   border-radius:15px;
   text-align:center;
   font-weight:bold;
-  box-shadow:0 5px 15px rgba(0,0,0,0.15);
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
   cursor:pointer;
-  transition:0.2s;
 }
 
-.menu-btn:hover{
-  transform:scale(1.05);
+.card{
+  background:white;
+  padding:15px;
+  border-radius:15px;
+  margin-bottom:15px;
 }
 
-.back-btn{
-  margin-bottom:10px;
+.back{
+  background:black;
+  color:#FFD43B;
+  padding:8px 14px;
+  border-radius:30px;
   display:inline-block;
-  padding:8px 12px;
-  background:#FFB800;
-  border-radius:10px;
-  font-weight:bold;
   cursor:pointer;
+  margin-bottom:10px;
+}
+
+.month-bar{
+  display:flex;
+  gap:10px;
+  margin-bottom:15px;
 }
 
 input,select{
@@ -74,11 +70,15 @@ input,select{
   border:1px solid #ccc;
 }
 
-img{
-  width:100%;
-  border-radius:10px;
-  margin-top:8px;
+button{
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#FFB800;
+  font-weight:bold;
+  cursor:pointer;
 }
+button:focus{ outline:none; }
 </style>
 </head>
 
@@ -89,26 +89,188 @@ img{
   <div onclick="logout()" style="cursor:pointer;">Chiqish</div>
 </div>
 
-<div class="container" id="mainMenu">
+<div class="container">
 
-  <div class="menu-grid">
-    <div class="menu-btn" onclick="openAudit()">Аудит</div>
-    <div class="menu-btn" onclick="openAuditBall()">Аудит Балл</div>
-    <div class="menu-btn" onclick="openSBBall()">СБ Балл</div>
-    <div class="menu-btn" onclick="openUsers()">Foydalanuvchilar</div>
-  </div>
+<div class="month-bar">
+  <select id="monthSelect" onchange="changeMonth()"></select>
+  <button id="newMonthBtn" onclick="createMonth()">+ Oy</button>
+</div>
+
+<div id="mainMenu" class="menu-grid">
+  <div class="menu-btn" onclick="openAudit()">Аудит</div>
+  <div class="menu-btn" onclick="openAuditBall()">Аудит Балл</div>
+  <div class="menu-btn" onclick="openSBBall()">СБ Балл</div>
+  <div class="menu-btn" onclick="openUsers()">Foydalanuvchilar</div>
+</div>
+
+<div id="content" style="display:none;"></div>
 
 </div>
 
-<div class="container" id="content" style="display:none;"></div>
-
 <script>
 
-const branches = ["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
-const role = localStorage.getItem("role");
+const branches=["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
+const role=localStorage.getItem("role");
+if(!role) window.location="/index.html";
 
-if(!role){
-  window.location="/index.html";
+if(role!=="admin"){
+  document.getElementById("newMonthBtn").style.display="none";
+}
+
+let currentMonth=localStorage.getItem("currentMonth")||getCurrentMonth();
+
+function getCurrentMonth(){
+  const d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+}
+
+function loadMonths(){
+  const select=document.getElementById("monthSelect");
+  const data=JSON.parse(localStorage.getItem("monthlyData")||"{}");
+
+  if(!data[currentMonth]) data[currentMonth]={};
+  localStorage.setItem("monthlyData",JSON.stringify(data));
+
+  select.innerHTML="";
+  Object.keys(data).forEach(m=>{
+    select.innerHTML+=`<option value="${m}">${m}</option>`;
+  });
+  select.value=currentMonth;
+}
+
+function changeMonth(){
+  currentMonth=document.getElementById("monthSelect").value;
+  localStorage.setItem("currentMonth",currentMonth);
+}
+
+function createMonth(){
+  if(role!=="admin") return;
+  const name=prompt("Oy nomi (2026-04):");
+  if(!name) return;
+  const data=JSON.parse(localStorage.getItem("monthlyData")||"{}");
+  if(!data[name]){
+    data[name]={};
+    localStorage.setItem("monthlyData",JSON.stringify(data));
+    loadMonths();
+  }
+}
+
+function getMonthData(){
+  const data=JSON.parse(localStorage.getItem("monthlyData")||"{}");
+  if(!data[currentMonth]) data[currentMonth]={};
+  return data;
+}
+
+function saveMonthData(data){
+  localStorage.setItem("monthlyData",JSON.stringify(data));
+}
+
+function showMenu(){
+  content.style.display="none";
+  mainMenu.style.display="grid";
+}
+
+function openAudit(){
+  mainMenu.style.display="none";
+  content.style.display="block";
+  let html=`<div class="back" onclick="showMenu()">Orqaga</div>`;
+  branches.forEach(b=>{
+    html+=`
+    <div class="card">
+      <h3>${b}</h3>
+      <input type="file" onchange="saveAudit(event,'${b}')">
+      <div id="list-${b}"></div>
+    </div>`;
+  });
+  content.innerHTML=html;
+  branches.forEach(loadAudit);
+}
+
+function saveAudit(e,branch){
+  const file=e.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    const data=getMonthData();
+    if(!data[currentMonth].audit) data[currentMonth].audit={};
+    if(!data[currentMonth].audit[branch]) data[currentMonth].audit[branch]=[];
+    data[currentMonth].audit[branch].push({
+      img:ev.target.result,
+      date:new Date().toLocaleString()
+    });
+    saveMonthData(data);
+    loadAudit(branch);
+  }
+  reader.readAsDataURL(file);
+}
+
+function loadAudit(branch){
+  const data=getMonthData();
+  const div=document.getElementById("list-"+branch);
+  if(!div) return;
+  div.innerHTML="";
+  const arr=data[currentMonth].audit?.[branch]||[];
+  arr.forEach(i=>{
+    div.innerHTML+=`<div class="card">📅 ${i.date}<br><img src="${i.img}" width="100%"></div>`;
+  });
+}
+
+function openAuditBall(){ openBall("auditBall"); }
+function openSBBall(){ openBall("sbBall"); }
+
+function openBall(type){
+  mainMenu.style.display="none";
+  content.style.display="block";
+  let html=`<div class="back" onclick="showMenu()">Orqaga</div>`;
+  branches.forEach(b=>{
+    html+=`
+    <div class="card">
+      <h3>${b}</h3>
+      <input ${role!=="admin"?"disabled":""}
+      value="${getMonthData()[currentMonth][type]?.[b]||""}"
+      onchange="saveBall('${type}','${b}',this.value)">
+    </div>`;
+  });
+  content.innerHTML=html;
+}
+
+function saveBall(type,branch,val){
+  if(role!=="admin") return;
+  const data=getMonthData();
+  if(!data[currentMonth][type]) data[currentMonth][type]={};
+  data[currentMonth][type][branch]=val;
+  saveMonthData(data);
+}
+
+function openUsers(){
+  if(role!=="admin") return alert("Faqat admin");
+  mainMenu.style.display="none";
+  content.style.display="block";
+  content.innerHTML=`
+  <div class="back" onclick="showMenu()">Orqaga</div>
+  <div class="card">
+    <h3>Yangi foydalanuvchi</h3>
+    <input id="loginNew" placeholder="Login">
+    <input id="passNew" placeholder="Parol">
+    <select id="roleNew">
+      <option value="viewer">Viewer</option>
+      <option value="editor">Editor</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button onclick="createUser()">Qo‘shish</button>
+  </div>`;
+}
+
+function createUser(){
+  fetch("/api/login",{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      login:loginNew.value,
+      password:passNew.value,
+      role:roleNew.value
+    })
+  }).then(r=>r.json()).then(d=>alert(d.message));
 }
 
 function logout(){
@@ -116,151 +278,8 @@ function logout(){
   window.location="/index.html";
 }
 
-function showMenu(){
-  content.style.display="none";
-  mainMenu.style.display="block";
-}
-
-function openAudit(){
-  mainMenu.style.display="none";
-  content.style.display="block";
-
-  let html = `<div class="back-btn" onclick="showMenu()">⬅ Orqaga</div>`;
-  branches.forEach(b=>{
-    html += `
-      <div class="card">
-        <h3>${b}</h3>
-        <input type="file" onchange="saveAudit(event,'${b}')">
-        <div id="list-${b}"></div>
-      </div>
-    `;
-  });
-
-  content.innerHTML = html;
-  branches.forEach(b=>loadAudit(b));
-}
-
-function saveAudit(event, branch){
-  const file = event.target.files[0];
-  if(!file) return;
-
-  const reader = new FileReader();
-  reader.onload = function(e){
-    const data = JSON.parse(localStorage.getItem("auditData") || "{}");
-    if(!data[branch]) data[branch] = [];
-
-    data[branch].push({
-      image: e.target.result,
-      date: new Date().toLocaleString()
-    });
-
-    localStorage.setItem("auditData", JSON.stringify(data));
-    loadAudit(branch);
-  };
-  reader.readAsDataURL(file);
-}
-
-function loadAudit(branch){
-  const data = JSON.parse(localStorage.getItem("auditData") || "{}");
-  const container = document.getElementById(`list-${branch}`);
-  if(!container) return;
-
-  container.innerHTML = "";
-  if(data[branch]){
-    data[branch].forEach(item=>{
-      container.innerHTML += `
-        <div class="card">
-          📅 ${item.date}
-          <img src="${item.image}">
-        </div>
-      `;
-    });
-  }
-}
-
-function openAuditBall(){
-  openBall("audit");
-}
-
-function openSBBall(){
-  openBall("sb");
-}
-
-function openBall(type){
-  mainMenu.style.display="none";
-  content.style.display="block";
-
-  let html = `<div class="back-btn" onclick="showMenu()">⬅ Orqaga</div>`;
-
-  branches.forEach(b=>{
-    html += `
-      <div class="card">
-        <h3>${b}</h3>
-        <input ${role !== "admin" ? "disabled" : ""} 
-        value="${getScore(type,b)||""}"
-        onchange="saveScore('${type}','${b}',this.value)">
-      </div>
-    `;
-  });
-
-  content.innerHTML = html;
-}
-
-function saveScore(type, branch, value){
-  if(role !== "admin") return;
-
-  const scores = JSON.parse(localStorage.getItem("scores") || "{}");
-  if(!scores[type]) scores[type] = {};
-  scores[type][branch] = value;
-
-  localStorage.setItem("scores", JSON.stringify(scores));
-}
-
-function getScore(type, branch){
-  const scores = JSON.parse(localStorage.getItem("scores") || "{}");
-  return scores[type]?.[branch];
-}
-
-function openUsers(){
-  if(role !== "admin"){
-    alert("Faqat admin");
-    return;
-  }
-
-  mainMenu.style.display="none";
-  content.style.display="block";
-
-  content.innerHTML = `
-    <div class="back-btn" onclick="showMenu()">⬅ Orqaga</div>
-    <div class="card">
-      <h3>Yangi foydalanuvchi</h3>
-      <input id="newLogin" placeholder="Login">
-      <input id="newPassword" placeholder="Parol">
-      <select id="newRole">
-        <option value="viewer">Viewer</option>
-        <option value="editor">Editor</option>
-        <option value="admin">Admin</option>
-      </select>
-      <button onclick="createUser()">Qo‘shish</button>
-    </div>
-  `;
-}
-
-function createUser(){
-  fetch("/api/login",{
-    method:"PUT",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      login: document.getElementById("newLogin").value,
-      password: document.getElementById("newPassword").value,
-      role: document.getElementById("newRole").value
-    })
-  })
-  .then(res=>res.json())
-  .then(data=>alert(data.message));
-}
+loadMonths();
 
 </script>
-
 </body>
 </html>
