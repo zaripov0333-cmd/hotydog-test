@@ -2,68 +2,79 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hoty Dogy Login</title>
+
 <style>
 body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:url("https://images.unsplash.com/photo-1446776811953-b23d57bd21aa");
-  background-size:cover;
-  font-family:sans-serif;
+background:#FFD43B;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:Segoe UI;
 }
-.card{
-  background:rgba(0,0,0,0.6);
-  backdrop-filter:blur(20px);
-  padding:40px;
-  border-radius:20px;
-  text-align:center;
-  color:white;
+.box{
+background:white;
+padding:30px;
+border-radius:20px;
+width:300px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
 }
-input,button{
-  width:100%;
-  padding:10px;
-  margin:10px 0;
-  border:none;
-  border-radius:10px;
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+border-radius:8px;
+border:1px solid #ccc;
 }
 button{
-  background:#FFD43B;
-  font-weight:bold;
+width:100%;
+padding:10px;
+background:black;
+color:#FFD43B;
+border:none;
+border-radius:8px;
+cursor:pointer;
 }
 </style>
 </head>
+
 <body>
 
-<div class="card">
-  <h2>Hoty Dogy</h2>
-  <input id="login" placeholder="Login">
-  <input id="password" type="password" placeholder="Parol">
-  <button onclick="loginUser()">Kirish</button>
+<div class="box">
+<h2>Hoty Dogy</h2>
+<input id="login" placeholder="Login">
+<input id="password" type="password" placeholder="Parol">
+<button onclick="login()">Kirish</button>
 </div>
 
 <script>
-function loginUser(){
-  fetch("/api/login",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      login: document.getElementById("login").value,
-      password: document.getElementById("password").value
-    })
-  })
-  .then(res=>res.json())
-  .then(data=>{
-    if(data.role){
-      localStorage.setItem("role",data.role);
-     window.location="/dashboard.html";
-    }else{
-      alert("Login xato");
-    }
-  });
+
+if(!localStorage.getItem("users")){
+localStorage.setItem("users", JSON.stringify([
+{login:"aziz", password:"1234", role:"superadmin"}
+]));
 }
+
+function login(){
+
+let login=document.getElementById("login").value;
+let pass=document.getElementById("password").value;
+
+let users=JSON.parse(localStorage.getItem("users"));
+
+let user=users.find(u=>u.login===login && u.password===pass);
+
+if(user){
+localStorage.setItem("role",user.role);
+window.location="dashboard.html";
+}else{
+alert("Login xato");
+}
+
+}
+
 </script>
 
 </body>
