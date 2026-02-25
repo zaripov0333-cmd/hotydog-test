@@ -59,22 +59,28 @@ localStorage.setItem("users", JSON.stringify([
 
 function login(){
 
-let login=document.getElementById("login").value;
-let pass=document.getElementById("password").value;
+const loginInput = document.getElementById("login").value;
+const passwordInput = document.getElementById("password").value;
 
-let users=JSON.parse(localStorage.getItem("users"));
+let users = JSON.parse(localStorage.getItem("users")) || [
+  {login:"admin", password:"1234", role:"superadmin"}
+];
 
-let user=users.find(u=>u.login===login && u.password===pass);
+let user = users.find(u =>
+  u.login === loginInput &&
+  u.password === passwordInput
+);
 
 if(user){
 
 sessionStorage.setItem("roleToken", user.role);
-
 window.location="dashboard.html";
 
 }else{
 
 alert("Login xato");
+
+}
 
 }
 
