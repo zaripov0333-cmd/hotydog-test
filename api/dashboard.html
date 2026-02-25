@@ -11,7 +11,6 @@ body{
   background-size:cover;
   color:white;
 }
-
 .header{
   padding:20px;
   display:flex;
@@ -19,13 +18,11 @@ body{
   background:rgba(0,0,0,0.6);
   backdrop-filter:blur(15px);
 }
-
 .menu{
   display:flex;
   gap:15px;
   padding:20px;
 }
-
 button{
   padding:10px 20px;
   border:none;
@@ -33,7 +30,6 @@ button{
   font-weight:bold;
   cursor:pointer;
 }
-
 .section{
   padding:20px;
   background:rgba(0,0,0,0.6);
@@ -41,11 +37,19 @@ button{
   border-radius:20px;
   backdrop-filter:blur(15px);
 }
+.card{
+  background:rgba(255,255,255,0.1);
+  padding:15px;
+  margin:10px 0;
+  border-radius:10px;
+}
+img{
+  width:150px;
+  border-radius:10px;
+  margin-top:5px;
+}
 input{
-  padding:8px;
-  margin:5px 0;
-  border-radius:8px;
-  border:none;
+  margin-top:5px;
 }
 </style>
 </head>
@@ -84,12 +88,55 @@ function openAudit(){
   branches.forEach(b=>{
     html += `
       <h4>${b}</h4>
-      <input type="file">
+      <input type="file" onchange="saveAudit(event,'${b}')">
+      <div id="list-${b}"></div>
       <hr>
     `;
   });
   html += `</div>`;
   content.innerHTML = html;
+
+  branches.forEach(b=>loadAudit(b));
+}
+
+function saveAudit(event, branch){
+  const file = event.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const data = JSON.parse(localStorage.getItem("auditData") || "{}");
+
+    if(!data[branch]) data[branch] = [];
+
+    data[branch].push({
+      image: e.target.result,
+      date: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("auditData", JSON.stringify(data));
+    loadAudit(branch);
+  };
+  reader.readAsDataURL(file);
+}
+
+function loadAudit(branch){
+  const data = JSON.parse(localStorage.getItem("auditData") || "{}");
+  const container = document.getElementById(`list-${branch}`);
+  if(!container) return;
+
+  container.innerHTML = "";
+
+  if(data[branch]){
+    data[branch].forEach(item=>{
+      container.innerHTML += `
+        <div class="card">
+          <div>📅 ${item.date}</div>
+          <img src="${item.image}">
+        </div>
+      `;
+    });
+  }
 }
 
 function openAuditBall(){
@@ -97,7 +144,9 @@ function openAuditBall(){
   branches.forEach(b=>{
     html += `
       <h4>${b}</h4>
-      <input ${role !== "admin" ? "disabled" : ""} placeholder="Ball kiriting">
+      <input ${role !== "admin" ? "disabled" : ""} 
+             value="${getScore('audit',b) || ""}" 
+             onchange="saveScore('audit','${b}',this.value)">
       <hr>
     `;
   });
@@ -110,12 +159,30 @@ function openSBBall(){
   branches.forEach(b=>{
     html += `
       <h4>${b}</h4>
-      <input ${role !== "admin" ? "disabled" : ""} placeholder="SB Ball kiriting">
+      <input ${role !== "admin" ? "disabled" : ""} 
+             value="${getScore('sb',b) || ""}" 
+             onchange="saveScore('sb','${b}',this.value)">
       <hr>
     `;
   });
   html += `</div>`;
   content.innerHTML = html;
+}
+
+function saveScore(type, branch, value){
+  if(role !== "admin") return;
+
+  const scores = JSON.parse(localStorage.getItem("scores") || "{}");
+
+  if(!scores[type]) scores[type] = {};
+  scores[type][branch] = value;
+
+  localStorage.setItem("scores", JSON.stringify(scores));
+}
+
+function getScore(type, branch){
+  const scores = JSON.parse(localStorage.getItem("scores") || "{}");
+  return scores[type]?.[branch];
 }
 
 </script>
