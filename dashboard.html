@@ -69,9 +69,11 @@ Hoty Dogy System
 
 /* ================= ROLE ================= */
 
-const role=localStorage.getItem("role");
-if(!role) window.location="index.html";
+const role = sessionStorage.getItem("roleToken");
 
+if(!role){
+  window.location="index.html";
+}
 /* ================= FILIALS ================= */
 
 const branches = ["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
@@ -406,12 +408,10 @@ function back(){
 document.getElementById("content").innerHTML="";
 document.getElementById("menu").style.display="grid";
 }
-
 function logout(){
-localStorage.removeItem("role");
-window.location="index.html";
+  sessionStorage.removeItem("roleToken");
+  window.location="index.html";
 }
-
 loadMonths();
 loadMenu();
 
