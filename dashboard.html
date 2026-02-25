@@ -1,1 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Hoty Dogy Admin Panel</title>
+
+<style>
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:url("https://images.unsplash.com/photo-1446776811953-b23d57bd21aa");
+  background-size:cover;
+  color:white;
+}
+
+.header{
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(20px);
+}
+
+.menu{
+  display:flex;
+  gap:15px;
+  padding:20px;
+}
+
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.section{
+  padding:20px;
+  background:rgba(0,0,0,0.6);
+  margin:20px;
+  border-radius:20px;
+  backdrop-filter:blur(20px);
+}
+
+.card{
+  background:rgba(255,255,255,0.1);
+  padding:15px;
+  margin:10px 0;
+  border-radius:10px;
+}
+
+img{
+  width:150px;
+  border-radius:10px;
+  margin-top:5px;
+}
+
+input,select{
+  padding:8px;
+  margin:5px 0;
+  border-radius:8px;
+  border:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h2>Hoty Dogy Admin Panel</h2>
+  <button onclick="logout()">Chiqish</button>
+</div>
+
+<div class="menu">
+  <button onclick="openAudit()">Аудит</button>
+  <button onclick="openAuditBall()">Аудит Балл</button>
+  <button onclick="openSBBall()">СБ Балл</button>
+  <button onclick="openUsers()">Foydalanuvchilar</button>
+</div>
+
+<div id="content"></div>
+
+<script>
+
+const branches = ["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
+const role = localStorage.getItem("role");
+
+if(!role){
+  window.location="index.html";
+}
+
+function logout(){
+  localStorage.clear();
+  window.location="index.html";
+}
+
+//////////////////////
+// АУДИТ
+//////////////////////
+
+function openAudit(){
+  let html = `<div class="section"><h3>Аудит</h3>`;
+  branches.forEach(b=>{
+    html += `
+      <h4>${b}</h4>
+      <input type="file" onchange="saveAudit(event,'${b}')">
+      <div id="list-${b}"></div>
+      <hr>
+    `;
+  });
+  html += `</div>`;
+  content.innerHTML = html;
+
+  branches.forEach(b=>loadAudit(b));
+}
+
+function saveAudit(event, branch){
+  const file = event.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const data = JSON.parse(localStorage.getItem("auditData") || "{}");
+
+    if(!data[branch]) data[branch] = [];
+
+    data[branch].push({
+      image: e.target.result,
+      date: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("auditData", JSON.stringify(data));
+    loadAudit(branch);
+  };
+  reader.readAsDataURL(file);
+}
+
+function loadAudit(branch){
+  const data = JSON.parse(localStorage.getItem("auditData") || "{}");
+  const container = document.getElementById(`list-${branch}`);
+  if(!container) return;
+
+  container.innerHTML = "";
+
+  if(data[branch]){
+    data[branch].forEach(item=>{
+      container.innerHTML += `
+        <div class="card">
+          <div>📅 ${item.date}</div>
+          <img src="${item.image}">
+        </div>
+      `;
+    });
+  }
+}
+
+//////////////////////
+// BALL SAQLASH
+//////////////////////
+
+function openAuditBall(){
+  let html = `<div class="section"><h3>Аудит Балл</h3>`;
+  branches.forEach(b=>{
+    html += `
+      <h4>${b}</h4>
+      <input ${role !== "admin" ? "disabled" : ""} 
+             value="${getScore('audit',b) || ""}" 
+             onchange="saveScore('audit','${b}',this.value)">
+      <hr>
+    `;
+  });
+  html += `</div>`;
+  content.innerHTML = html;
+}
+
+function openSBBall(){
+  let html = `<div class="section"><h3>СБ Балл</h3>`;
+  branches.forEach(b=>{
+    html += `
+      <h4>${b}</h4>
+      <input ${role !== "admin" ? "disabled" : ""} 
+             value="${getScore('sb',b) || ""}" 
+             onchange="saveScore('sb','${b}',this.value)">
+      <hr>
+    `;
+  });
+  html += `</div>`;
+  content.innerHTML = html;
+}
+
+function saveScore(type, branch, value){
+  if(role !== "admin") return;
+
+  const scores = JSON.parse(localStorage.getItem("scores") || "{}");
+
+  if(!scores[type]) scores[type] = {};
+  scores[type][branch] = value;
+
+  localStorage.setItem("scores", JSON.stringify(scores));
+}
+
+function getScore(type, branch){
+  const scores = JSON.parse(localStorage.getItem("scores") || "{}");
+  return scores[type]?.[branch];
+}
+
+//////////////////////
+// FOYDALANUVCHI
+//////////////////////
+
+function openUsers(){
+
+  if(role !== "admin"){
+    content.innerHTML = "<div class='section'><h3>Faqat admin kiradi</h3></div>";
+    return;
+  }
+
+  content.innerHTML = `
+    <div class="section">
+      <h3>Yangi foydalanuvchi qo‘shish</h3>
+      <input id="newLogin" placeholder="Login">
+      <input id="newPassword" placeholder="Parol">
+      <select id="newRole">
+        <option value="viewer">Viewer</option>
+        <option value="editor">Editor</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button onclick="createUser()">Qo‘shish</button>
+    </div>
+  `;
+}
+
+function createUser(){
+  fetch("/api/login",{
+    method:"PUT",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      login: document.getElementById("newLogin").value,
+      password: document.getElementById("newPassword").value,
+      role: document.getElementById("newRole").value
+    })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    alert(data.message);
+  });
+}
+
+</script>
+
+</body>
+</html>
 
