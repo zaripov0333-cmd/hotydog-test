@@ -2,33 +2,26 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hoty Dogy Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hoty Dogy Audit</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI;}
 
 body{
-  font-family:Segoe UI;
-  background:url("/photo_2026-02-23_14-16-36.jpg") no-repeat center center fixed;
-  background-size:cover;
-}
-
-.overlay{
-  background:rgba(255,212,59,0.92);
-  min-height:100vh;
+  background:#FFD43B;
 }
 
 .header{
   background:black;
   color:#FFD43B;
   padding:18px;
+  font-weight:bold;
   display:flex;
   justify-content:space-between;
-  font-weight:bold;
 }
 
-.container{ padding:15px; }
+.container{padding:15px;}
 
 .menu{
   display:grid;
@@ -37,12 +30,12 @@ body{
 }
 
 .menu-btn{
-  background:linear-gradient(135deg,#FFB800,#FFD43B);
-  padding:18px;
+  background:white;
+  padding:20px;
   border-radius:20px;
   text-align:center;
   font-weight:700;
-  box-shadow:0 15px 30px rgba(0,0,0,0.25);
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
   cursor:pointer;
 }
 
@@ -53,140 +46,157 @@ body{
   margin-bottom:15px;
 }
 
+.question{
+  padding:12px;
+  border-bottom:1px solid #eee;
+}
+
+.good{color:green;font-weight:bold;}
+.bad{color:red;font-weight:bold;}
+
 .back{
   background:black;
   color:#FFD43B;
   padding:8px 14px;
-  border-radius:30px;
+  border-radius:20px;
   display:inline-block;
   margin-bottom:10px;
-  cursor:pointer;
-}
-
-select,input{
-  width:100%;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid #ccc;
-  margin:6px 0;
-}
-
-button{
-  padding:10px;
-  border:none;
-  border-radius:10px;
-  background:black;
-  color:#FFD43B;
-  font-weight:bold;
   cursor:pointer;
 }
 </style>
 </head>
 
 <body>
-<div class="overlay">
 
 <div class="header">
-  Hoty Dogy Admin
+  Hoty Dogy Audit
   <div onclick="logout()">Chiqish</div>
 </div>
 
 <div class="container">
 
-<div id="menu" class="menu">
-  <div class="menu-btn" onclick="openAudit()">Аудит</div>
-  <div class="menu-btn" onclick="openAuditBall()">Аудит Балл</div>
-  <div class="menu-btn" onclick="openSBBall()">СБ Балл</div>
-  <div class="menu-btn" id="userBtn" onclick="openUsers()">Foydalanuvchilar</div>
-</div>
+<div id="menu" class="menu"></div>
+<div id="content"></div>
 
-<div id="content" style="display:none;"></div>
-
-</div>
 </div>
 
 <script>
 
-const branches=["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
 const role=localStorage.getItem("role");
-
 if(!role) window.location="/index.html";
 
-// Faqat superadmin user yaratadi
-if(role!=="superadmin"){
-  document.getElementById("userBtn").style.display="none";
-}
+const branches=["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
 
-function showMenu(){
-  content.style.display="none";
-  menu.style.display="grid";
-}
+const questions=[
+{ text:"Bruschatka toza", minus:1 },
+{ text:"XotyDogy yorlig'i toza", minus:1 },
+{ text:"Chiqindi baklari toza", minus:1 },
+{ text:"Zina toza", minus:1 },
+{ text:"Kirish guruhlari soz", minus:1 },
+{ text:"Vitraj oynalar toza", minus:1 },
+{ text:"Dekor mustahkam", minus:2 },
+{ text:"Yoritish vositalari ishlaydi", minus:1 }
+];
 
-function openAudit(){
-  menu.style.display="none";
-  content.style.display="block";
-  let html=`<div class="back" onclick="showMenu()">Orqaga</div>`;
+function loadMenu(){
+  const menu=document.getElementById("menu");
+  menu.innerHTML="";
   branches.forEach(b=>{
-    html+=`
-    <div class="card">
-      <h3>${b}</h3>
-      ${role==="superadmin"
-        ? `<input type="file" onchange="saveAudit(event,'${b}')">`
-        : `<div style="color:gray;">Faqat super admin yuklaydi</div>`
-      }
-      <div id="list-${b}"></div>
+    menu.innerHTML+=`
+    <div class="menu-btn" onclick="openBranch('${b}')">
+      ${b}
     </div>`;
   });
+}
+
+function openBranch(branch){
+  document.getElementById("menu").style.display="none";
+  const content=document.getElementById("content");
+
+  let html=`<div class="back" onclick="back()">Orqaga</div>`;
+  html+=`<div class="card"><h2>${branch}</h2>`;
+  html+=`<button onclick="startAudit('${branch}')">Audit boshlash</button>`;
+  html+=`<div id="auditArea"></div></div>`;
+
   content.innerHTML=html;
 }
 
-function openAuditBall(){ openBall("auditBall"); }
-function openSBBall(){ openBall("sbBall"); }
+function startAudit(branch){
 
-function openBall(type){
-  menu.style.display="none";
-  content.style.display="block";
-  let html=`<div class="back" onclick="showMenu()">Orqaga</div>`;
-  branches.forEach(b=>{
+  if(role!=="superadmin" && role!=="admin"){
+    alert("Siz audit qila olmaysiz");
+    return;
+  }
+
+  let html="";
+  questions.forEach((q,i)=>{
     html+=`
-    <div class="card">
-      <h3>${b}</h3>
-      <input ${role==="superadmin" ? "" : "disabled"}>
+    <div class="question">
+      <b>${q.text}</b><br><br>
+      <button onclick="mark('${branch}',${i},'good')">✔</button>
+      <button onclick="mark('${branch}',${i},'bad')">❌</button>
+      <input type="file" onchange="saveImage(event,'${branch}',${i})">
+      <div id="result-${i}"></div>
     </div>`;
   });
-  content.innerHTML=html;
+
+  html+=`<button onclick="finishAudit('${branch}')">Auditni tugatish</button>`;
+
+  document.getElementById("auditArea").innerHTML=html;
 }
 
-function openUsers(){
-  if(role!=="superadmin") return;
+let currentAudit={};
 
-  menu.style.display="none";
-  content.style.display="block";
-  content.innerHTML=`
-    <div class="back" onclick="showMenu()">Orqaga</div>
-    <div class="card">
-      <h3>Yangi foydalanuvchi</h3>
-      <input id="loginNew" placeholder="Login">
-      <input id="passNew" placeholder="Parol">
-      <select id="roleNew">
-        <option value="admin">Admin (faqat ko‘radi)</option>
-        <option value="viewer">Viewer</option>
-      </select>
-      <button onclick="createUser()">Qo‘shish</button>
-    </div>
-  `;
+function mark(branch,index,type){
+  if(!currentAudit[branch]) currentAudit[branch]={};
+  currentAudit[branch][index]=type;
+  document.getElementById("result-"+index).innerHTML=
+    type==="good"
+    ? "<span class='good'>Yaxshi</span>"
+    : "<span class='bad'>Yomon</span>";
 }
 
-function createUser(){
-  fetch("/api/login",{
-    method:"PUT",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      login:loginNew.value,
-      password:passNew.value,
-      role:roleNew.value
-    })
-  }).then(r=>r.json()).then(d=>alert(d.message));
+function saveImage(e,branch,index){
+  const file=e.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    if(!currentAudit[branch]) currentAudit[branch]={};
+    if(!currentAudit[branch]["images"]) currentAudit[branch]["images"]={};
+    currentAudit[branch]["images"][index]=ev.target.result;
+  }
+  reader.readAsDataURL(file);
+}
+
+function finishAudit(branch){
+
+  let score=100;
+
+  Object.keys(currentAudit[branch]).forEach(k=>{
+    if(currentAudit[branch][k]==="bad"){
+      score-=questions[k].minus;
+    }
+  });
+
+  if(!localStorage.getItem("scores")){
+    localStorage.setItem("scores",JSON.stringify({}));
+  }
+
+  const data=JSON.parse(localStorage.getItem("scores"));
+  if(!data[branch]) data[branch]=[];
+
+  data[branch].push(score);
+
+  localStorage.setItem("scores",JSON.stringify(data));
+
+  alert("Audit yakunlandi. Ball: "+score);
+
+  back();
+}
+
+function back(){
+  document.getElementById("content").innerHTML="";
+  document.getElementById("menu").style.display="grid";
 }
 
 function logout(){
@@ -194,6 +204,9 @@ function logout(){
   window.location="/index.html";
 }
 
+loadMenu();
+
 </script>
+
 </body>
 </html>
