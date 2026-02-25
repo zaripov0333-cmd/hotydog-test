@@ -67,10 +67,15 @@ let users=JSON.parse(localStorage.getItem("users"));
 let user=users.find(u=>u.login===login && u.password===pass);
 
 if(user){
-localStorage.setItem("role",user.role);
+
+sessionStorage.setItem("roleToken", user.role);
+
 window.location="dashboard.html";
+
 }else{
+
 alert("Login xato");
+
 }
 
 }
