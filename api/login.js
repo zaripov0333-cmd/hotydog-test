@@ -1,22 +1,31 @@
 let users = [
-  { login: "azizbek", password: "1234", role: "admin" },
-  { login: "user1", password: "1111", role: "viewer" }
+  { login: "azizbek", password: "1234", role: "admin" }
 ];
 
 export default function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).end();
+
+  if (req.method === "POST") {
+    const { login, password } = req.body;
+
+    const user = users.find(
+      u => u.login === login && u.password === password
+    );
+
+    if (!user) {
+      return res.status(401).json({ message: "Login yoki parol xato" });
+    }
+
+    return res.status(200).json({ role: user.role });
   }
 
-  const { login, password } = req.body;
+  // yangi user qo‘shish (faqat admin uchun)
+  if (req.method === "PUT") {
+    const { login, password, role } = req.body;
 
-  const user = users.find(
-    u => u.login === login && u.password === password
-  );
+    users.push({ login, password, role });
 
-  if (!user) {
-    return res.status(401).json({ message: "Login yoki parol xato" });
+    return res.status(200).json({ message: "Foydalanuvchi qo‘shildi" });
   }
 
-  res.status(200).json({ role: user.role });
+  res.status(405).end();
 }
