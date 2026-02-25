@@ -258,9 +258,16 @@ questions.forEach((q,i)=>{
 html+=`
 <div class="question">
 ${q.text}<br>
+
 <button id="good-${i}" onclick="mark(${i},'good')">✔</button>
 <button id="bad-${i}" onclick="mark(${i},'bad')">❌</button>
+
+<br>
+<input type="file" accept="image/*" onchange="uploadImage(event,${i})">
+
+<div id="preview-${i}"></div>
 <span id="status-${i}"></span>
+
 </div>`;
 });
 
