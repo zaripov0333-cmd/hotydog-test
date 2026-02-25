@@ -3,77 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hoty Dogy Audit</title>
+<title>Hoty Dogy System</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI;}
-
-body{
-  background:#FFD43B;
-}
-
+body{background:#FFD43B;}
 .header{
-  background:black;
-  color:#FFD43B;
-  padding:18px;
-  font-weight:bold;
-  display:flex;
-  justify-content:space-between;
+background:black;color:#FFD43B;padding:15px;
+display:flex;justify-content:space-between;font-weight:bold;
 }
-
 .container{padding:15px;}
-
-.menu{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn{
+background:white;padding:18px;border-radius:18px;
+text-align:center;font-weight:bold;cursor:pointer;
+box-shadow:0 5px 20px rgba(0,0,0,0.2);
 }
-
-.menu-btn{
-  background:white;
-  padding:20px;
-  border-radius:20px;
-  text-align:center;
-  font-weight:700;
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
-  cursor:pointer;
-}
-
 .card{
-  background:white;
-  padding:15px;
-  border-radius:20px;
-  margin-bottom:15px;
+background:white;padding:15px;border-radius:15px;
+margin-bottom:15px;
 }
-
 .question{
-  padding:12px;
-  border-bottom:1px solid #eee;
+padding:10px;border-bottom:1px solid #eee;
 }
-
 .good{color:green;font-weight:bold;}
 .bad{color:red;font-weight:bold;}
-
 .back{
-  background:black;
-  color:#FFD43B;
-  padding:8px 14px;
-  border-radius:20px;
-  display:inline-block;
-  margin-bottom:10px;
-  cursor:pointer;
+background:black;color:#FFD43B;
+padding:8px 12px;border-radius:20px;
+display:inline-block;margin-bottom:10px;cursor:pointer;
 }
+select,input{width:100%;padding:8px;margin:6px 0;border-radius:8px;}
+button{padding:8px 12px;border:none;border-radius:8px;background:black;color:#FFD43B;cursor:pointer;}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  Hoty Dogy Audit
-  <div onclick="logout()">Chiqish</div>
+Hoty Dogy System
+<div onclick="logout()">Chiqish</div>
 </div>
 
 <div class="container">
+
+<select id="monthSelect" onchange="changeMonth()"></select>
 
 <div id="menu" class="menu"></div>
 <div id="content"></div>
@@ -82,131 +56,236 @@ body{
 
 <script>
 
-const role=localStorage.getItem("role");
+const role = localStorage.getItem("role");
 if(!role) window.location="/index.html";
 
-const branches=["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
+const branches = ["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
+const questions = [
 
-const questions=[
-{ text:"Bruschatka toza", minus:1 },
-{ text:"XotyDogy yorlig'i toza", minus:1 },
-{ text:"Chiqindi baklari toza", minus:1 },
-{ text:"Zina toza", minus:1 },
-{ text:"Kirish guruhlari soz", minus:1 },
-{ text:"Vitraj oynalar toza", minus:1 },
-{ text:"Dekor mustahkam", minus:2 },
-{ text:"Yoritish vositalari ishlaydi", minus:1 }
+{ text:"Restoran oldidagi bruschatka butun, mustahkam va toza.", minus:1 },
+{ text:"XotyDogy yorlig'i toza va soz.", minus:1 },
+{ text:"Chiqindi baklari toza va 3/4 dan oshmagan.", minus:1 },
+{ text:"Zina va pandus toza va shikastlanmagan.", minus:1 },
+{ text:"Kirish guruhlari texnik soz.", minus:1 },
+{ text:"Vitrajli derazalar toza.", minus:1 },
+{ text:"Dekor devorlarga mahkam yopishtirilgan.", minus:2 },
+{ text:"Barcha yoritish vositalari ishlaydi.", minus:1 },
+{ text:"Eshik oldidagi gilam toza.", minus:1 },
+{ text:"Stollar toza va salfetnitsa mavjud.", minus:2 },
+{ text:"Zal atmosferasi yaxshi.", minus:1 },
+{ text:"Zov-klient ishlaydi.", minus:1 },
+{ text:"Axlat idishlari toza.", minus:1 },
+{ text:"Devorlar eskirmagan.", minus:1 },
+{ text:"Pollar toza.", minus:1 },
+{ text:"Bolalar o‘rindig‘i toza.", minus:2 },
+{ text:"Banner butun.", minus:1 },
+{ text:"Menu aktual.", minus:1 },
+{ text:"TV Board aktual.", minus:1 },
+{ text:"Flayerlar mavjud.", minus:2 },
+{ text:"Xolodilnik toza va +6°.", minus:2 },
+{ text:"Kassa zonasi standartga mos.", minus:2 },
+{ text:"Buyurtma yig‘ish zonasi standart.", minus:2 },
+{ text:"Buyurtma aniqligi.", minus:2 },
+{ text:"Polda saqlash yo‘q.", minus:1 },
+{ text:"Kassada FIFO.", minus:1 },
+{ text:"Ikkinchi darajali qadoq kassada yo‘q.", minus:1 },
+{ text:"Kassada shaxsiy narsalar yo‘q.", minus:2 },
+{ text:"Stop-list mavjud.", minus:2 },
+{ text:"Podnos va tarelkalar toza.", minus:2 },
+{ text:"TV va boardlar changsiz.", minus:1 },
+{ text:"Postmix apparati toza.", minus:1 },
+{ text:"Chiqindi chelagi toza.", minus:1 },
+{ text:"Oshxona pollari toza.", minus:1 },
+{ text:"Oshxona harorati ≤26°.", minus:2 },
+{ text:"Mahsulotlar FIFO asosida.", minus:1 },
+{ text:"Meklayn toza.", minus:1 },
+{ text:"Meklayn harorati ≤+6°.", minus:1 },
+{ text:"Ikkinchi qadoq oshxonada yo‘q.", minus:1 },
+{ text:"Toster, frityur toza.", minus:2 },
+{ text:"Zagatovka stoli toza.", minus:1 },
+{ text:"Mahsulot saqlash standart.", minus:2 },
+{ text:"Osma javonlar toza.", minus:1 },
+{ text:"Hisobdan chiqarish o‘z vaqtida.", minus:5 },
+{ text:"Sabzavot rakovina toza.", minus:1 },
+{ text:"Tarozilar toza.", minus:2 },
+{ text:"FIFO gastronom idishlar.", minus:2 },
+{ text:"Mahsulot harorati ≤+6°.", minus:2 },
+{ text:"Ombor stelajlari toza.", minus:1 },
+{ text:"Eshiklar soz.", minus:1 },
+{ text:"Tovar qo‘shnichiligi saqlangan.", minus:2 },
+{ text:"Muzlatkich harorati -10°/-18°.", minus:2 },
+{ text:"Polda hech narsa saqlanmaydi.", minus:1 },
+{ text:"Sanitariya qo‘pol buzilishi yo‘q.", minus:2 },
+{ text:"Restoran tayyorligi.", minus:2 },
+{ text:"Xodimlar qo‘l yuvish qoidasi.", minus:5 },
+{ text:"Simlar chiqmagan.", minus:2 },
+{ text:"Xodim shaxsiy fayli mavjud.", minus:2 },
+{ text:"Telefonlar topshirilgan.", minus:2 },
+{ text:"Xodim tashqi ko‘rinishi standart.", minus:2 },
+{ text:"Ognetushitel yashil zona.", minus:1 },
+{ text:"Razdevalka tartibli.", minus:2 },
+{ text:"Restoranda yoriq yo‘q.", minus:1 },
+{ text:"Latta matolar to‘g‘ri saqlanadi.", minus:2 },
+{ text:"Inventar toza.", minus:5 },
+{ text:"Zararkunanda yo‘q.", minus:5 },
+{ text:"Qo‘l yuvish sovuni bor.", minus:5 },
+{ text:"Formasiz yurish yo‘q.", minus:5 },
+{ text:"Mahsulot sifati yaxshi.", minus:5 },
+{ text:"Yaroqlilik muddati o‘tmagan.", minus:20 },
+{ text:"Markirovka ustidan markirovka yo‘q.", minus:20 },
+{ text:"Markirovka mavjud.", minus:20 },
+{ text:"Smena mas'ul shaxs mavjud.", minus:20 }
+
 ];
 
+let currentMonth = getCurrentMonth();
+
+function getCurrentMonth(){
+let d=new Date();
+return d.getFullYear()+"-"+(d.getMonth()+1);
+}
+
+function initMonth(){
+let data = JSON.parse(localStorage.getItem("data")||"{}");
+if(!data[currentMonth]) data[currentMonth]={};
+localStorage.setItem("data",JSON.stringify(data));
+}
+
+function loadMonths(){
+let data = JSON.parse(localStorage.getItem("data")||"{}");
+let select=document.getElementById("monthSelect");
+select.innerHTML="";
+Object.keys(data).forEach(m=>{
+select.innerHTML+=`<option>${m}</option>`;
+});
+select.value=currentMonth;
+}
+
+function changeMonth(){
+currentMonth=document.getElementById("monthSelect").value;
+}
+
 function loadMenu(){
-  const menu=document.getElementById("menu");
-  menu.innerHTML="";
-  branches.forEach(b=>{
-    menu.innerHTML+=`
-    <div class="menu-btn" onclick="openBranch('${b}')">
-      ${b}
-    </div>`;
-  });
+let menu=document.getElementById("menu");
+menu.innerHTML="";
+menu.innerHTML+=`<div class="btn" onclick="openAudit()">Аудит</div>`;
+menu.innerHTML+=`<div class="btn" onclick="openAuditBall()">Аудит Балл</div>`;
+menu.innerHTML+=`<div class="btn" onclick="openSBBall()">СБ Балл</div>`;
+if(role==="superadmin"){
+menu.innerHTML+=`<div class="btn" onclick="openUsers()">Admin Qo‘shish</div>`;
+}
 }
 
-function openBranch(branch){
-  document.getElementById("menu").style.display="none";
-  const content=document.getElementById("content");
-
-  let html=`<div class="back" onclick="back()">Orqaga</div>`;
-  html+=`<div class="card"><h2>${branch}</h2>`;
-  html+=`<button onclick="startAudit('${branch}')">Audit boshlash</button>`;
-  html+=`<div id="auditArea"></div></div>`;
-
-  content.innerHTML=html;
+function back(){
+document.getElementById("content").innerHTML="";
+document.getElementById("menu").style.display="grid";
 }
 
-function startAudit(branch){
-
-  if(role!=="superadmin" && role!=="admin"){
-    alert("Siz audit qila olmaysiz");
-    return;
-  }
-
-  let html="";
-  questions.forEach((q,i)=>{
-    html+=`
-    <div class="question">
-      <b>${q.text}</b><br><br>
-      <button onclick="mark('${branch}',${i},'good')">✔</button>
-      <button onclick="mark('${branch}',${i},'bad')">❌</button>
-      <input type="file" onchange="saveImage(event,'${branch}',${i})">
-      <div id="result-${i}"></div>
-    </div>`;
-  });
-
-  html+=`<button onclick="finishAudit('${branch}')">Auditni tugatish</button>`;
-
-  document.getElementById("auditArea").innerHTML=html;
+function openAudit(){
+document.getElementById("menu").style.display="none";
+let html=`<div class="back" onclick="back()">Orqaga</div>`;
+branches.forEach(b=>{
+html+=`<div class="card"><b>${b}</b><br>
+<button onclick="startAudit('${b}')">Audit boshlash</button></div>`;
+});
+document.getElementById("content").innerHTML=html;
 }
 
 let currentAudit={};
 
-function mark(branch,index,type){
-  if(!currentAudit[branch]) currentAudit[branch]={};
-  currentAudit[branch][index]=type;
-  document.getElementById("result-"+index).innerHTML=
-    type==="good"
-    ? "<span class='good'>Yaxshi</span>"
-    : "<span class='bad'>Yomon</span>";
+function startAudit(branch){
+
+if(role==="viewer"){
+alert("Siz audit qila olmaysiz");
+return;
 }
 
-function saveImage(e,branch,index){
-  const file=e.target.files[0];
-  if(!file) return;
-  const reader=new FileReader();
-  reader.onload=function(ev){
-    if(!currentAudit[branch]) currentAudit[branch]={};
-    if(!currentAudit[branch]["images"]) currentAudit[branch]["images"]={};
-    currentAudit[branch]["images"][index]=ev.target.result;
-  }
-  reader.readAsDataURL(file);
+let html=`<div class="back" onclick="openAudit()">Orqaga</div>`;
+html+=`<div class="card"><b>${branch}</b></div>`;
+
+questions.forEach((q,i)=>{
+html+=`
+<div class="question">
+${q.text}<br>
+<button onclick="mark('${branch}',${i},'good')">✔</button>
+<button onclick="mark('${branch}',${i},'bad')">❌</button>
+${role!=="viewer" ? `<input type="file" onchange="saveImage(event,'${branch}',${i})">` : ""}
+<div id="res-${i}"></div>
+</div>`;
+});
+
+html+=`<button onclick="finishAudit('${branch}')">Tugatish</button>`;
+
+document.getElementById("content").innerHTML=html;
+}
+
+function mark(branch,i,type){
+if(!currentAudit[branch]) currentAudit[branch]={};
+currentAudit[branch][i]=type;
+document.getElementById("res-"+i).innerHTML=
+type==="good"?"<span class='good'>Yaxshi</span>":"<span class='bad'>Yomon</span>";
 }
 
 function finishAudit(branch){
 
-  let score=100;
+let score=100;
 
-  Object.keys(currentAudit[branch]).forEach(k=>{
-    if(currentAudit[branch][k]==="bad"){
-      score-=questions[k].minus;
-    }
-  });
+Object.keys(currentAudit[branch]).forEach(k=>{
+if(currentAudit[branch][k]==="bad"){
+score-=questions[k].minus;
+}
+});
 
-  if(!localStorage.getItem("scores")){
-    localStorage.setItem("scores",JSON.stringify({}));
-  }
+let data=JSON.parse(localStorage.getItem("data"));
+if(!data[currentMonth][branch]) data[currentMonth][branch]=[];
 
-  const data=JSON.parse(localStorage.getItem("scores"));
-  if(!data[branch]) data[branch]=[];
-
-  data[branch].push(score);
-
-  localStorage.setItem("scores",JSON.stringify(data));
-
-  alert("Audit yakunlandi. Ball: "+score);
-
-  back();
+if(data[currentMonth][branch].length>=2){
+alert("Bu oy 2 ta audit to‘lgan");
+return;
 }
 
-function back(){
-  document.getElementById("content").innerHTML="";
-  document.getElementById("menu").style.display="grid";
+data[currentMonth][branch].push(score);
+localStorage.setItem("data",JSON.stringify(data));
+
+alert("Ball saqlandi");
+openAudit();
+}
+
+function openAuditBall(){
+
+document.getElementById("menu").style.display="none";
+let data=JSON.parse(localStorage.getItem("data"));
+let html=`<div class="back" onclick="back()">Orqaga</div>`;
+
+branches.forEach(b=>{
+let arr=data[currentMonth]?.[b]||[];
+let avg=0;
+if(arr.length===2){
+avg=(arr[0]+arr[1])/2;
+}
+html+=`<div class="card">${b} : ${avg}</div>`;
+});
+
+document.getElementById("content").innerHTML=html;
+}
+
+function openSBBall(){
+alert("SB Ball tizimi shu yerga yoziladi");
+}
+
+function openUsers(){
+alert("Admin qo‘shish tizimi login API orqali ishlaydi");
 }
 
 function logout(){
-  localStorage.removeItem("role");
-  window.location="/index.html";
+localStorage.removeItem("role");
+window.location="/index.html";
 }
 
+initMonth();
+loadMonths();
 loadMenu();
 
 </script>
-
 </body>
 </html>
