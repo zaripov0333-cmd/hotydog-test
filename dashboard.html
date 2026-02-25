@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hoty Dogy System</title>
+<title>Hoty Dogy Audit System</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI;}
@@ -24,17 +24,16 @@ background:white;padding:15px;border-radius:15px;
 margin-bottom:15px;
 }
 .question{
-padding:10px;border-bottom:1px solid #eee;
+padding:8px;border-bottom:1px solid #eee;
+font-size:14px;
 }
-.good{color:green;font-weight:bold;}
-.bad{color:red;font-weight:bold;}
 .back{
 background:black;color:#FFD43B;
 padding:8px 12px;border-radius:20px;
 display:inline-block;margin-bottom:10px;cursor:pointer;
 }
 select,input{width:100%;padding:8px;margin:6px 0;border-radius:8px;}
-button{padding:8px 12px;border:none;border-radius:8px;background:black;color:#FFD43B;cursor:pointer;}
+button{padding:6px 10px;border:none;border-radius:8px;background:black;color:#FFD43B;cursor:pointer;margin:3px;}
 </style>
 </head>
 
@@ -56,8 +55,12 @@ Hoty Dogy System
 
 <script>
 
+/* ================= ROLE ================= */
+
 const role = localStorage.getItem("role");
 if(!role) window.location="/index.html";
+
+/* ================= FILIALS ================= */
 
 const branches = ["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
 const questions = [
@@ -138,143 +141,189 @@ const questions = [
 
 ];
 
-let currentMonth = getCurrentMonth();
+/* ================= DATA ================= */
+
+function getData(){
+return JSON.parse(localStorage.getItem("data")||"{}");
+}
+
+function saveData(d){
+localStorage.setItem("data",JSON.stringify(d));
+}
 
 function getCurrentMonth(){
 let d=new Date();
 return d.getFullYear()+"-"+(d.getMonth()+1);
 }
 
-function initMonth(){
-let data = JSON.parse(localStorage.getItem("data")||"{}");
-if(!data[currentMonth]) data[currentMonth]={};
-localStorage.setItem("data",JSON.stringify(data));
-}
+let currentMonth=getCurrentMonth();
+
+/* ================= OY ================= */
 
 function loadMonths(){
-let data = JSON.parse(localStorage.getItem("data")||"{}");
+let data=getData();
 let select=document.getElementById("monthSelect");
 select.innerHTML="";
+
+if(!data[currentMonth]){
+data[currentMonth]={};
+saveData(data);
+}
+
 Object.keys(data).forEach(m=>{
-select.innerHTML+=`<option>${m}</option>`;
+select.innerHTML+=`<option value="${m}">${m}</option>`;
 });
+
 select.value=currentMonth;
+}
+
+function addMonth(){
+if(role!=="superadmin") return;
+let name=prompt("Yangi oy (masalan 2025-3)");
+if(!name) return;
+let data=getData();
+if(!data[name]) data[name]={};
+saveData(data);
+currentMonth=name;
+loadMonths();
 }
 
 function changeMonth(){
 currentMonth=document.getElementById("monthSelect").value;
 }
 
+/* ================= MENU ================= */
+
 function loadMenu(){
 let menu=document.getElementById("menu");
 menu.innerHTML="";
 menu.innerHTML+=`<div class="btn" onclick="openAudit()">Аудит</div>`;
 menu.innerHTML+=`<div class="btn" onclick="openAuditBall()">Аудит Балл</div>`;
-menu.innerHTML+=`<div class="btn" onclick="openSBBall()">СБ Балл</div>`;
+
 if(role==="superadmin"){
 menu.innerHTML+=`<div class="btn" onclick="openUsers()">Admin Qo‘shish</div>`;
+menu.innerHTML+=`<div class="btn" onclick="addMonth()">+ Yangi Oy</div>`;
 }
 }
 
-function back(){
-document.getElementById("content").innerHTML="";
-document.getElementById("menu").style.display="grid";
-}
+/* ================= AUDIT ================= */
 
 function openAudit(){
 document.getElementById("menu").style.display="none";
 let html=`<div class="back" onclick="back()">Orqaga</div>`;
+
 branches.forEach(b=>{
-html+=`<div class="card"><b>${b}</b><br>
-<button onclick="startAudit('${b}')">Audit boshlash</button></div>`;
+html+=`
+<div class="card">
+<b>${b}</b><br>
+<button onclick="startAudit('${b}',0)">Audit 1</button>
+<button onclick="startAudit('${b}',1)">Audit 2</button>
+</div>`;
 });
+
 document.getElementById("content").innerHTML=html;
 }
 
-let currentAudit={};
+let tempMarks={};
+let currentBranch="";
+let currentIndex=0;
 
-function startAudit(branch){
+function startAudit(branch,index){
 
 if(role==="viewer"){
 alert("Siz audit qila olmaysiz");
 return;
 }
 
+currentBranch=branch;
+currentIndex=index;
+tempMarks={};
+
 let html=`<div class="back" onclick="openAudit()">Orqaga</div>`;
-html+=`<div class="card"><b>${branch}</b></div>`;
+html+=`<div class="card"><b>${branch} - Audit ${index+1}</b></div>`;
 
 questions.forEach((q,i)=>{
 html+=`
 <div class="question">
 ${q.text}<br>
-<button onclick="mark('${branch}',${i},'good')">✔</button>
-<button onclick="mark('${branch}',${i},'bad')">❌</button>
-${role!=="viewer" ? `<input type="file" onchange="saveImage(event,'${branch}',${i})">` : ""}
+<button onclick="mark(${i},'good')">✔</button>
+<button onclick="mark(${i},'bad')">❌</button>
 <div id="res-${i}"></div>
 </div>`;
 });
 
-html+=`<button onclick="finishAudit('${branch}')">Tugatish</button>`;
-
+html+=`<button onclick="finishAudit()">Tugatish</button>`;
 document.getElementById("content").innerHTML=html;
 }
 
-function mark(branch,i,type){
-if(!currentAudit[branch]) currentAudit[branch]={};
-currentAudit[branch][i]=type;
-document.getElementById("res-"+i).innerHTML=
-type==="good"?"<span class='good'>Yaxshi</span>":"<span class='bad'>Yomon</span>";
+function mark(i,type){
+tempMarks[i]=type;
+document.getElementById("res-"+i).innerHTML= type==="good"?"✔":"❌";
 }
 
-function finishAudit(branch){
+function finishAudit(){
 
 let score=100;
 
-Object.keys(currentAudit[branch]).forEach(k=>{
-if(currentAudit[branch][k]==="bad"){
+Object.keys(tempMarks).forEach(k=>{
+if(tempMarks[k]==="bad"){
 score-=questions[k].minus;
 }
 });
 
-let data=JSON.parse(localStorage.getItem("data"));
-if(!data[currentMonth][branch]) data[currentMonth][branch]=[];
+let data=getData();
+if(!data[currentMonth][currentBranch])
+data[currentMonth][currentBranch]={audits:[null,null]};
 
-if(data[currentMonth][branch].length>=2){
-alert("Bu oy 2 ta audit to‘lgan");
-return;
-}
+data[currentMonth][currentBranch].audits[currentIndex]={score};
 
-data[currentMonth][branch].push(score);
-localStorage.setItem("data",JSON.stringify(data));
+saveData(data);
 
-alert("Ball saqlandi");
+alert("Ball: "+score);
 openAudit();
 }
 
-function openAuditBall(){
+/* ================= AUDIT BALL ================= */
 
+function openAuditBall(){
 document.getElementById("menu").style.display="none";
-let data=JSON.parse(localStorage.getItem("data"));
+let data=getData();
 let html=`<div class="back" onclick="back()">Orqaga</div>`;
 
 branches.forEach(b=>{
-let arr=data[currentMonth]?.[b]||[];
+let audits=data[currentMonth]?.[b]?.audits||[null,null];
 let avg=0;
-if(arr.length===2){
-avg=(arr[0]+arr[1])/2;
+
+if(audits[0]&&audits[1]){
+avg=(audits[0].score+audits[1].score)/2;
+}else if(audits[0]){
+avg=audits[0].score;
+}else if(audits[1]){
+avg=audits[1].score;
 }
+
 html+=`<div class="card">${b} : ${avg}</div>`;
 });
 
 document.getElementById("content").innerHTML=html;
 }
 
-function openSBBall(){
-alert("SB Ball tizimi shu yerga yoziladi");
-}
+/* ================= USERS ================= */
 
 function openUsers(){
-alert("Admin qo‘shish tizimi login API orqali ishlaydi");
+document.getElementById("menu").style.display="none";
+document.getElementById("content").innerHTML=`
+<div class="back" onclick="back()">Orqaga</div>
+<div class="card">
+Yangi user qo‘shish backend login.js orqali ishlaydi
+</div>`;
+}
+
+/* ================= GENERAL ================= */
+
+function back(){
+document.getElementById("content").innerHTML="";
+document.getElementById("menu").style.display="grid";
 }
 
 function logout(){
@@ -282,10 +331,10 @@ localStorage.removeItem("role");
 window.location="/index.html";
 }
 
-initMonth();
 loadMonths();
 loadMenu();
 
 </script>
+
 </body>
 </html>
