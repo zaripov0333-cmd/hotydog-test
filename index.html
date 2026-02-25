@@ -58,7 +58,7 @@ function loginUser(){
   .then(data=>{
     if(data.role){
       localStorage.setItem("role",data.role);
-      window.location="dashboard.html";
+     window.location="/dashboard.html";
     }else{
       alert("Login xato");
     }
