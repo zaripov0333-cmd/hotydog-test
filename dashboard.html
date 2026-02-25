@@ -2,47 +2,54 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hoty Dogy Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hoty Dogy Panel</title>
 
 <style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
 body{
-  margin:0;
   font-family:Segoe UI;
-  background:#FFD43B;
+  background:url("/photo_2026-02-23_14-16-36.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+.overlay{
+  background:rgba(255,212,59,0.92);
+  min-height:100vh;
 }
 
 .header{
-  background:#FFB800;
-  padding:15px;
+  background:black;
+  color:#FFD43B;
+  padding:18px;
   display:flex;
   justify-content:space-between;
   font-weight:bold;
-  font-size:18px;
 }
 
 .container{ padding:15px; }
 
-.menu-grid{
+.menu{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
 }
 
 .menu-btn{
-  background:white;
-  padding:15px;
-  border-radius:15px;
+  background:linear-gradient(135deg,#FFB800,#FFD43B);
+  padding:18px;
+  border-radius:20px;
   text-align:center;
-  font-weight:bold;
-  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+  font-weight:700;
+  box-shadow:0 15px 30px rgba(0,0,0,0.25);
   cursor:pointer;
 }
 
 .card{
   background:white;
   padding:15px;
-  border-radius:15px;
+  border-radius:20px;
   margin-bottom:15px;
 }
 
@@ -52,213 +59,122 @@ body{
   padding:8px 14px;
   border-radius:30px;
   display:inline-block;
-  cursor:pointer;
   margin-bottom:10px;
+  cursor:pointer;
 }
 
-.month-bar{
-  display:flex;
-  gap:10px;
-  margin-bottom:15px;
-}
-
-input,select{
+select,input{
   width:100%;
   padding:10px;
-  margin:6px 0;
-  border-radius:8px;
+  border-radius:10px;
   border:1px solid #ccc;
+  margin:6px 0;
 }
 
 button{
   padding:10px;
   border:none;
-  border-radius:8px;
-  background:#FFB800;
+  border-radius:10px;
+  background:black;
+  color:#FFD43B;
   font-weight:bold;
   cursor:pointer;
 }
-button:focus{ outline:none; }
 </style>
 </head>
 
 <body>
+<div class="overlay">
 
 <div class="header">
   Hoty Dogy Admin
-  <div onclick="logout()" style="cursor:pointer;">Chiqish</div>
+  <div onclick="logout()">Chiqish</div>
 </div>
 
 <div class="container">
 
-<div class="month-bar">
-  <select id="monthSelect" onchange="changeMonth()"></select>
-  <button id="newMonthBtn" onclick="createMonth()">+ Oy</button>
-</div>
-
-<div id="mainMenu" class="menu-grid">
+<div id="menu" class="menu">
   <div class="menu-btn" onclick="openAudit()">Аудит</div>
   <div class="menu-btn" onclick="openAuditBall()">Аудит Балл</div>
   <div class="menu-btn" onclick="openSBBall()">СБ Балл</div>
-  <div class="menu-btn" onclick="openUsers()">Foydalanuvchilar</div>
+  <div class="menu-btn" id="userBtn" onclick="openUsers()">Foydalanuvchilar</div>
 </div>
 
 <div id="content" style="display:none;"></div>
 
+</div>
 </div>
 
 <script>
 
 const branches=["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
 const role=localStorage.getItem("role");
+
 if(!role) window.location="/index.html";
 
-if(role!=="admin"){
-  document.getElementById("newMonthBtn").style.display="none";
-}
-
-let currentMonth=localStorage.getItem("currentMonth")||getCurrentMonth();
-
-function getCurrentMonth(){
-  const d=new Date();
-  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
-}
-
-function loadMonths(){
-  const select=document.getElementById("monthSelect");
-  const data=JSON.parse(localStorage.getItem("monthlyData")||"{}");
-
-  if(!data[currentMonth]) data[currentMonth]={};
-  localStorage.setItem("monthlyData",JSON.stringify(data));
-
-  select.innerHTML="";
-  Object.keys(data).forEach(m=>{
-    select.innerHTML+=`<option value="${m}">${m}</option>`;
-  });
-  select.value=currentMonth;
-}
-
-function changeMonth(){
-  currentMonth=document.getElementById("monthSelect").value;
-  localStorage.setItem("currentMonth",currentMonth);
-}
-
-function createMonth(){
-  if(role!=="admin") return;
-  const name=prompt("Oy nomi (2026-04):");
-  if(!name) return;
-  const data=JSON.parse(localStorage.getItem("monthlyData")||"{}");
-  if(!data[name]){
-    data[name]={};
-    localStorage.setItem("monthlyData",JSON.stringify(data));
-    loadMonths();
-  }
-}
-
-function getMonthData(){
-  const data=JSON.parse(localStorage.getItem("monthlyData")||"{}");
-  if(!data[currentMonth]) data[currentMonth]={};
-  return data;
-}
-
-function saveMonthData(data){
-  localStorage.setItem("monthlyData",JSON.stringify(data));
+// Faqat superadmin user yaratadi
+if(role!=="superadmin"){
+  document.getElementById("userBtn").style.display="none";
 }
 
 function showMenu(){
   content.style.display="none";
-  mainMenu.style.display="grid";
+  menu.style.display="grid";
 }
 
 function openAudit(){
-  mainMenu.style.display="none";
+  menu.style.display="none";
   content.style.display="block";
   let html=`<div class="back" onclick="showMenu()">Orqaga</div>`;
   branches.forEach(b=>{
     html+=`
     <div class="card">
       <h3>${b}</h3>
-      <input type="file" onchange="saveAudit(event,'${b}')">
+      ${role==="superadmin"
+        ? `<input type="file" onchange="saveAudit(event,'${b}')">`
+        : `<div style="color:gray;">Faqat super admin yuklaydi</div>`
+      }
       <div id="list-${b}"></div>
     </div>`;
   });
   content.innerHTML=html;
-  branches.forEach(loadAudit);
-}
-
-function saveAudit(e,branch){
-  const file=e.target.files[0];
-  if(!file) return;
-  const reader=new FileReader();
-  reader.onload=function(ev){
-    const data=getMonthData();
-    if(!data[currentMonth].audit) data[currentMonth].audit={};
-    if(!data[currentMonth].audit[branch]) data[currentMonth].audit[branch]=[];
-    data[currentMonth].audit[branch].push({
-      img:ev.target.result,
-      date:new Date().toLocaleString()
-    });
-    saveMonthData(data);
-    loadAudit(branch);
-  }
-  reader.readAsDataURL(file);
-}
-
-function loadAudit(branch){
-  const data=getMonthData();
-  const div=document.getElementById("list-"+branch);
-  if(!div) return;
-  div.innerHTML="";
-  const arr=data[currentMonth].audit?.[branch]||[];
-  arr.forEach(i=>{
-    div.innerHTML+=`<div class="card">📅 ${i.date}<br><img src="${i.img}" width="100%"></div>`;
-  });
 }
 
 function openAuditBall(){ openBall("auditBall"); }
 function openSBBall(){ openBall("sbBall"); }
 
 function openBall(type){
-  mainMenu.style.display="none";
+  menu.style.display="none";
   content.style.display="block";
   let html=`<div class="back" onclick="showMenu()">Orqaga</div>`;
   branches.forEach(b=>{
     html+=`
     <div class="card">
       <h3>${b}</h3>
-      <input ${role!=="admin"?"disabled":""}
-      value="${getMonthData()[currentMonth][type]?.[b]||""}"
-      onchange="saveBall('${type}','${b}',this.value)">
+      <input ${role==="superadmin" ? "" : "disabled"}>
     </div>`;
   });
   content.innerHTML=html;
 }
 
-function saveBall(type,branch,val){
-  if(role!=="admin") return;
-  const data=getMonthData();
-  if(!data[currentMonth][type]) data[currentMonth][type]={};
-  data[currentMonth][type][branch]=val;
-  saveMonthData(data);
-}
-
 function openUsers(){
-  if(role!=="admin") return alert("Faqat admin");
-  mainMenu.style.display="none";
+  if(role!=="superadmin") return;
+
+  menu.style.display="none";
   content.style.display="block";
   content.innerHTML=`
-  <div class="back" onclick="showMenu()">Orqaga</div>
-  <div class="card">
-    <h3>Yangi foydalanuvchi</h3>
-    <input id="loginNew" placeholder="Login">
-    <input id="passNew" placeholder="Parol">
-    <select id="roleNew">
-      <option value="viewer">Viewer</option>
-      <option value="editor">Editor</option>
-      <option value="admin">Admin</option>
-    </select>
-    <button onclick="createUser()">Qo‘shish</button>
-  </div>`;
+    <div class="back" onclick="showMenu()">Orqaga</div>
+    <div class="card">
+      <h3>Yangi foydalanuvchi</h3>
+      <input id="loginNew" placeholder="Login">
+      <input id="passNew" placeholder="Parol">
+      <select id="roleNew">
+        <option value="admin">Admin (faqat ko‘radi)</option>
+        <option value="viewer">Viewer</option>
+      </select>
+      <button onclick="createUser()">Qo‘shish</button>
+    </div>
+  `;
 }
 
 function createUser(){
@@ -274,11 +190,9 @@ function createUser(){
 }
 
 function logout(){
-  localStorage.clear();
+  localStorage.removeItem("role");
   window.location="/index.html";
 }
-
-loadMonths();
 
 </script>
 </body>
