@@ -3,75 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hoty Dogy Dashboard</title>
+<title>Hoty Dogy Audit</title>
 
 <style>
-body{
-margin:0;
-font-family:Arial;
-background:#f5c542;
-}
-
-header{
-background:black;
-color:white;
-padding:15px;
-display:flex;
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI;}
+body{background:#FFD43B;}
+.header{
+background:black;color:#FFD43B;
+padding:15px;display:flex;
 justify-content:space-between;
-align-items:center;
+font-weight:bold;
 }
-
-button{
-padding:8px 15px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-margin:5px;
+.container{padding:15px;}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn{
+background:white;padding:15px;
+border-radius:15px;text-align:center;
+font-weight:bold;cursor:pointer;
+box-shadow:0 5px 20px rgba(0,0,0,0.2);
 }
-
-.adminBtn{background:#000;color:white;}
-.viewerBtn{background:#555;color:white;}
-.good{background:green;color:white;}
-.bad{background:red;color:white;}
-
-.container{
-padding:20px;
-}
-
 .card{
-background:white;
-padding:15px;
-margin-bottom:10px;
-border-radius:10px;
+background:white;padding:15px;
+border-radius:15px;margin-bottom:10px;
 }
-
-.hidden{display:none;}
+.question{
+border-bottom:1px solid #eee;
+padding:8px;font-size:13px;
+}
+.back{
+background:black;color:#FFD43B;
+padding:6px 10px;border-radius:15px;
+display:inline-block;margin-bottom:10px;
+cursor:pointer;
+}
+button{
+margin:3px;padding:5px 8px;
+border:none;border-radius:6px;
+background:black;color:#FFD43B;
+cursor:pointer;
+}
+select,input{
+width:100%;padding:8px;
+margin:5px 0;border-radius:8px;
+}
 </style>
 </head>
+
 <body>
 
-<header>
-<div>Hoty Dogy Panel</div>
-<button onclick="logout()">Chiqish</button>
-</header>
+<div class="header">
+Hoty Dogy System
+<div onclick="logout()">Chiqish</div>
+</div>
 
 <div class="container">
 
-<select id="monthSelect"></select>
-<button onclick="addMonth()">Yangi Oy</button>
+<select id="monthSelect" onchange="changeMonth()"></select>
 
-<div id="menu"></div>
+<div id="menu" class="menu"></div>
 <div id="content"></div>
 
 </div>
 
 <script>
 
-/* ROLE */
-const role = sessionStorage.getItem("roleToken");
+/* ================= ROLE ================= */
+
+const role=localStorage.getItem("role");
 if(!role) window.location="index.html";
 
-/* FILIALS */
+/* ================= FILIALS ================= */
+
 const branches = ["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
 const questions = [
 
@@ -150,146 +152,184 @@ const questions = [
 { text:"Smena mas'ul shaxs mavjud.", minus:20 }
 
 ];
-/* DATA */
+
+/* ================= DATA ================= */
+
 function getData(){
-return JSON.parse(localStorage.getItem("auditData")||"{}");
+return JSON.parse(localStorage.getItem("data")||"{}");
 }
 
 function saveData(d){
-localStorage.setItem("auditData",JSON.stringify(d));
+localStorage.setItem("data",JSON.stringify(d));
 }
 
-/* MONTH */
-function addMonth(){
-if(role!=="superadmin") return;
-
-let name=prompt("Oy nomi (2026-03):");
-if(!name) return;
-
-let data=getData();
-if(!data[name]) data[name]={};
-saveData(data);
-loadMonths();
+function getMonth(){
+let d=new Date();
+return d.getFullYear()+"-"+(d.getMonth()+1);
 }
+
+let currentMonth=getMonth();
+
+/* ================= OY ================= */
 
 function loadMonths(){
 let data=getData();
+if(!data[currentMonth]){
+data[currentMonth]={};
+saveData(data);
+}
 let select=document.getElementById("monthSelect");
 select.innerHTML="";
 Object.keys(data).forEach(m=>{
-select.innerHTML+=`<option>${m}</option>`;
+select.innerHTML+=`<option value="${m}">${m}</option>`;
 });
+select.value=currentMonth;
 }
 
+function addMonth(){
+if(role!=="superadmin"){
+alert("Faqat superadmin");
+return;
+}
+let name=prompt("Yangi oy (2025-3)");
+if(!name) return;
+let data=getData();
+if(!data[name]) data[name]={};
+saveData(data);
+currentMonth=name;
 loadMonths();
+}
 
-/* MENU */
+function changeMonth(){
+currentMonth=document.getElementById("monthSelect").value;
+}
+
+/* ================= MENU ================= */
+
 function loadMenu(){
-let menu=document.getElementById("menu");
-menu.innerHTML="";
+let m=document.getElementById("menu");
+m.innerHTML="";
+m.innerHTML+=`<div class="btn" onclick="openAudit()">Аудит</div>`;
+m.innerHTML+=`<div class="btn" onclick="openAuditBall()">Аудит Балл</div>`;
+
+if(role==="superadmin"){
+m.innerHTML+=`<div class="btn" onclick="openUsers()">User Qo‘shish</div>`;
+m.innerHTML+=`<div class="btn" onclick="addMonth()">+ Oy</div>`;
+}
+}
+
+/* ================= AUDIT ================= */
+
+function openAudit(){
+document.getElementById("menu").style.display="none";
+let html=`<div class="back" onclick="back()">Orqaga</div>`;
+
 branches.forEach(b=>{
-menu.innerHTML+=`<button onclick="openBranch('${b}')">${b}</button>`;
+html+=`
+<div class="card">
+<b>${b}</b><br>
+<button onclick="startAudit('${b}',0)">Audit 1</button>
+<button onclick="startAudit('${b}',1)">Audit 2</button>
+</div>`;
 });
-menu.innerHTML+=`<button onclick="showAuditBall()">Audit Ball</button>`;
+
+document.getElementById("content").innerHTML=html;
 }
 
-loadMenu();
-
-/* OPEN BRANCH */
-let currentBranch="";
-let currentAudit=0;
-
-function openBranch(branch){
-currentBranch=branch;
-let c=document.getElementById("content");
-c.innerHTML=`
-<h3>${branch}</h3>
-<button onclick="startAudit(0)">Audit 1</button>
-<button onclick="startAudit(1)">Audit 2</button>
-`;
-}
-
-/* START AUDIT */
 let tempMarks={};
+let currentBranch="";
+let currentIndex=0;
 
-function startAudit(index){
-if(role!=="superadmin") return;
+function startAudit(branch,index){
 
-currentAudit=index;
+if(role==="viewer"){
+alert("Siz faqat ko‘ra olasiz");
+return;
+}
+
+currentBranch=branch;
+currentIndex=index;
 tempMarks={};
 
-let html="<h3>Audit</h3>";
+let html=`<div class="back" onclick="openAudit()">Orqaga</div>`;
+html+=`<div class="card"><b>${branch} - Audit ${index+1}</b></div>`;
 
 questions.forEach((q,i)=>{
 html+=`
-<div class="card">
-<p>${q.text}</p>
-<button class="good" onclick="mark(${i},'good')">✔</button>
-<button class="bad" onclick="mark(${i},'bad')">✖</button>
-<input type="file" onchange="uploadImage(event,${i})">
-</div>
-`;
+<div class="question">
+${q.text}<br>
+<button id="good-${i}" onclick="mark(${i},'good')">✔</button>
+<button id="bad-${i}" onclick="mark(${i},'bad')">❌</button>
+<span id="status-${i}"></span>
+</div>`;
 });
 
-html+=`<button onclick="finishAudit()">Yakunlash</button>`;
+html+=`<button onclick="finishAudit()">Tugatish</button>`;
 document.getElementById("content").innerHTML=html;
 }
 
 function mark(i,type){
+
 tempMarks[i]=type;
+
+let goodBtn=document.getElementById("good-"+i);
+let badBtn=document.getElementById("bad-"+i);
+let status=document.getElementById("status-"+i);
+
+if(type==="good"){
+goodBtn.style.background="green";
+badBtn.style.background="black";
+status.innerHTML=" ✔";
+status.style.color="green";
+}
+else{
+badBtn.style.background="red";
+goodBtn.style.background="black";
+status.innerHTML=" ❌";
+status.style.color="red";
 }
 
-function uploadImage(e,i){
-let reader=new FileReader();
-reader.onload=function(){
-tempMarks["img_"+i]=reader.result;
-}
-reader.readAsDataURL(e.target.files[0]);
 }
 
-/* FINISH */
 function finishAudit(){
 
 let score=100;
 
 Object.keys(tempMarks).forEach(k=>{
-if(!k.includes("img_")){
 if(tempMarks[k]==="bad"){
 score-=questions[k].minus;
 }
-}
 });
 
-let month=document.getElementById("monthSelect").value;
 let data=getData();
 
-if(!data[month][currentBranch]){
-data[month][currentBranch]={audits:[null,null]};
-}
+if(!data[currentMonth][currentBranch])
+data[currentMonth][currentBranch]={audits:[null,null]};
 
-data[month][currentBranch].audits[currentAudit]=score;
+data[currentMonth][currentBranch].audits[currentIndex]={score};
 
 saveData(data);
 
-alert("Saqlandi");
-openBranch(currentBranch);
+alert("Ball: "+score);
+openAudit();
 }
 
-/* AUDIT BALL */
-function showAuditBall(){
-let month=document.getElementById("monthSelect").value;
+/* ================= AUDIT BALL ================= */
+
+function openAuditBall(){
+document.getElementById("menu").style.display="none";
 let data=getData();
-let html="<h3>Audit Ball</h3>";
+let html=`<div class="back" onclick="back()">Orqaga</div>`;
 
 branches.forEach(b=>{
+let audits=data[currentMonth]?.[b]?.audits||[null,null];
 let avg=0;
-if(data[month] && data[month][b]){
-let a=data[month][b].audits;
-let sum=0,count=0;
-a.forEach(x=>{
-if(x!=null){sum+=x;count++;}
-});
-if(count>0) avg=(sum/count).toFixed(1);
+if(audits[0]&&audits[1]){
+avg=(audits[0].score+audits[1].score)/2;
+}else if(audits[0]){
+avg=audits[0].score;
+}else if(audits[1]){
+avg=audits[1].score;
 }
 html+=`<div class="card">${b} : ${avg}</div>`;
 });
@@ -297,12 +337,55 @@ html+=`<div class="card">${b} : ${avg}</div>`;
 document.getElementById("content").innerHTML=html;
 }
 
-/* LOGOUT */
+/* ================= USERS ================= */
+
+function openUsers(){
+if(role!=="superadmin") return;
+document.getElementById("menu").style.display="none";
+document.getElementById("content").innerHTML=`
+<div class="back" onclick="back()">Orqaga</div>
+<div class="card">
+<input id="newLogin" placeholder="Login">
+<input id="newPass" placeholder="Parol">
+<select id="newRole">
+<option value="admin">Admin</option>
+<option value="viewer">Viewer</option>
+</select>
+<button onclick="addUser()">Qo‘shish</button>
+</div>`;
+}
+
+function addUser(){
+let login=document.getElementById("newLogin").value;
+let pass=document.getElementById("newPass").value;
+let roleSelect=document.getElementById("newRole").value;
+
+let users=JSON.parse(localStorage.getItem("users"));
+
+users.push({login,password:pass,role:roleSelect});
+localStorage.setItem("users",JSON.stringify(users));
+
+alert("Qo‘shildi");
+back();
+}
+
+/* ================= GENERAL ================= */
+
+function back(){
+document.getElementById("content").innerHTML="";
+document.getElementById("menu").style.display="grid";
+}
+
 function logout(){
-sessionStorage.removeItem("roleToken");
+localStorage.removeItem("role");
 window.location="index.html";
 }
 
+loadMonths();
+loadMenu();
+
 </script>
+
 </body>
 </html>
+
