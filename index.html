@@ -1,162 +1,70 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hoty Dogy - Kurier</title>
-
+<title>Hoty Dogy Login</title>
 <style>
 body{
   margin:0;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg,#FFD43B,#FFC300);
+  height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  height:100vh;
+  background:url("https://images.unsplash.com/photo-1446776811953-b23d57bd21aa");
+  background-size:cover;
+  font-family:sans-serif;
 }
-
-.container{
-  width:95%;
-  max-width:420px;
-}
-
-.logo{
-  text-align:center;
-  font-size:34px;
-  font-weight:900;
-  color:#FF5A00;
-  margin-bottom:10px;
-}
-
-.image{
-  text-align:center;
-}
-
-.image img{
-  width:220px;
-  margin-bottom:15px;
-}
-
 .card{
-  background:#fff;
-  padding:25px;
-  border-radius:25px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.2);
-  transition:0.4s;
-}
-
-.question{
-  display:none;
-  animation:fade 0.4s ease-in-out;
-}
-
-.active{
-  display:block;
-}
-
-select,input{
-  width:100%;
-  padding:14px;
-  margin-top:15px;
-  border-radius:12px;
-  border:1px solid #ddd;
-  font-size:15px;
-}
-
-button{
-  width:100%;
-  padding:14px;
-  margin-top:20px;
-  background:#FF5A00;
-  color:white;
-  border:none;
-  border-radius:15px;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-button:hover{
-  background:#e63e00;
-}
-
-.message{
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(20px);
+  padding:40px;
+  border-radius:20px;
   text-align:center;
-  margin-top:15px;
-  font-weight:bold;
+  color:white;
 }
-
-@keyframes fade{
-  from{opacity:0;transform:translateY(10px);}
-  to{opacity:1;transform:translateY(0);}
+input,button{
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  border:none;
+  border-radius:10px;
+}
+button{
+  background:#FFD43B;
+  font-weight:bold;
 }
 </style>
 </head>
-
 <body>
 
-<div class="container">
-
-<div class="logo">Hoty Dogy</div>
-
-<div class="image">
-  <img src="photo_2026-02-23_14-16-36.jpg">
-</div>
-
 <div class="card">
-
-<!-- 1 Savol -->
-<div class="question active" id="q1">
-  <h3>Yashash manzilingiz?</h3>
-  <select id="district">
-    <option value="">Tanlang</option>
-    <option>Mirzo Ulugbek</option>
-    <option>Yashnabod</option>
-    <option>Chilonzor</option>
-    <option>Mirobod</option>
-    <option>Uchtepa</option>
-  </select>
-  <button onclick="next(1)">Keyingi</button>
+  <h2>Hoty Dogy</h2>
+  <input id="login" placeholder="Login">
+  <input id="password" type="password" placeholder="Parol">
+  <button onclick="loginUser()">Kirish</button>
 </div>
 
-<!-- 2 Savol -->
-<div class="question" id="q2">
-  <h3>Transportingiz bormi?</h3>
-  <select id="transport">
-    <option value="">Tanlang</option>
-    <option value="HA">HA</option>
-    <option value="YOQ">YO'Q</option>
-  </select>
-  <button onclick="next(2)">Keyingi</button>
-</div>
+<script>
+function loginUser(){
+  fetch("/api/login",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      login: document.getElementById("login").value,
+      password: document.getElementById("password").value
+    })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.role){
+      localStorage.setItem("role",data.role);
+      window.location="dashboard.html";
+    }else{
+      alert("Login xato");
+    }
+  });
+}
+</script>
 
-<!-- 3 Savol -->
-<div class="question" id="q3">
-  <h3>250.000 - 300.000 to'g'ri keladimi?</h3>
-  <select id="salary">
-    <option value="">Tanlang</option>
-    <option value="HA">HA</option>
-    <option value="YOQ">YO'Q</option>
-  </select>
-  <button onclick="next(3)">Keyingi</button>
-</div>
-
-<!-- Ma'lumot -->
-<div class="question" id="q4">
-  <h3>Ma'lumotlaringiz</h3>
-  <input type="text" id="name" placeholder="Ismingiz">
-  <input type="number" id="age" placeholder="Yoshingiz">
-  <input type="tel" id="phone" placeholder="Telefon raqam">
-  <button onclick="sendData()">Yuborish</button>
-</div>
-
-<div class="message" id="msg"></div>
-
-</div>
-</div>
-
-<script src="submit.js"></script>
 </body>
 </html>
