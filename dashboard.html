@@ -66,69 +66,32 @@ Hoty Dogy System
 </div>
 
 <script>
-/* ===== GLOBAL ===== */
-let tempMarks = {};
-let currentBranch = "";
-let currentAudit = 0;
+  function uploadImage(event,i){
 
-/* ===== START AUDIT ===== */
-function startAudit(branch, auditIndex){
-
-if(role !== "superadmin"){
-alert("Siz audit o‘zgartira olmaysiz");
+if(role==="viewer"){
+alert("Siz rasm qo‘sha olmaysiz");
 return;
 }
 
-currentBranch = branch;
-currentAudit = auditIndex;
-tempMarks = {};
-
-let html = `<h3>${branch} - Audit ${auditIndex+1}</h3>`;
-
-questions.forEach((q,i)=>{
-
-html += `
-<div class="card">
-<p>${q.text}</p>
-
-<button onclick="mark(${i},'good')">✔</button>
-<button onclick="mark(${i},'bad')">✖</button>
-
-<br>
-<input type="file" accept="image/*" 
-onchange="uploadImage(event, ${i})">
-
-</div>
-`;
-
-});
-
-html += `<button onclick="finishAudit()">Yakunlash</button>`;
-
-document.getElementById("content").innerHTML = html;
-
-}
-
-/* ===== MARK ===== */
-function mark(i,type){
-tempMarks[i] = type;
-}
-
-/* ===== UPLOAD IMAGE ===== */
-function uploadImage(event, i){
-
-let file = event.target.files[0];
+let file=event.target.files[0];
 if(!file) return;
 
-let reader = new FileReader();
+let reader=new FileReader();
 
-reader.onload = function(e){
-tempMarks["img_"+i] = e.target.result;
+reader.onload=function(e){
+
+if(!tempMarks["images"]) tempMarks["images"]={};
+
+tempMarks["images"][i]=e.target.result;
+
+document.getElementById("preview-"+i).innerHTML=
+`<img src="${e.target.result}" width="100" style="margin-top:5px;border-radius:8px;">`;
+
 };
 
 reader.readAsDataURL(file);
-
 }
+
 /* ================= ROLE ================= */
 
 const role=localStorage.getItem("role");
@@ -214,7 +177,6 @@ const questions = [
 { text:"Smena mas'ul shaxs mavjud.", minus:20 }
 
 ];
-
 /* ================= DATA ================= */
 
 function getData(){
@@ -332,7 +294,7 @@ ${q.text}<br>
 
 </div>`;
 });
-
+  
 html+=`<button onclick="finishAudit()">Tugatish</button>`;
 document.getElementById("content").innerHTML=html;
 }
@@ -457,4 +419,3 @@ loadMenu();
 
 </body>
 </html>
-
