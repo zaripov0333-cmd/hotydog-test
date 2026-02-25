@@ -2,16 +2,75 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Dashboard</title>
+<title>Hoty Dogy Panel</title>
+<style>
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:url("https://images.unsplash.com/photo-1446776811953-b23d57bd21aa");
+  background-size:cover;
+  color:white;
+}
+
+.header{
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(15px);
+}
+
+.menu{
+  display:flex;
+  gap:15px;
+  padding:20px;
+}
+
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.section{
+  padding:20px;
+  background:rgba(0,0,0,0.6);
+  margin:20px;
+  border-radius:20px;
+  backdrop-filter:blur(15px);
+}
+input{
+  padding:8px;
+  margin:5px 0;
+  border-radius:8px;
+  border:none;
+}
+</style>
 </head>
-<body style="background:black;color:white;font-family:sans-serif">
 
-<h1>Hoty Dogy Admin Panel</h1>
+<body>
 
-<button onclick="logout()">Chiqish</button>
+<div class="header">
+  <h2>Hoty Dogy Admin Panel</h2>
+  <button onclick="logout()">Chiqish</button>
+</div>
+
+<div class="menu">
+  <button onclick="openAudit()">Аудит</button>
+  <button onclick="openAuditBall()">Аудит Балл</button>
+  <button onclick="openSBBall()">СБ Балл</button>
+</div>
+
+<div id="content"></div>
 
 <script>
-if(!localStorage.getItem("role")){
+
+const branches = ["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
+const role = localStorage.getItem("role");
+
+if(!role){
   window.location="index.html";
 }
 
@@ -19,6 +78,46 @@ function logout(){
   localStorage.clear();
   window.location="index.html";
 }
+
+function openAudit(){
+  let html = `<div class="section"><h3>Аудит</h3>`;
+  branches.forEach(b=>{
+    html += `
+      <h4>${b}</h4>
+      <input type="file">
+      <hr>
+    `;
+  });
+  html += `</div>`;
+  content.innerHTML = html;
+}
+
+function openAuditBall(){
+  let html = `<div class="section"><h3>Аудит Балл</h3>`;
+  branches.forEach(b=>{
+    html += `
+      <h4>${b}</h4>
+      <input ${role !== "admin" ? "disabled" : ""} placeholder="Ball kiriting">
+      <hr>
+    `;
+  });
+  html += `</div>`;
+  content.innerHTML = html;
+}
+
+function openSBBall(){
+  let html = `<div class="section"><h3>СБ Балл</h3>`;
+  branches.forEach(b=>{
+    html += `
+      <h4>${b}</h4>
+      <input ${role !== "admin" ? "disabled" : ""} placeholder="SB Ball kiriting">
+      <hr>
+    `;
+  });
+  html += `</div>`;
+  content.innerHTML = html;
+}
+
 </script>
 
 </body>
