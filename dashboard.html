@@ -7,70 +7,126 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI;}
-body{background:#FFD43B;}
+body{background:linear-gradient(135deg,#FFD43B,#FFC107);}
 .header{
-background:black;color:#FFD43B;
+background:#000;color:#FFD43B;
 padding:15px;display:flex;
 justify-content:space-between;
-font-weight:bold;
+font-weight:bold;font-size:18px;
 }
 .container{padding:15px;}
-.menu{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;}
 .btn{
-background:white;padding:15px;
-border-radius:15px;text-align:center;
+background:#fff;padding:18px;
+border-radius:18px;text-align:center;
 font-weight:bold;cursor:pointer;
-box-shadow:0 5px 20px rgba(0,0,0,0.2);
+box-shadow:0 8px 25px rgba(0,0,0,0.25);
+transition:0.2s;
 }
+.btn:hover{transform:scale(1.03);}
 .card{
-background:white;padding:15px;
-border-radius:15px;margin-bottom:10px;
+background:#fff;padding:15px;
+border-radius:18px;margin-bottom:12px;
+box-shadow:0 6px 20px rgba(0,0,0,0.15);
 }
 .back{
-background:black;color:#FFD43B;
-padding:6px 10px;border-radius:15px;
+background:#000;color:#FFD43B;
+padding:6px 12px;border-radius:20px;
 display:inline-block;margin-bottom:10px;
 cursor:pointer;
 }
 button{
-margin:3px;padding:6px 10px;
-border:none;border-radius:6px;
-background:black;color:#FFD43B;
+margin:4px;padding:6px 12px;
+border:none;border-radius:8px;
+background:#000;color:#FFD43B;
 cursor:pointer;
 }
 select,input{
 width:100%;padding:8px;
-margin:5px 0;border-radius:8px;
+margin:6px 0;border-radius:8px;
 }
-img{margin-top:5px;border-radius:8px;}
+img{
+width:100%;
+max-height:280px;
+object-fit:cover;
+border-radius:12px;
+margin-top:8px;
+cursor:pointer;
+}
 .good{background:green!important;}
 .bad{background:red!important;}
+.locked{opacity:0.6;}
+.scoreGreen{color:green;font-weight:bold;}
+.scoreRed{color:red;font-weight:bold;}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-Hoty Dogy Audit System
+Hoty Dogy Audit
 <div onclick="logout()">Chiqish</div>
 </div>
 
 <div class="container">
-
 <select id="monthSelect" onchange="changeMonth()"></select>
-
 <div id="menu" class="menu"></div>
 <div id="content"></div>
-
 </div>
 
 <script>
 
-/* ROLE */
-const role=localStorage.getItem("role");
-if(!role) window.location="index.html";
+/* ================= SECURITY ROLE ================= */
 
-/* FILIALS */
+function hash(str){
+  let h=0;
+  for(let i=0;i<str.length;i++){
+    h = Math.imul(31,h)+str.charCodeAt(i)|0;
+  }
+  return h.toString();
+}
+
+function getRole(){
+  try{
+    const raw=localStorage.getItem("auth");
+    if(!raw)return null;
+    const data=JSON.parse(atob(raw));
+    if(data.key!=="HD_secure_2025")return null;
+    return data.role;
+  }catch{return null;}
+}
+
+const role=getRole();
+if(!role){
+  localStorage.clear();
+  window.location="index.html";
+}
+
+/* ================= STORAGE SIGNATURE ================= */
+
+function saveData(data){
+  const payload=JSON.stringify(data);
+  const signature=hash(payload+"HotySecretKey");
+  localStorage.setItem("auditSecure", btoa(JSON.stringify({payload,signature})));
+}
+
+function getData(){
+  const raw=localStorage.getItem("auditSecure");
+  if(!raw)return {};
+  try{
+    const obj=JSON.parse(atob(raw));
+    if(hash(obj.payload+"HotySecretKey")!==obj.signature){
+      alert("Ma'lumot buzilgan!");
+      localStorage.clear();
+      location.reload();
+      return {};
+    }
+    return JSON.parse(obj.payload);
+  }catch{return {};}
+}
+
+/* ================= BASIC DATA ================= */
+
 const branches = ["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
 const questions = [
 
@@ -120,7 +176,7 @@ const questions = [
 { text:"Hisobdan chiqarish o‘z vaqtida.", minus:5 },
 { text:"Sabzavot rakovina toza.", minus:1 },
 { text:"Tarozilar toza.", minus:2 },
-{ text:"Gastronom idishlar toza .", minus:2 },
+{ text:"FIFO gastronom idishlar.", minus:2 },
 { text:"Mahsulot harorati ≤+6°.", minus:2 },
 { text:"Ombor stelajlari toza.", minus:1 },
 { text:"Eshiklar soz.", minus:1 },
@@ -150,16 +206,12 @@ const questions = [
 
 ];
 
-/* STORAGE */
-function getData(){ return JSON.parse(localStorage.getItem("auditData")||"{}"); }
-function saveData(d){ localStorage.setItem("auditData",JSON.stringify(d)); }
+/* ================= MONTH ================= */
 
-/* MONTH */
 function getMonth(){
 let d=new Date();
 return d.getFullYear()+"-"+(d.getMonth()+1);
 }
-
 let currentMonth=getMonth();
 
 function loadMonths(){
@@ -181,28 +233,28 @@ currentMonth=document.getElementById("monthSelect").value;
 }
 
 function addMonth(){
-if(role!=="superadmin") return;
+if(role!=="superadmin")return;
 let name=prompt("Yangi oy (2025-4)");
-if(!name) return;
+if(!name)return;
 let data=getData();
-if(!data[name]) data[name]={};
+if(!data[name])data[name]={};
 saveData(data);
 currentMonth=name;
 loadMonths();
 }
 
-/* MENU */
+/* ================= MENU ================= */
+
 function loadMenu(){
 let m=document.getElementById("menu");
 m.innerHTML="";
 m.innerHTML+=`<div class="btn" onclick="openAudit()">Аудит</div>`;
 m.innerHTML+=`<div class="btn" onclick="openAuditBall()">Аудит Балл</div>`;
-if(role==="superadmin"){
-m.innerHTML+=`<div class="btn" onclick="addMonth()">+ Oy</div>`;
-}
+if(role==="superadmin")m.innerHTML+=`<div class="btn" onclick="addMonth()">+ Oy</div>`;
 }
 
-/* AUDIT */
+/* ================= AUDIT ================= */
+
 let currentBranch="";
 let currentIndex=0;
 let tempMarks={};
@@ -215,14 +267,14 @@ branches.forEach(b=>{
 html+=`
 <div class="card">
 <b>${b}</b><br>
-<button onclick="startAudit('${b}',0)">Audit 1</button>
-<button onclick="startAudit('${b}',1)">Audit 2</button>
+<button onclick="openAuditForm('${b}',0)">Audit 1</button>
+<button onclick="openAuditForm('${b}',1)">Audit 2</button>
 </div>`;
 });
 document.getElementById("content").innerHTML=html;
 }
 
-function startAudit(branch,index){
+function openAuditForm(branch,index){
 
 currentBranch=branch;
 currentIndex=index;
@@ -234,65 +286,37 @@ let html=`<div class="back" onclick="openAudit()">Orqaga</div>`;
 html+=`<div class="card"><b>${branch} - Audit ${index+1}</b></div>`;
 
 questions.forEach((q,i)=>{
-
 let savedMark=existing?.marks?.[i];
 let savedImage=existing?.images?.[i];
 
-html+=`<div class="card"><p>${q.text}</p>`;
+html+=`<div class="card">`;
+html+=`<p>${q.text}</p>`;
 
-if(existing){  
-/* AGAR OLDIN QILINGAN BO'LSA — FAQAT KO'RSATADI */
+if(existing){
 if(savedMark){
-html+=`<div style="font-weight:bold;color:${savedMark==="good"?"green":"red"}">
+html+=`<div class="${savedMark==="good"?"scoreGreen":"scoreRed"}">
 ${savedMark==="good"?"✔ Yaxshi":"❌ Yomon"}
 </div>`;
 }
-
 if(savedImage){
-html+=`
-<img src="${savedImage}" style="width:100%;max-height:250px;object-fit:cover;cursor:pointer"
-onclick="openImage('${savedImage}')">
-`;
+html+=`<img src="${savedImage}" onclick="openImage('${savedImage}')">`;
 }
-
 }else{
-
-/* AGAR HALI QILINMAGAN BO'LSA */
 if(role!=="viewer"){
 html+=`
-<button onclick="mark(${i},'good')">✔</button>
-<button onclick="mark(${i},'bad')">✖</button>
+<button onclick="mark(${i},'good')" id="g${i}">✔</button>
+<button onclick="mark(${i},'bad')" id="b${i}">✖</button>
 <input type="file" accept="image/*" onchange="uploadImage(event,${i})">
 `;
+}else{
+html+=`<div class="locked">Audit hali qilinmagan</div>`;
 }
-
 }
 
 html+=`</div>`;
 });
 
-/* Tugatish faqat yangi auditda chiqadi */
 if(!existing && role!=="viewer"){
-html+=`<button onclick="finishAudit()">Tugatish</button>`;
-}
-
-document.getElementById("content").innerHTML=html;
-}
-
-if(savedMark){
-html+=`<div style="color:${savedMark==="good"?"green":"red"}">
-${savedMark==="good"?"✔ Yaxshi":"❌ Yomon"}
-</div>`;
-}
-
-if(savedImage){
-html+=`<img src="${savedImage}" width="100%">`;
-}
-
-html+=`</div>`;
-});
-
-if(role!=="viewer"){
 html+=`<button onclick="finishAudit()">Tugatish</button>`;
 }
 
@@ -312,7 +336,7 @@ document.getElementById("g"+i).classList.remove("good");
 
 function uploadImage(event,index){
 let file=event.target.files[0];
-if(!file) return;
+if(!file)return;
 let reader=new FileReader();
 reader.onload=function(e){
 tempImages[index]=e.target.result;
@@ -321,61 +345,66 @@ reader.readAsDataURL(file);
 }
 
 function finishAudit(){
-
+if(role==="viewer")return;
 let score=100;
-questions.forEach((q,i)=>{
-if(tempMarks[i]==="bad") score-=q.minus;
-});
-
+questions.forEach((q,i)=>{if(tempMarks[i]==="bad")score-=q.minus;});
 let data=getData();
-if(!data[currentMonth]) data[currentMonth]={};
+if(!data[currentMonth])data[currentMonth]={};
 if(!data[currentMonth][currentBranch])
 data[currentMonth][currentBranch]={audits:[null,null]};
-
 data[currentMonth][currentBranch].audits[currentIndex]={
 score:score,
 marks:tempMarks,
-images:tempImages
+images:tempImages,
+date:new Date().toLocaleString()
 };
-
 saveData(data);
-
 alert("Audit saqlandi ✅ Ball: "+score);
 openAudit();
 }
 
-/* AUDIT BALL */
+/* ================= IMAGE VIEW ================= */
+
+function openImage(src){
+let w=window.open("");
+w.document.write("<img src='"+src+"' style='width:100%'>");
+}
+
+/* ================= BALL ================= */
+
 function openAuditBall(){
 document.getElementById("menu").style.display="none";
 let data=getData();
 let html=`<div class="back" onclick="back()">Orqaga</div>`;
-
 branches.forEach(b=>{
 let audits=data[currentMonth]?.[b]?.audits||[null,null];
 let avg=0;
-if(audits[0]&&audits[1])
-avg=(audits[0].score+audits[1].score)/2;
-else if(audits[0])
-avg=audits[0].score;
-else if(audits[1])
-avg=audits[1].score;
-
+if(audits[0]&&audits[1])avg=Math.round((audits[0].score+audits[1].score)/2);
+else if(audits[0])avg=audits[0].score;
+else if(audits[1])avg=audits[1].score;
 html+=`<div class="card"><b>${b}</b> : ${avg}</div>`;
 });
-
 document.getElementById("content").innerHTML=html;
 }
 
-/* GENERAL */
+/* ================= GENERAL ================= */
+
 function back(){
 document.getElementById("content").innerHTML="";
 document.getElementById("menu").style.display="grid";
 }
 
 function logout(){
-localStorage.removeItem("role");
+localStorage.clear();
 window.location="index.html";
 }
+
+/* Devtools block (oddiy user uchun) */
+document.addEventListener("contextmenu",e=>e.preventDefault());
+document.onkeydown=function(e){
+if(e.keyCode==123)return false;
+if(e.ctrlKey&&e.shiftKey&&e.keyCode==73)return false;
+};
 
 loadMonths();
 loadMenu();
