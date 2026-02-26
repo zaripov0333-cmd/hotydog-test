@@ -230,9 +230,6 @@ currentIndex=index;
 let data=getData();
 let existing=data[currentMonth]?.[branch]?.audits?.[index];
 
-tempMarks={};
-tempImages={};
-
 let html=`<div class="back" onclick="openAudit()">Orqaga</div>`;
 html+=`<div class="card"><b>${branch} - Audit ${index+1}</b></div>`;
 
@@ -243,12 +240,43 @@ let savedImage=existing?.images?.[i];
 
 html+=`<div class="card"><p>${q.text}</p>`;
 
+if(existing){  
+/* AGAR OLDIN QILINGAN BO'LSA — FAQAT KO'RSATADI */
+if(savedMark){
+html+=`<div style="font-weight:bold;color:${savedMark==="good"?"green":"red"}">
+${savedMark==="good"?"✔ Yaxshi":"❌ Yomon"}
+</div>`;
+}
+
+if(savedImage){
+html+=`
+<img src="${savedImage}" style="width:100%;max-height:250px;object-fit:cover;cursor:pointer"
+onclick="openImage('${savedImage}')">
+`;
+}
+
+}else{
+
+/* AGAR HALI QILINMAGAN BO'LSA */
 if(role!=="viewer"){
 html+=`
-<button id="g${i}" onclick="mark(${i},'good')">✔</button>
-<button id="b${i}" onclick="mark(${i},'bad')">✖</button>
+<button onclick="mark(${i},'good')">✔</button>
+<button onclick="mark(${i},'bad')">✖</button>
 <input type="file" accept="image/*" onchange="uploadImage(event,${i})">
 `;
+}
+
+}
+
+html+=`</div>`;
+});
+
+/* Tugatish faqat yangi auditda chiqadi */
+if(!existing && role!=="viewer"){
+html+=`<button onclick="finishAudit()">Tugatish</button>`;
+}
+
+document.getElementById("content").innerHTML=html;
 }
 
 if(savedMark){
