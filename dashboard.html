@@ -26,10 +26,6 @@ box-shadow:0 5px 20px rgba(0,0,0,0.2);
 background:white;padding:15px;
 border-radius:15px;margin-bottom:10px;
 }
-.question{
-border-bottom:1px solid #eee;
-padding:8px;font-size:13px;
-}
 .back{
 background:black;color:#FFD43B;
 padding:6px 10px;border-radius:15px;
@@ -46,6 +42,7 @@ select,input{
 width:100%;padding:8px;
 margin:5px 0;border-radius:8px;
 }
+img{margin-top:5px;border-radius:8px;}
 </style>
 </head>
 
@@ -66,14 +63,12 @@ Hoty Dogy System
 </div>
 
 <script>
- 
-/* ================= ROLE ================= */
 
+/* ROLE */
 const role=localStorage.getItem("role");
 if(!role) window.location="index.html";
 
-/* ================= FILIALS ================= */
-
+/* FILIALS */
 const branches = ["Ц1","Шевченко","Чилонзор","Нехт","Эко","ИТ парк"];
 const questions = [
 
@@ -152,24 +147,17 @@ const questions = [
 { text:"Smena mas'ul shaxs mavjud.", minus:20 }
 
 ];
-/* ================= DATA ================= */
 
-function getData(){
-return JSON.parse(localStorage.getItem("data")||"{}");
-}
+/* DATA */
+function getData(){ return JSON.parse(localStorage.getItem("data")||"{}"); }
+function saveData(d){ localStorage.setItem("data",JSON.stringify(d)); }
 
-function saveData(d){
-localStorage.setItem("data",JSON.stringify(d));
-}
-
+/* MONTH */
 function getMonth(){
 let d=new Date();
 return d.getFullYear()+"-"+(d.getMonth()+1);
 }
-
 let currentMonth=getMonth();
-
-/* ================= OY ================= */
 
 function loadMonths(){
 let data=getData();
@@ -186,14 +174,11 @@ select.value=currentMonth;
 }
 
 function addMonth(){
-if(role!=="superadmin"){
-alert("Faqat superadmin");
-return;
-}
+if(role!=="superadmin"){alert("Faqat superadmin");return;}
 let name=prompt("Yangi oy (2025-3)");
-if(!name) return;
+if(!name)return;
 let data=getData();
-if(!data[name]) data[name]={};
+if(!data[name])data[name]={};
 saveData(data);
 currentMonth=name;
 loadMonths();
@@ -203,26 +188,27 @@ function changeMonth(){
 currentMonth=document.getElementById("monthSelect").value;
 }
 
-/* ================= MENU ================= */
-
+/* MENU */
 function loadMenu(){
 let m=document.getElementById("menu");
 m.innerHTML="";
 m.innerHTML+=`<div class="btn" onclick="openAudit()">Аудит</div>`;
 m.innerHTML+=`<div class="btn" onclick="openAuditBall()">Аудит Балл</div>`;
-
 if(role==="superadmin"){
 m.innerHTML+=`<div class="btn" onclick="openUsers()">User Qo‘shish</div>`;
 m.innerHTML+=`<div class="btn" onclick="addMonth()">+ Oy</div>`;
 }
 }
 
-/* ================= AUDIT ================= */
+/* AUDIT */
+let tempMarks={};
+let tempImages={};
+let currentBranch="";
+let currentIndex=0;
 
 function openAudit(){
 document.getElementById("menu").style.display="none";
 let html=`<div class="back" onclick="back()">Orqaga</div>`;
-
 branches.forEach(b=>{
 html+=`
 <div class="card">
@@ -231,148 +217,119 @@ html+=`
 <button onclick="startAudit('${b}',1)">Audit 2</button>
 </div>`;
 });
-
 document.getElementById("content").innerHTML=html;
 }
 
-let tempMarks={};
-let currentBranch="";
-let currentIndex=0;
-
 function startAudit(branch,index){
 
-if(role==="viewer"){
-alert("Siz faqat ko‘ra olasiz");
-return;
-}
+if(role==="viewer"){alert("Siz faqat ko‘ra olasiz");return;}
 
 currentBranch=branch;
 currentIndex=index;
 tempMarks={};
+tempImages={};
 
 let html=`<div class="back" onclick="openAudit()">Orqaga</div>`;
 html+=`<div class="card"><b>${branch} - Audit ${index+1}</b></div>`;
 
 questions.forEach((q,i)=>{
-
-html += `
+html+=`
 <div class="card">
-
 <p>${q.text}</p>
 
-<button id="good-${i}" onclick="mark(${i}, 'good')">✔</button>
-<button id="bad-${i}" onclick="mark(${i}, 'bad')">✖</button>
+<button id="good-${i}" onclick="mark(${i},'good')">✔</button>
+<button id="bad-${i}" onclick="mark(${i},'bad')">✖</button>
 
 <br>
-
-<input type="file" accept="image/*" onchange="uploadImage(event, ${i})">
-
+<input type="file" accept="image/*" onchange="uploadImage(event,${i})">
 <div id="preview-${i}"></div>
 <span id="status-${i}"></span>
-
-</div>
-`;
-
+</div>`;
 });
-  
-html+=`
-<button onclick="finishAudit()">Tugatish</button>`;
+
+html+=`<button onclick="finishAudit()">Tugatish</button>`;
 document.getElementById("content").innerHTML=html;
 }
 
 function mark(i,type){
-
 tempMarks[i]=type;
-
-let goodBtn=document.getElementById("good-"+i);
-let badBtn=document.getElementById("bad-"+i);
+let good=document.getElementById("good-"+i);
+let bad=document.getElementById("bad-"+i);
 let status=document.getElementById("status-"+i);
 
 if(type==="good"){
-goodBtn.style.background="green";
-badBtn.style.background="black";
+good.style.background="green";
+bad.style.background="black";
 status.innerHTML=" ✔";
 status.style.color="green";
-}
-else{
-badBtn.style.background="red";
-goodBtn.style.background="black";
+}else{
+bad.style.background="red";
+good.style.background="black";
 status.innerHTML=" ❌";
 status.style.color="red";
 }
-
 }
+
+function uploadImage(event,index){
+let file=event.target.files[0];
+if(!file)return;
+let reader=new FileReader();
+reader.onload=function(e){
+tempImages[index]=e.target.result;
+document.getElementById("preview-"+index).innerHTML=
+`<img src="${e.target.result}" width="100%">`;
+};
+reader.readAsDataURL(file);
+}
+
 function finishAudit(){
 
-if(!currentBranch){
-alert("Filial tanlanmagan");
-return;
-}
+if(!currentBranch){alert("Filial yo‘q");return;}
 
-let month = document.getElementById("monthSelect").value;
-if(!month){
-alert("Oy tanlanmagan");
-return;
-}
+let score=100;
+questions.forEach((q,i)=>{
+if(tempMarks[i]==="bad"){score-=q.minus;}
+});
 
-let score = 100;
+let data=getData();
+if(!data[currentMonth])data[currentMonth]={};
+if(!data[currentMonth][currentBranch])
+data[currentMonth][currentBranch]={audits:[null,null]};
 
-for(let i=0;i<questions.length;i++){
-if(tempMarks[i] === "bad"){
-score -= questions[i].minus;
-}
-}
-
-let data = getData();
-
-if(!data[month]){
-data[month] = {};
-}
-
-if(!data[month][currentBranch]){
-data[month][currentBranch] = {audits:[null,null]};
-}
-
-data[month][currentBranch].audits[currentIndex] = {
-score: score,
-images: tempMarks
+data[currentMonth][currentBranch].audits[currentIndex]={
+score:score,
+marks:tempMarks,
+images:tempImages
 };
 
 saveData(data);
 
-alert("Yakunladingiz ✅ Ball: " + score);
-
+alert("Yakunladingiz ✅ Ball: "+score);
 openAudit();
-
 }
 
-/* ================= AUDIT BALL ================= */
-
+/* AUDIT BALL */
 function openAuditBall(){
 document.getElementById("menu").style.display="none";
 let data=getData();
 let html=`<div class="back" onclick="back()">Orqaga</div>`;
-
 branches.forEach(b=>{
 let audits=data[currentMonth]?.[b]?.audits||[null,null];
 let avg=0;
-if(audits[0]&&audits[1]){
+if(audits[0]&&audits[1])
 avg=(audits[0].score+audits[1].score)/2;
-}else if(audits[0]){
+else if(audits[0])
 avg=audits[0].score;
-}else if(audits[1]){
+else if(audits[1])
 avg=audits[1].score;
-}
+
 html+=`<div class="card">${b} : ${avg}</div>`;
 });
-
 document.getElementById("content").innerHTML=html;
 }
 
-/* ================= USERS ================= */
-
+/* USERS */
 function openUsers(){
-if(role!=="superadmin") return;
 document.getElementById("menu").style.display="none";
 document.getElementById("content").innerHTML=`
 <div class="back" onclick="back()">Orqaga</div>
@@ -392,8 +349,7 @@ let login=document.getElementById("newLogin").value;
 let pass=document.getElementById("newPass").value;
 let roleSelect=document.getElementById("newRole").value;
 
-let users=JSON.parse(localStorage.getItem("users"));
-
+let users=JSON.parse(localStorage.getItem("users")||"[]");
 users.push({login,password:pass,role:roleSelect});
 localStorage.setItem("users",JSON.stringify(users));
 
@@ -401,8 +357,7 @@ alert("Qo‘shildi");
 back();
 }
 
-/* ================= GENERAL ================= */
-
+/* GENERAL */
 function back(){
 document.getElementById("content").innerHTML="";
 document.getElementById("menu").style.display="grid";
@@ -417,6 +372,5 @@ loadMonths();
 loadMenu();
 
 </script>
-
 </body>
 </html>
