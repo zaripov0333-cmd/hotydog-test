@@ -33,7 +33,7 @@ display:inline-block;margin-bottom:10px;
 cursor:pointer;
 }
 button{
-margin:3px;padding:5px 8px;
+margin:3px;padding:6px 10px;
 border:none;border-radius:6px;
 background:black;color:#FFD43B;
 cursor:pointer;
@@ -43,13 +43,15 @@ width:100%;padding:8px;
 margin:5px 0;border-radius:8px;
 }
 img{margin-top:5px;border-radius:8px;}
+.good{background:green!important;}
+.bad{background:red!important;}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-Hoty Dogy System
+Hoty Dogy Audit System
 <div onclick="logout()">Chiqish</div>
 </div>
 
@@ -118,7 +120,7 @@ const questions = [
 { text:"Hisobdan chiqarish o‘z vaqtida.", minus:5 },
 { text:"Sabzavot rakovina toza.", minus:1 },
 { text:"Tarozilar toza.", minus:2 },
-{ text:"FIFO gastronom idishlar.", minus:2 },
+{ text:"Gastronom idishlar toza .", minus:2 },
 { text:"Mahsulot harorati ≤+6°.", minus:2 },
 { text:"Ombor stelajlari toza.", minus:1 },
 { text:"Eshiklar soz.", minus:1 },
@@ -148,15 +150,16 @@ const questions = [
 
 ];
 
-/* DATA */
-function getData(){ return JSON.parse(localStorage.getItem("data")||"{}"); }
-function saveData(d){ localStorage.setItem("data",JSON.stringify(d)); }
+/* STORAGE */
+function getData(){ return JSON.parse(localStorage.getItem("auditData")||"{}"); }
+function saveData(d){ localStorage.setItem("auditData",JSON.stringify(d)); }
 
 /* MONTH */
 function getMonth(){
 let d=new Date();
 return d.getFullYear()+"-"+(d.getMonth()+1);
 }
+
 let currentMonth=getMonth();
 
 function loadMonths(){
@@ -173,19 +176,19 @@ select.innerHTML+=`<option value="${m}">${m}</option>`;
 select.value=currentMonth;
 }
 
+function changeMonth(){
+currentMonth=document.getElementById("monthSelect").value;
+}
+
 function addMonth(){
-if(role!=="superadmin"){alert("Faqat superadmin");return;}
-let name=prompt("Yangi oy (2025-3)");
-if(!name)return;
+if(role!=="superadmin") return;
+let name=prompt("Yangi oy (2025-4)");
+if(!name) return;
 let data=getData();
-if(!data[name])data[name]={};
+if(!data[name]) data[name]={};
 saveData(data);
 currentMonth=name;
 loadMonths();
-}
-
-function changeMonth(){
-currentMonth=document.getElementById("monthSelect").value;
 }
 
 /* MENU */
@@ -195,16 +198,15 @@ m.innerHTML="";
 m.innerHTML+=`<div class="btn" onclick="openAudit()">Аудит</div>`;
 m.innerHTML+=`<div class="btn" onclick="openAuditBall()">Аудит Балл</div>`;
 if(role==="superadmin"){
-m.innerHTML+=`<div class="btn" onclick="openUsers()">User Qo‘shish</div>`;
 m.innerHTML+=`<div class="btn" onclick="addMonth()">+ Oy</div>`;
 }
 }
 
 /* AUDIT */
-let tempMarks={};
-let tempImages={};
 let currentBranch="";
 let currentIndex=0;
+let tempMarks={};
+let tempImages={};
 
 function openAudit(){
 document.getElementById("menu").style.display="none";
@@ -222,10 +224,12 @@ document.getElementById("content").innerHTML=html;
 
 function startAudit(branch,index){
 
-if(role==="viewer"){alert("Siz faqat ko‘ra olasiz");return;}
-
 currentBranch=branch;
 currentIndex=index;
+
+let data=getData();
+let existing=data[currentMonth]?.[branch]?.audits?.[index];
+
 tempMarks={};
 tempImages={};
 
@@ -233,66 +237,70 @@ let html=`<div class="back" onclick="openAudit()">Orqaga</div>`;
 html+=`<div class="card"><b>${branch} - Audit ${index+1}</b></div>`;
 
 questions.forEach((q,i)=>{
+
+let savedMark=existing?.marks?.[i];
+let savedImage=existing?.images?.[i];
+
+html+=`<div class="card"><p>${q.text}</p>`;
+
+if(role!=="viewer"){
 html+=`
-<div class="card">
-<p>${q.text}</p>
-
-<button id="good-${i}" onclick="mark(${i},'good')">✔</button>
-<button id="bad-${i}" onclick="mark(${i},'bad')">✖</button>
-
-<br>
+<button id="g${i}" onclick="mark(${i},'good')">✔</button>
+<button id="b${i}" onclick="mark(${i},'bad')">✖</button>
 <input type="file" accept="image/*" onchange="uploadImage(event,${i})">
-<div id="preview-${i}"></div>
-<span id="status-${i}"></span>
+`;
+}
+
+if(savedMark){
+html+=`<div style="color:${savedMark==="good"?"green":"red"}">
+${savedMark==="good"?"✔ Yaxshi":"❌ Yomon"}
 </div>`;
+}
+
+if(savedImage){
+html+=`<img src="${savedImage}" width="100%">`;
+}
+
+html+=`</div>`;
 });
 
+if(role!=="viewer"){
 html+=`<button onclick="finishAudit()">Tugatish</button>`;
+}
+
 document.getElementById("content").innerHTML=html;
 }
 
 function mark(i,type){
 tempMarks[i]=type;
-let good=document.getElementById("good-"+i);
-let bad=document.getElementById("bad-"+i);
-let status=document.getElementById("status-"+i);
-
 if(type==="good"){
-good.style.background="green";
-bad.style.background="black";
-status.innerHTML=" ✔";
-status.style.color="green";
+document.getElementById("g"+i).classList.add("good");
+document.getElementById("b"+i).classList.remove("bad");
 }else{
-bad.style.background="red";
-good.style.background="black";
-status.innerHTML=" ❌";
-status.style.color="red";
+document.getElementById("b"+i).classList.add("bad");
+document.getElementById("g"+i).classList.remove("good");
 }
 }
 
 function uploadImage(event,index){
 let file=event.target.files[0];
-if(!file)return;
+if(!file) return;
 let reader=new FileReader();
 reader.onload=function(e){
 tempImages[index]=e.target.result;
-document.getElementById("preview-"+index).innerHTML=
-`<img src="${e.target.result}" width="100%">`;
 };
 reader.readAsDataURL(file);
 }
 
 function finishAudit(){
 
-if(!currentBranch){alert("Filial yo‘q");return;}
-
 let score=100;
 questions.forEach((q,i)=>{
-if(tempMarks[i]==="bad"){score-=q.minus;}
+if(tempMarks[i]==="bad") score-=q.minus;
 });
 
 let data=getData();
-if(!data[currentMonth])data[currentMonth]={};
+if(!data[currentMonth]) data[currentMonth]={};
 if(!data[currentMonth][currentBranch])
 data[currentMonth][currentBranch]={audits:[null,null]};
 
@@ -304,7 +312,7 @@ images:tempImages
 
 saveData(data);
 
-alert("Yakunladingiz ✅ Ball: "+score);
+alert("Audit saqlandi ✅ Ball: "+score);
 openAudit();
 }
 
@@ -313,6 +321,7 @@ function openAuditBall(){
 document.getElementById("menu").style.display="none";
 let data=getData();
 let html=`<div class="back" onclick="back()">Orqaga</div>`;
+
 branches.forEach(b=>{
 let audits=data[currentMonth]?.[b]?.audits||[null,null];
 let avg=0;
@@ -323,38 +332,10 @@ avg=audits[0].score;
 else if(audits[1])
 avg=audits[1].score;
 
-html+=`<div class="card">${b} : ${avg}</div>`;
+html+=`<div class="card"><b>${b}</b> : ${avg}</div>`;
 });
+
 document.getElementById("content").innerHTML=html;
-}
-
-/* USERS */
-function openUsers(){
-document.getElementById("menu").style.display="none";
-document.getElementById("content").innerHTML=`
-<div class="back" onclick="back()">Orqaga</div>
-<div class="card">
-<input id="newLogin" placeholder="Login">
-<input id="newPass" placeholder="Parol">
-<select id="newRole">
-<option value="admin">Admin</option>
-<option value="viewer">Viewer</option>
-</select>
-<button onclick="addUser()">Qo‘shish</button>
-</div>`;
-}
-
-function addUser(){
-let login=document.getElementById("newLogin").value;
-let pass=document.getElementById("newPass").value;
-let roleSelect=document.getElementById("newRole").value;
-
-let users=JSON.parse(localStorage.getItem("users")||"[]");
-users.push({login,password:pass,role:roleSelect});
-localStorage.setItem("users",JSON.stringify(users));
-
-alert("Qo‘shildi");
-back();
 }
 
 /* GENERAL */
