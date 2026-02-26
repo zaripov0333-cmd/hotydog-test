@@ -302,7 +302,6 @@ status.style.color="red";
 }
 
 }
-
 function finishAudit(){
 
 if(!currentBranch){
@@ -334,7 +333,7 @@ if(!data[month][currentBranch]){
 data[month][currentBranch] = {audits:[null,null]};
 }
 
-data[month][currentBranch].audits[currentAudit] = {
+data[month][currentBranch].audits[currentIndex] = {
 score: score,
 images: tempMarks
 };
@@ -343,8 +342,7 @@ saveData(data);
 
 alert("Yakunladingiz ✅ Ball: " + score);
 
-/* Audit tugagandan keyin filialga qaytadi */
-openBranch(currentBranch);
+openAudit();
 
 }
 
