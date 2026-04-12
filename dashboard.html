@@ -1,400 +1,448 @@
 <!DOCTYPE html>
-<html>
+<html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hoty Dogy Audit</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoty Dogy | Professional Audit System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FFD43B;
+            --dark: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass: rgba(255, 255, 255, 0.1);
+            --success: #2ecc71;
+            --danger: #e74c3c;
+        }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;}
-body{background:linear-gradient(135deg,#FFD43B,#FFC107); min-height: 100vh;}
-.header{
-background:#000;color:#FFD43B;
-padding:15px;display:flex;
-justify-content:space-between;
-font-weight:bold;font-size:18px;
-position: sticky; top: 0; z-index: 100;
-}
-.container{padding:15px;}
-.menu{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;}
-.btn{
-background:#fff;padding:18px;
-border-radius:18px;text-align:center;
-font-weight:bold;cursor:pointer;
-box-shadow:0 8px 25px rgba(0,0,0,0.25);
-transition:0.2s;
-}
-.btn:hover{transform:scale(1.03);}
-.card{
-background:#fff;padding:15px;
-border-radius:18px;margin-bottom:12px;
-box-shadow:0 6px 20px rgba(0,0,0,0.15);
-}
-.back{
-background:#000;color:#FFD43B;
-padding:6px 12px;border-radius:20px;
-display:inline-block;margin-bottom:10px;
-cursor:pointer;
-}
-button{
-margin:4px;padding:8px 15px;
-border:none;border-radius:8px;
-background:#000;color:#FFD43B;
-cursor:pointer; font-weight: bold;
-}
-select,input{
-width:100%;padding:10px;
-margin:6px 0;border-radius:8px;
-border: 1px solid #ccc;
-}
-img{
-width:100%;
-max-height:280px;
-object-fit:cover;
-border-radius:12px;
-margin-top:8px;
-cursor:pointer;
-border: 2px solid #eee;
-}
-.good{background:green!important; color: white !important;}
-.bad{background:red!important; color: white !important;}
-.locked{color: #777; font-style: italic;}
-.scoreGreen{color:green;font-weight:bold; margin-top: 5px;}
-.scoreRed{color:red;font-weight:bold; margin-top: 5px;}
-</style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: var(--dark); 
+            color: #fff; 
+            min-height: 100vh;
+            background-image: radial-gradient(circle at top right, #1a1a1a, #0a0a0a);
+        }
+
+        .header {
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(15px);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass);
+            position: sticky; top: 0; z-index: 1000;
+        }
+
+        .header h1 { font-size: 16px; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; }
+
+        .container { padding: 15px; max-width: 500px; margin: auto; }
+
+        /* Login Section */
+        #loginPage { height: 95vh; display: flex; align-items: center; justify-content: center; }
+        .login-box {
+            background: var(--card-bg);
+            padding: 40px; border-radius: 30px;
+            border: 1px solid var(--glass);
+            width: 100%; text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        /* UI Elements */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass);
+            border-radius: 20px; padding: 20px; margin-bottom: 20px;
+        }
+
+        input, select {
+            width: 100%; padding: 14px; margin: 10px 0;
+            border-radius: 12px; border: 1px solid var(--glass);
+            background: rgba(255,255,255,0.05); color: #fff; outline: none;
+        }
+
+        .btn {
+            background: var(--primary); color: #000;
+            padding: 15px; border-radius: 12px; border: none;
+            font-weight: 800; width: 100%; cursor: pointer;
+            transition: 0.3s; margin-top: 10px;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn-outline { background: transparent; color: var(--primary); border: 1px solid var(--primary); }
+
+        /* Audit Style */
+        .q-card { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--glass); }
+        .btn-group { display: flex; gap: 10px; margin: 10px 0; }
+        .choice { 
+            flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--glass);
+            background: transparent; color: #fff; cursor: pointer; font-weight: bold;
+        }
+        .choice.active-good { background: var(--success); border: none; }
+        .choice.active-bad { background: var(--danger); border: none; }
+
+        img { width: 100%; border-radius: 15px; margin-top: 10px; border: 1px solid var(--glass); }
+
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
+        .bg-success { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
+        .bg-danger { background: rgba(231, 76, 60, 0.2); color: #e74c3c; }
+
+        .back-link { color: var(--primary); cursor: pointer; display: inline-block; margin-bottom: 15px; font-weight: bold; }
+    </style>
 </head>
-
 <body>
 
-<div class="header">
-Hoty Dogy Audit
-<div onclick="logout()" style="cursor:pointer">Chiqish</div>
+<div id="loginPage">
+    <div class="login-box">
+        <h2 style="color:var(--primary); margin-bottom:20px; font-weight: 800;">HOTY DOGY</h2>
+        <input type="text" id="lName" placeholder="Login">
+        <input type="password" id="lPass" placeholder="Parol">
+        <button class="btn" onclick="handleLogin()">TIZIMGA KIRISH</button>
+    </div>
 </div>
 
-<div class="container">
-<select id="monthSelect" onchange="changeMonth()"></select>
-<div id="menu" class="menu"></div>
-<div id="content"></div>
+<div id="app" style="display:none">
+    <div class="header">
+        <h1>Hoty Dogy Audit</h1>
+        <div onclick="location.reload()" style="cursor:pointer; color:var(--danger); font-size: 12px; font-weight:bold">CHIQISH</div>
+    </div>
+
+    <div class="container">
+        <div id="view-home">
+            <h3 id="welcomeMsg" style="margin-bottom:15px">Xush kelibsiz</h3>
+            <select id="monthFilter" onchange="renderHome()"></select>
+            <button class="btn" onclick="showView('view-audit')">+ Yangi Audit</button>
+            <div id="adminControls"></div>
+            <br>
+            <h4>Auditlar Tarixi (Arxiv)</h4>
+            <div id="historyList"></div>
+        </div>
+
+        <div id="view-audit" style="display:none">
+            <div class="back-link" onclick="showView('view-home')">← ORQAGA</div>
+            <div class="card">
+                <label>Filialni tanlang:</label>
+                <select id="auditBranch">
+                    <option>Ц1</option><option>Шevchenko</option><option>Chilonzor</option>
+                    <option>Next</option><option>Eko</option><option>IT Park</option>
+                </select>
+                <div id="questionsContainer"></div>
+                <button class="btn" onclick="submitAudit()" style="height: 70px; font-size: 18px;">AUDITNI SAQLASH</button>
+            </div>
+        </div>
+
+        <div id="view-details" style="display:none">
+            <div class="back-link" onclick="showView('view-home')">← ORQAGA</div>
+            <div id="detailsContent"></div>
+        </div>
+
+        <div id="view-admin" style="display:none">
+            <div class="back-link" onclick="showView('view-home')">← ORQAGA</div>
+            <div class="card">
+                <h4>Yangi Admin Qo'shish</h4>
+                <input type="text" id="newAdminLogin" placeholder="Login">
+                <input type="text" id="newAdminPass" placeholder="Parol">
+                <button class="btn" onclick="addAdmin()">QO'SHISH</button>
+            </div>
+            <h4>Adminlar Ro'yxati</h4>
+            <div id="adminList"></div>
+        </div>
+    </div>
 </div>
 
 <script>
-/* ================= SECURITY & STORAGE ================= */
-function hash(str){
-  let h=0;
-  for(let i=0;i<str.length;i++){
-    h = Math.imul(31,h)+str.charCodeAt(i)|0;
-  }
-  return h.toString();
-}
-
-function getRole(){
-  try{
-    const raw=localStorage.getItem("auth");
-    if(!raw)return "admin"; // Test uchun admin qilib qo'ydim, productionda null bo'lishi kerak
-    const data=JSON.parse(atob(raw));
-    return data.role;
-  }catch{return "admin";} 
-}
-
-const role=getRole();
-
-function saveData(data){
-  const payload=JSON.stringify(data);
-  const signature=hash(payload+"HotySecretKey");
-  localStorage.setItem("auditSecure", btoa(JSON.stringify({payload,signature})));
-}
-
-function getData(){
-  const raw=localStorage.getItem("auditSecure");
-  if(!raw)return {};
-  try{
-    const obj=JSON.parse(atob(raw));
-    if(hash(obj.payload+"HotySecretKey")!==obj.signature){
-      alert("Ma'lumot buzilgan!");
-      return {};
-    }
-    return JSON.parse(obj.payload);
-  }catch{return {};}
-}
-
-/* ================= BASIC DATA ================= */
-const branches = ["Ц1","Шevchenko","Chilonzor","Next","Eko","IT Park"];
-const questions = [
-    { text:"Restoran oldidagi bruschatka butun, mustahkam va toza.", minus:1 },
-    { text:"XotyDogy yorlig'i toza va soz.", minus:1 },
-    { text:"Chiqindi baklari toza va 3/4 dan oshmagan.", minus:1 },
-    { text:"Zina va pandus toza va shikastlanmagan.", minus:1 },
-    { text:"Kirish guruhlari texnik soz.", minus:1 },
-    { text:"Vitrajli derazalar toza.", minus:1 },
-    { text:"Dekor devorlarga mahkam yopishtirilgan.", minus:2 },
-    { text:"Barcha yoritish vositalari ishlaydi.", minus:1 },
-    { text:"Eshik oldidagi gilam toza.", minus:1 },
-    { text:"Stollar toza va salfetnitsa mavjud.", minus:2 },
-    { text:"Zal atmosferasi yaxshi.", minus:1 },
-    { text:"Zov-klient ishlaydi.", minus:1 },
-    { text:"Axlat idishlari toza.", minus:1 },
-    { text:"Devorlar eskirmagan.", minus:1 },
-    { text:"Pollar toza.", minus:1 },
-    { text:"Bolalar o‘rindig‘i toza.", minus:2 },
-    { text:"Banner butun.", minus:1 },
-    { text:"Menu aktual.", minus:1 },
-    { text:"TV Board aktual.", minus:1 },
-    { text:"Flayerlar mavjud.", minus:2 },
-    { text:"Xolodilnik toza va +6°.", minus:2 },
-    { text:"Kassa zonasi standartga mos.", minus:2 },
-    { text:"Buyurtma yig‘ish zonasi standart.", minus:2 },
-    { text:"Buyurtma aniqligi.", minus:2 },
-    { text:"Polda saqlash yo‘q.", minus:1 },
-    { text:"Kassada FIFO.", minus:1 },
-    { text:"Ikkinchi darajali qadoq kassada yo‘q.", minus:1 },
-    { text:"Kassada shaxsiy narsalar yo‘q.", minus:2 },
-    { text:"Stop-list mavjud.", minus:2 },
-    { text:"Podnos va tarelkalar toza.", minus:2 },
-    { text:"TV va boardlar changsiz.", minus:1 },
-    { text:"Postmix apparati toza.", minus:1 },
-    { text:"Chiqindi chelagi toza.", minus:1 },
-    { text:"Oshxona pollari toza.", minus:1 },
-    { text:"Oshxona harorati ≤26°.", minus:2 },
-    { text:"Mahsulotlar FIFO asosida.", minus:1 },
-    { text:"Meklayn toza.", minus:1 },
-    { text:"Meklayn harorati ≤+6°.", minus:1 },
-    { text:"Ikkinchi qadoq oshxonada yo‘q.", minus:1 },
-    { text:"Toster, frityur toza.", minus:2 },
-    { text:"Zagatovka stoli toza.", minus:1 },
-    { text:"Mahsulot saqlash standart.", minus:2 },
-    { text:"Osma javonlar toza.", minus:1 },
-    { text:"Hisobdan chiqarish o‘z vaqtida.", minus:5 },
-    { text:"Sabzavot rakovina toza.", minus:1 },
-    { text:"Tarozilar toza.", minus:2 },
-    { text:"FIFO gastronom idishlar.", minus:2 },
-    { text:"Mahsulot harorati ≤+6°.", minus:2 },
-    { text:"Ombor stelajlari toza.", minus:1 },
-    { text:"Eshiklar soz.", minus:1 },
-    { text:"Tovar qo‘shnichiligi saqlangan.", minus:2 },
-    { text:"Muzlatkich harorati -10°/-18°.", minus:2 },
-    { text:"Polda hech narsa saqlanmaydi.", minus:1 },
-    { text:"Sanitariya qo‘pol buzilishi yo‘q.", minus:2 },
-    { text:"Restoran tayyorligi.", minus:2 },
-    { text:"Xodimlar qo‘l yuvish qoidasi.", minus:5 },
-    { text:"Simlar chiqmagan.", minus:2 },
-    { text:"Xodim shaxsiy fayli mavjud.", minus:2 },
-    { text:"Telefonlar topshirilgan.", minus:2 },
-    { text:"Xodim tashqi ko‘rinishi standart.", minus:2 },
-    { text:"Ognetushitel yashil zona.", minus:1 },
-    { text:"Razdevalka tartibli.", minus:2 },
-    { text:"Restoranda yoriq yo‘q.", minus:1 },
-    { text:"Latta matolar to‘g‘ri saqladi.", minus:2 },
-    { text:"Inventar toza.", minus:5 },
-    { text:"Zararkunanda yo‘q.", minus:5 },
-    { text:"Qo‘l yuvish sovuni bor.", minus:5 },
-    { text:"Formasiz yurish yo‘q.", minus:5 },
-    { text:"Mahsulot sifati yaxshi.", minus:5 },
-    { text:"Yaroqlilik muddati o‘tmagan.", minus:20 },
-    { text:"Markirovka ustidan markirovka yo‘q.", minus:20 },
-    { text:"Markirovka mavjud.", minus:20 },
-    { text:"Smena mas'ul shaxs mavjud.", minus:20 }
+/* --- BARCHA 73 TA SAVOLLAR RO'YXATI --- */
+const QUESTIONS = [
+    { text: "Restoran oldidagi bruschatka butun, mustahkam va toza.", minus: 1 },
+    { text: "XotyDogy yorlig'i toza va soz.", minus: 1 },
+    { text: "Chiqindi baklari toza va 3/4 dan oshmagan.", minus: 1 },
+    { text: "Zina va pandus toza va shikastlanmagan.", minus: 1 },
+    { text: "Kirish guruhlari texnik soz.", minus: 1 },
+    { text: "Vitrajli derazalar toza.", minus: 1 },
+    { text: "Dekor devorlarga mahkam yopishtirilgan.", minus: 2 },
+    { text: "Barcha yoritish vositalari ishlaydi.", minus: 1 },
+    { text: "Eshik oldidagi gilam toza.", minus: 1 },
+    { text: "Stollar toza va salfetnitsa mavjud.", minus: 2 },
+    { text: "Zal atmosferasi yaxshi.", minus: 1 },
+    { text: "Zov-klient ishlaydi.", minus: 1 },
+    { text: "Axlat idishlari toza.", minus: 1 },
+    { text: "Devorlar eskirmagan.", minus: 1 },
+    { text: "Pollar toza.", minus: 1 },
+    { text: "Bolalar o‘rindig‘i toza.", minus: 2 },
+    { text: "Banner butun.", minus: 1 },
+    { text: "Menu aktual.", minus: 1 },
+    { text: "TV Board aktual.", minus: 1 },
+    { text: "Flayerlar mavjud.", minus: 2 },
+    { text: "Xolodilnik toza va +6°.", minus: 2 },
+    { text: "Kassa zonasi standartga mos.", minus: 2 },
+    { text: "Buyurtma yig‘ish zonasi standart.", minus: 2 },
+    { text: "Buyurtma aniqligi.", minus: 2 },
+    { text: "Polda saqlash yo‘q.", minus: 1 },
+    { text: "Kassada FIFO.", minus: 1 },
+    { text: "Ikkinchi darajali qadoq kassada yo‘q.", minus: 1 },
+    { text: "Kassada shaxsiy narsalar yo‘q.", minus: 2 },
+    { text: "Stop-list mavjud.", minus: 2 },
+    { text: "Podnos va tarelkalar toza.", minus: 2 },
+    { text: "TV va boardlar changsiz.", minus: 1 },
+    { text: "Postmix apparati toza.", minus: 1 },
+    { text: "Chiqindi chelagi toza.", minus: 1 },
+    { text: "Oshxona pollari toza.", minus: 1 },
+    { text: "Oshxona harorati ≤26°.", minus: 2 },
+    { text: "Mahsulotlar FIFO asosida.", minus: 1 },
+    { text: "Meklayn toza.", minus: 1 },
+    { text: "Meklayn harorati ≤+6°.", minus: 1 },
+    { text: "Ikkinchi qadoq oshxonada yo‘q.", minus: 1 },
+    { text: "Toster, frityur toza.", minus: 2 },
+    { text: "Zagatovka stoli toza.", minus: 1 },
+    { text: "Mahsulot saqlash standart.", minus: 2 },
+    { text: "Osma javonlar toza.", minus: 1 },
+    { text: "Hisobdan chiqarish o‘z vaqtida.", minus: 5 },
+    { text: "Sabzavot rakovina toza.", minus: 1 },
+    { text: "Tarozilar toza.", minus: 2 },
+    { text: "FIFO gastronom idishlar.", minus: 2 },
+    { text: "Mahsulot harorati ≤+6°.", minus: 2 },
+    { text: "Ombor stelajlari toza.", minus: 1 },
+    { text: "Eshiklar soz.", minus: 1 },
+    { text: "Tovar qo‘shnichiligi saqlangan.", minus: 2 },
+    { text: "Muzlatkich harorati -10°/-18°.", minus: 2 },
+    { text: "Polda hech narsa saqlanmaydi.", minus: 1 },
+    { text: "Sanitariya qo‘pol buzilishi yo‘q.", minus: 2 },
+    { text: "Restoran tayyorligi.", minus: 2 },
+    { text: "Xodimlar qo‘l yuvish qoidasi.", minus: 5 },
+    { text: "Simlar chiqmagan.", minus: 2 },
+    { text: "Xodim shaxsiy fayli mavjud.", minus: 2 },
+    { text: "Telefonlar topshirilgan.", minus: 2 },
+    { text: "Xodim tashqi ko‘rinishi standart.", minus: 2 },
+    { text: "Ognetushitel yashil zona.", minus: 1 },
+    { text: "Razdevalka tartibli.", minus: 2 },
+    { text: "Restoranda yoriq yo‘q.", minus: 1 },
+    { text: "Latta matolar to‘g‘ri saqlanadi.", minus: 2 },
+    { text: "Inventar toza.", minus: 5 },
+    { text: "Zararkunanda yo‘q.", minus: 5 },
+    { text: "Qo‘l yuvish sovuni bor.", minus: 5 },
+    { text: "Formasiz yurish yo‘q.", minus: 5 },
+    { text: "Mahsulot sifati yaxshi.", minus: 5 },
+    { text: "Yaroqlilik muddati o‘tmagan.", minus: 20 },
+    { text: "Markirovka ustidan markirovka yo‘q.", minus: 20 },
+    { text: "Markirovka mavjud.", minus: 20 },
+    { text: "Smena mas'ul shaxs mavjud.", minus: 20 }
 ];
 
-/* ================= MONTH LOGIC ================= */
-let currentMonth = new Date().getFullYear() + "-" + (new Date().getMonth() + 1);
+let currentUser = null;
+let currentMarks = {};
+let currentImages = {};
 
-function loadMonths(){
-  let data = getData();
-  if(!data[currentMonth]) {
-      data[currentMonth] = {};
-      saveData(data);
-  }
-  let select = document.getElementById("monthSelect");
-  select.innerHTML = "";
-  Object.keys(data).sort().reverse().forEach(m => {
-    select.innerHTML += `<option value="${m}">${m}</option>`;
-  });
-  select.value = currentMonth;
+/* --- DATABASE CORE --- */
+function getDB() {
+    let db = localStorage.getItem('HD_ULTIMATE_DB');
+    if(!db) {
+        const initial = {
+            users: [{l: "hotydogy", p: "7777", role: "superadmin"}],
+            audits: {}, 
+            months: [new Date().toISOString().slice(0,7)]
+        };
+        localStorage.setItem('HD_ULTIMATE_DB', JSON.stringify(initial));
+        return initial;
+    }
+    return JSON.parse(db);
 }
+function saveDB(db) { localStorage.setItem('HD_ULTIMATE_DB', JSON.stringify(db)); }
 
-function changeMonth(){
-  currentMonth = document.getElementById("monthSelect").value;
-  back(); // Menuga qaytish
-}
-
-/* ================= AUDIT ENGINE ================= */
-let currentBranch = "";
-let currentIndex = 0;
-let tempMarks = {};
-let tempImages = {};
-
-function openAudit(){
-  document.getElementById("menu").style.display="none";
-  let html=`<div class="back" onclick="back()">Orqaga</div>`;
-  branches.forEach(b=>{
-    html+=`
-    <div class="card">
-      <b>${b}</b><br>
-      <button onclick="openAuditForm('${b}',0)">Audit 1</button>
-      <button onclick="openAuditForm('${b}',1)">Audit 2</button>
-    </div>`;
-  });
-  document.getElementById("content").innerHTML=html;
-}
-
-function openAuditForm(branch, index){
-  currentBranch = branch;
-  currentIndex = index;
-  tempMarks = {}; // Tozalash
-  tempImages = {};
-
-  let data = getData();
-  let existing = data[currentMonth]?.[branch]?.audits?.[index];
-
-  let html=`<div class="back" onclick="openAudit()">Orqaga</div>`;
-  html+=`<div class="card"><b>${branch} - Audit ${index+1}</b></div>`;
-
-  questions.forEach((q, i)=>{
-    let savedMark = existing?.marks?.[i];
-    let savedImage = existing?.images?.[i];
-
-    html+=`<div class="card">
-      <p><b>${i+1}.</b> ${q.text}</p>`;
-
-    if(existing){
-        if(savedMark){
-          html+=`<div class="${savedMark==="good"?"scoreGreen":"scoreRed"}">
-            ${savedMark==="good"?"✔ Yaxshi":"❌ Yomon (-"+q.minus+")"}
-          </div>`;
+/* --- LOGIN SYSTEM --- */
+function handleLogin() {
+    const l = document.getElementById('lName').value;
+    const p = document.getElementById('lPass').value;
+    const db = getDB();
+    const user = db.users.find(u => u.l === l && u.p === p);
+    
+    if(user) {
+        currentUser = user;
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('welcomeMsg').innerText = `Admin: ${user.l}`;
+        
+        if(user.role === 'superadmin') {
+            document.getElementById('adminControls').innerHTML = `<button class="btn btn-outline" onclick="showView('view-admin')">Admin Boshqaruvi</button>`;
         }
-        if(savedImage){
-          html+=`<img src="${savedImage}" onclick="openImage('${savedImage}')">`;
-        }
+        
+        initMonthFilter();
+        renderHome();
     } else {
-        if(role !== "viewer"){
-          html+=`
-          <div style="margin-top:10px">
-            <button onclick="mark(${i},'good')" id="g${i}">✔</button>
-            <button onclick="mark(${i},'bad')" id="b${i}">✖</button>
-            <input type="file" accept="image/*" onchange="uploadImage(event,${i})">
-          </div>`;
-        } else {
-          html+=`<div class="locked">Audit hali o'tkazilmagan</div>`;
-        }
+        alert("Login yoki parol xato!");
     }
-    html+=`</div>`;
-  });
-
-  if(!existing && role !== "viewer"){
-    html+=`<button onclick="finishAudit()" style="width:100%; padding:20px; font-size:18px; background: green; color:white; margin-bottom:50px;">Auditni Yakunlash</button>`;
-  }
-  document.getElementById("content").innerHTML = html;
-  window.scrollTo(0,0);
 }
 
-function mark(i, type){
-  tempMarks[i] = type;
-  document.getElementById("g"+i).classList.toggle("good", type === "good");
-  document.getElementById("b"+i).classList.toggle("bad", type === "bad");
+/* --- NAVIGATION --- */
+function showView(viewId) {
+    ['view-home', 'view-audit', 'view-details', 'view-admin'].forEach(v => {
+        document.getElementById(v).style.display = (v === viewId) ? 'block' : 'none';
+    });
+    if(viewId === 'view-audit') setupAudit();
+    if(viewId === 'view-admin') renderAdminList();
+    window.scrollTo(0,0);
 }
 
-function uploadImage(event, index){
-  let file = event.target.files[0];
-  if(!file) return;
-  
-  // Rasmni kichraytirish (localStorage to'lib qolmasligi uchun)
-  let reader = new FileReader();
-  reader.onload = function(e){
-    let img = new Image();
-    img.onload = function() {
-        let canvas = document.createElement("canvas");
-        let ctx = canvas.getContext("2d");
-        let maxW = 600; 
-        let scale = maxW / img.width;
-        canvas.width = maxW;
-        canvas.height = img.height * scale;
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        tempImages[index] = canvas.toDataURL("image/jpeg", 0.7); // 70% sifat
+function initMonthFilter() {
+    const db = getDB();
+    const filter = document.getElementById('monthFilter');
+    filter.innerHTML = db.months.sort().reverse().map(m => `<option value="${m}">${m}</option>`).join('');
+}
+
+function renderHome() {
+    const db = getDB();
+    const month = document.getElementById('monthFilter').value;
+    const list = document.getElementById('historyList');
+    list.innerHTML = "";
+    
+    const monthData = db.audits[month] || {};
+    Object.keys(monthData).forEach(branch => {
+        monthData[branch].forEach((audit, idx) => {
+            list.innerHTML += `
+            <div class="card" onclick="viewDetails('${month}', '${branch}', ${idx})">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <b>${branch}</b>
+                    <span class="badge ${audit.s > 80 ? 'bg-success' : 'bg-danger'}">${audit.s} ball</span>
+                </div>
+                <small style="opacity:0.6; display:block; margin-top:5px;">${audit.d} | Admin: ${audit.u}</small>
+            </div>`;
+        });
+    });
+}
+
+/* --- AUDIT ENGINE --- */
+function setupAudit() {
+    currentMarks = {}; currentImages = {};
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = QUESTIONS.map((q, i) => `
+        <div class="q-card">
+            <p style="font-size:14px; line-height:1.4"><b>${i+1}.</b> ${q.text}</p>
+            <div class="btn-group">
+                <button id="g_${i}" class="choice" onclick="setMark(${i}, 'good')">YAXSHI</button>
+                <button id="b_${i}" class="choice" onclick="setMark(${i}, 'bad')">YOMON</button>
+            </div>
+            <input type="file" accept="image/*" onchange="processImg(event, ${i})">
+            <div id="img_prev_${i}"></div>
+        </div>
+    `).join('');
+}
+
+function setMark(idx, status) {
+    currentMarks[idx] = status;
+    document.getElementById(`g_${idx}`).className = 'choice ' + (status === 'good' ? 'active-good' : '');
+    document.getElementById(`b_${idx}`).className = 'choice ' + (status === 'bad' ? 'active-bad' : '');
+}
+
+function processImg(e, idx) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const maxW = 500;
+            const scale = maxW / img.width;
+            canvas.width = maxW; canvas.height = img.height * scale;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+            currentImages[idx] = dataUrl;
+            document.getElementById(`img_prev_${idx}`).innerHTML = `<img src="${dataUrl}">`;
+        };
+        img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function submitAudit() {
+    if(Object.keys(currentMarks).length < QUESTIONS.length) {
+        alert("DIQQAT: Barcha savollarni belgilashingiz shart!");
+        return;
     }
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
+    
+    let score = 100;
+    QUESTIONS.forEach((q, i) => { if(currentMarks[i] === 'bad') score -= q.minus; });
+    
+    const db = getDB();
+    const month = new Date().toISOString().slice(0,7);
+    const branch = document.getElementById('auditBranch').value;
+    
+    if(!db.audits[month]) db.audits[month] = {};
+    if(!db.audits[month][branch]) db.audits[month][branch] = [];
+    
+    db.audits[month][branch].push({
+        s: Math.max(0, score),
+        m: currentMarks,
+        i: currentImages,
+        d: new Date().toLocaleString(),
+        u: currentUser.l
+    });
+    
+    if(!db.months.includes(month)) db.months.push(month);
+    
+    saveDB(db);
+    alert("AUDIT MUVAFFAQIYATLI SAQLANDI! BALL: " + Math.max(0, score));
+    showView('view-home');
+    renderHome();
 }
 
-function finishAudit(){
-  // Kamida barcha savollar belgilanganini tekshirish tavsiya etiladi
-  if(Object.keys(tempMarks).length < questions.length) {
-      if(!confirm("Barcha savollar belgilanmadi. Baribir saqlaysizmi?")) return;
-  }
-
-  let score = 100;
-  questions.forEach((q, i) => {
-    if(tempMarks[i] === "bad") score -= q.minus;
-  });
-  if(score < 0) score = 0;
-
-  let data = getData();
-  if(!data[currentMonth]) data[currentMonth] = {};
-  if(!data[currentMonth][currentBranch]) data[currentMonth][currentBranch] = {audits:[null,null]};
-  
-  // Tarixni saqlash: Marks va Images obyektlarini klonlash
-  data[currentMonth][currentBranch].audits[currentIndex] = {
-    score: score,
-    marks: Object.assign({}, tempMarks),
-    images: Object.assign({}, tempImages),
-    date: new Date().toLocaleString()
-  };
-
-  saveData(data);
-  alert("Audit muvaffaqiyatli saqlandi! Ball: " + score);
-  openAudit();
+function viewDetails(m, b, idx) {
+    const db = getDB();
+    const a = db.audits[m][b][idx];
+    showView('view-details');
+    
+    document.getElementById('detailsContent').innerHTML = `
+        <h3 style="color:var(--primary)">${b} Natijalari</h3>
+        <p style="margin-bottom:20px">Ball: <b style="font-size:24px">${a.s}</b> | Sana: ${a.d}</p>
+        ${QUESTIONS.map((q, i) => `
+            <div class="card">
+                <p style="font-size:14px"><b>${i+1}.</b> ${q.text}</p>
+                <div style="margin-top:10px">
+                    <b style="color:${a.m[i] === 'good' ? '#2ecc71' : '#e74c3c'}">
+                        ${a.m[i] === 'good' ? '✔ YAXSHI' : '✖ YOMON'}
+                    </b>
+                </div>
+                ${a.i[i] ? `<img src="${a.i[i]}">` : ''}
+            </div>
+        `).join('')}
+    `;
 }
 
-/* ================= REPORTS ================= */
-function openAuditBall(){
-  document.getElementById("menu").style.display="none";
-  let data = getData();
-  let html=`<div class="back" onclick="back()">Orqaga</div>`;
-  branches.forEach(b=>{
-    let audits = data[currentMonth]?.[b]?.audits || [null, null];
-    let s1 = audits[0] ? audits[0].score : "-";
-    let s2 = audits[1] ? audits[1].score : "-";
-    let avg = (audits[0] && audits[1]) ? Math.round((audits[0].score + audits[1].score)/2) : (audits[0]?.score || audits[1]?.score || 0);
-
-    html+=`<div class="card">
-      <div style="font-size:20px; border-bottom:1px solid #eee; margin-bottom:10px; padding-bottom:5px;"><b>${b}</b></div>
-      <div style="display:flex; justify-content:space-between">
-        <span>Audit 1: <b>${s1}</b></span>
-        <span>Audit 2: <b>${s2}</b></span>
-      </div>
-      <div style="margin-top:10px; font-size:18px; color:#000">O'rtacha ball: <b>${avg}</b></div>
-    </div>`;
-  });
-  document.getElementById("content").innerHTML=html;
+/* --- SUPERADMIN FUNCTIONS --- */
+function addAdmin() {
+    if(currentUser.role !== 'superadmin') return;
+    const l = document.getElementById('newAdminLogin').value;
+    const p = document.getElementById('newAdminPass').value;
+    if(!l || !p) return alert("Login va parol to'liq bo'lishi kerak!");
+    
+    const db = getDB();
+    if(db.users.find(u => u.l === l)) return alert("Bunday loginli admin mavjud!");
+    
+    db.users.push({l, p, role: "admin"});
+    saveDB(db);
+    alert("Admin qo'shildi!");
+    document.getElementById('newAdminLogin').value = "";
+    document.getElementById('newAdminPass').value = "";
+    renderAdminList();
 }
 
-/* ================= UTILS ================= */
-function openImage(src){
-  let w=window.open("");
-  w.document.write(`<body style="margin:0; background:#000; display:flex; align-items:center; justify-content:center;"><img src="${src}" style="max-width:100%; max-height:100%;"></body>`);
+function renderAdminList() {
+    const db = getDB();
+    const list = document.getElementById('adminList');
+    list.innerHTML = db.users.map(u => `
+        <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+            <span><b>${u.l}</b> (${u.role})</span>
+            ${u.role !== 'superadmin' ? `<button onclick="delUser('${u.l}')" style="color:var(--danger); background:none; border:none; font-weight:bold; cursor:pointer;">O'CHIRISH</button>` : '<i>Asosiy</i>'}
+        </div>
+    `).join('');
 }
 
-function loadMenu(){
-  let m=document.getElementById("menu");
-  m.innerHTML=`
-    <div class="btn" onclick="openAudit()">🔍 Audit O'tkazish</div>
-    <div class="btn" onclick="openAuditBall()">📊 Natijalar (Ball)</div>
-  `;
+function delUser(login) {
+    if(!confirm("Haqiqatdan ham ushbu adminni o'chirmoqchimisiz?")) return;
+    const db = getDB();
+    db.users = db.users.filter(u => u.l !== login);
+    saveDB(db);
+    renderAdminList();
 }
-
-function back(){
-  document.getElementById("content").innerHTML="";
-  document.getElementById("menu").style.display="grid";
-}
-
-function logout(){
-  localStorage.removeItem("auth");
-  location.reload();
-}
-
-// Start
-loadMonths();
-loadMenu();
 </script>
 
 </body>
