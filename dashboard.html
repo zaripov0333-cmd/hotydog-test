@@ -2,146 +2,33 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Kirish Tizimi</title>
+    <title>Dashboard</title>
     <style>
-        /* Umumiy ko'rinish */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        h2 { color: #333; margin-bottom: 20px; }
-
-        /* Login Form stili */
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-
-        button:hover { background-color: #0056b3; }
-
-        /* Dashboard tugmalari stili */
-        #dashboard { display: none; } /* Avvaliga yashirin turadi */
-
-        .btn-category {
-            display: block;
-            text-decoration: none;
-            background-color: #28a745;
-            color: white;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 18px;
-            transition: transform 0.2s;
-        }
-
-        .btn-category:hover {
-            transform: scale(1.05);
-            background-color: #218838;
-        }
-
-        .audit-btn { background-color: #17a2b8; }
-        .audit-btn:hover { background-color: #138496; }
-
-        .error-msg { color: red; font-size: 14px; display: none; }
+        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 350px; text-align: center; }
+        .btn { display: block; text-decoration: none; padding: 20px; margin: 10px 0; border-radius: 8px; color: white; font-weight: bold; font-size: 18px; }
+        .audit { background: #17a2b8; }
+        .sb-ball { background: #28a745; }
+        .logout { background: #dc3545; padding: 10px; margin-top: 20px; display: inline-block; text-decoration: none; border-radius: 5px; color: white; font-size: 14px;}
     </style>
-</head>
-<body>
-
-    <!-- LOGIN QISMI -->
-    <div id="login-form" class="container">
-        <h2>Tizimga kirish</h2>
-        <input type="text" id="username" placeholder="Login">
-        <input type="password" id="password" placeholder="Parol">
-        <p id="error" class="error-msg">Login yoki parol xato!</p>
-        <button onclick="checkLogin()">Kirish</button>
-    </div>
-
-    <!-- DASHBOARD QISMI (Kirgandan keyin ko'rinadi) -->
-    <div id="dashboard" class="container">
-        <h2>Kategoriyalar</h2>
-        <p>Xush kelibsiz! Kerakli bo'limni tanlang:</p>
-        
-        <a href="https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/edit?usp=sharing" 
-           target="_blank" class="btn-category audit-btn">
-            📊 Audit
-        </a>
-
-        <a href="https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/edit?usp=sharing" 
-           target="_blank" class="btn-category">
-            📈 SB ball
-        </a>
-
-        <button onclick="logout()" style="background-color: #dc3545; margin-top: 20px;">Chiqish</button>
-    </div>
-
     <script>
-        // Login va Parolni shu yerda o'zgartirishingiz mumkin
-        const VALID_USER = "admin";
-        const VALID_PASS = "12345";
-
-        function checkLogin() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            const error = document.getElementById('error');
-
-            if (user === VALID_USER && pass === VALID_PASS) {
-                // Login muvaffaqiyatli bo'lsa
-                document.getElementById('login-form').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                localStorage.setItem('isLoggedIn', 'true');
-            } else {
-                // Xato bo'lsa
-                error.style.display = 'block';
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('isLoggedIn');
-            location.reload(); // Sahifani yangilash
-        }
-
-        // Sahifa yangilanganda login holatini tekshirish
-        window.onload = function() {
-            if (localStorage.getItem('isLoggedIn') === 'true') {
-                document.getElementById('login-form').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-            }
+        // Agar login qilmasdan kirmoqchi bo'lsa, orqaga haydab yuboradi
+        if (sessionStorage.getItem('auth') !== 'true') {
+            window.location.href = "index.html";
         }
     </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Asosiy bo'limlar</h2>
+        
+        <a href="https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/edit?usp=sharing" 
+           target="_blank" class="btn audit">📊 Audit</a>
 
+        <a href="https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/edit?usp=sharing" 
+           target="_blank" class="btn sb-ball">📈 SB ball</a>
+
+        <a href="#" onclick="sessionStorage.clear(); window.location.href='index.html';" class="logout">Chiqish</a>
+    </div>
 </body>
 </html>
