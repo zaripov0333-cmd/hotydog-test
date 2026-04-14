@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-<meta charset="UTF-8">
-<title>Dashboard</title>
-
 <style>
 body {
     margin: 0;
     font-family: sans-serif;
-    background: linear-gradient(135deg, #ffcc00, #ff9900);
+    background: #111;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,12 +15,11 @@ body {
     border-radius: 20px;
     width: 350px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    animation: fadeIn 0.6s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 h2 {
-    color: #ff9900;
+    color: #ffb300;
 }
 
 .btn {
@@ -35,17 +28,17 @@ h2 {
     margin: 12px 0;
     border-radius: 12px;
     text-decoration: none;
-    color: white;
+    color: black;
     font-weight: bold;
     transition: 0.3s;
 }
 
 .audit {
-    background: #ff9900;
+    background: #ffb300;
 }
 
 .sb-ball {
-    background: #ffaa00;
+    background: #ffd54f;
 }
 
 .btn:hover {
@@ -56,40 +49,9 @@ h2 {
     margin-top: 20px;
     display: inline-block;
     padding: 10px 15px;
-    background: red;
+    background: black;
     color: white;
     border-radius: 8px;
     text-decoration: none;
 }
-
-@keyframes fadeIn {
-    from {opacity: 0; transform: translateY(20px);}
-    to {opacity: 1; transform: translateY(0);}
-}
 </style>
-
-<script>
-if (sessionStorage.getItem('auth') !== 'true') {
-    window.location.href = "index.html";
-}
-</script>
-</head>
-
-<body>
-
-<div class="container">
-    <h2>🔥 HOTY DOGY</h2>
-
-    <a href="https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/edit"
-       target="_blank" class="btn audit">📊 Audit</a>
-
-    <a href="https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/edit"
-       target="_blank" class="btn sb-ball">📈 SB Ball</a>
-
-    <a href="#" onclick="sessionStorage.clear(); window.location.href='index.html';" class="logout">
-        🚪 Chiqish
-    </a>
-</div>
-
-</body>
-</html>
