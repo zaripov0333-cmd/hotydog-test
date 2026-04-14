@@ -1,194 +1,147 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hoty Dogy | Katalog & Audit</title>
-  <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap)" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #FFD43B;
-      --dark: #0a0a0a;
-      --card-bg: rgba(255,255,255,0.05);
-      --glass: rgba(255,255,255,0.1);
-      --success: #2ecc71;
-      --danger: #e74c3c;
-    }
-    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-    body{background:var(--dark);color:#fff;min-height:100vh;background-image:radial-gradient(circle at top right,#1a1a1a,#0a0a0a);}
-    .header{background:rgba(0,0,0,0.8);backdrop-filter:blur(15px);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--glass);position:sticky;top:0;z-index:1000;}
-    .header h1{font-size:16px;color:var(--primary);text-transform:uppercase;letter-spacing:2px;}
-    .container{padding:15px;max-width:600px;margin:auto;}
-    .login-box{background:var(--card-bg);padding:40px;border-radius:30px;border:1px solid var(--glass);width:100%;text-align:center;backdrop-filter:blur(10px);}
-    input{width:100%;padding:14px;margin:10px 0;border-radius:12px;border:1px solid var(--glass);background:rgba(255,255,255,0.05);color:#fff;outline:none;}
-    .btn{background:var(--primary);color:#000;padding:15px;border-radius:12px;border:none;font-weight:800;width:100%;cursor:pointer;transition:0.2s;}
-    .btn:active{transform:scale(0.95);}
-    .btn-outline{background:transparent;color:var(--primary);border:1px solid var(--primary);}
-    .menu-btns{display:flex;gap:15px;margin-top:15px;}
-    .card{background:var(--card-bg);border:1px solid var(--glass);border-radius:15px;padding:20px;margin-bottom:20px;}
-    table{width:100%;border-collapse:collapse;margin-top:10px;}
-    th,td{border-bottom:1px solid var(--glass);padding:8px;}
-    th{background:var(--primary);color:#000;}
-    .choice{flex:1;padding:12px;border-radius:10px;border:1px solid var(--glass);background:transparent;color:#fff;cursor:pointer;font-weight:bold;}
-    .choice.active-good{background:var(--success);border:none;}
-    .choice.active-bad{background:var(--danger);border:none;}
-    .btn-group{display:flex;gap:10px;margin:10px 0;}
-    img{width:100%;border-radius:15px;margin-top:10px;border:1px solid var(--glass);}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Kirish Tizimi</title>
+    <style>
+        /* Umumiy ko'rinish */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h2 { color: #333; margin-bottom: 20px; }
+
+        /* Login Form stili */
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        button:hover { background-color: #0056b3; }
+
+        /* Dashboard tugmalari stili */
+        #dashboard { display: none; } /* Avvaliga yashirin turadi */
+
+        .btn-category {
+            display: block;
+            text-decoration: none;
+            background-color: #28a745;
+            color: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+
+        .btn-category:hover {
+            transform: scale(1.05);
+            background-color: #218838;
+        }
+
+        .audit-btn { background-color: #17a2b8; }
+        .audit-btn:hover { background-color: #138496; }
+
+        .error-msg { color: red; font-size: 14px; display: none; }
+    </style>
 </head>
 <body>
 
-<!-- LOGIN PAGE -->
-<div id="loginPage" style="display:flex;align-items:center;justify-content:center;height:100vh;">
-  <div class="login-box">
-    <h2 style="color:var(--primary);margin-bottom:20px;font-weight:800;">HOTY DOGY</h2>
-    <input type="text" id="login" placeholder="Login">
-    <input type="password" id="password" placeholder="Parol">
-    <button class="btn" onclick="login()">Tizimga kirish</button>
-  </div>
-</div>
-
-<!-- APP MAIN -->
-<div id="app" style="display:none;">
-  <div class="header">
-    <h1>Hoty Dogy Tizimi</h1>
-    <div style="cursor:pointer;color:var(--danger);font-weight:bold;font-size:12px;" onclick="logout()">CHIQISH</div>
-  </div>
-  <div class="container">
-    <div id="homeView">
-      <h3>Xush kelibsiz, <span style="color:var(--primary);" id="username">Hoty</span></h3>
-      <div class="menu-btns">
-        <button class="btn" onclick="showView('catalogView')">📂 Katalog</button>
-        <button class="btn btn-outline" onclick="showView('auditView')">🧾 Audit</button>
-      </div>
+    <!-- LOGIN QISMI -->
+    <div id="login-form" class="container">
+        <h2>Tizimga kirish</h2>
+        <input type="text" id="username" placeholder="Login">
+        <input type="password" id="password" placeholder="Parol">
+        <p id="error" class="error-msg">Login yoki parol xato!</p>
+        <button onclick="checkLogin()">Kirish</button>
     </div>
 
-    <!-- KATALOG VIEW -->
-    <div id="catalogView" style="display:none;">
-      <div style="margin-bottom:15px;cursor:pointer;color:var(--primary);" onclick="showView('homeView')">← ORQAGA</div>
-      <h3>Katalog (Google Sheets bilan bog‘liq)</h3>
-      <button class="btn" style="margin-top:10px" onclick="loadCatalog()">Yangilash</button>
-      <div id="sheetStatus" style="opacity:.7;font-size:13px;margin-top:8px;"></div>
-      <table id="catalogTable">
-        <thead><tr><th>Nomi</th><th>Narxi</th><th>Toifa</th></tr></thead>
-        <tbody></tbody>
-      </table>
+    <!-- DASHBOARD QISMI (Kirgandan keyin ko'rinadi) -->
+    <div id="dashboard" class="container">
+        <h2>Kategoriyalar</h2>
+        <p>Xush kelibsiz! Kerakli bo'limni tanlang:</p>
+        
+        <a href="https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/edit?usp=sharing" 
+           target="_blank" class="btn-category audit-btn">
+            📊 Audit
+        </a>
+
+        <a href="https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/edit?usp=sharing" 
+           target="_blank" class="btn-category">
+            📈 SB ball
+        </a>
+
+        <button onclick="logout()" style="background-color: #dc3545; margin-top: 20px;">Chiqish</button>
     </div>
 
-    <!-- AUDIT VIEW -->
-    <div id="auditView" style="display:none;">
-      <div style="margin-bottom:15px;cursor:pointer;color:var(--primary);" onclick="showView('homeView')">← ORQAGA</div>
-      <div class="card">
-        <h3 style="margin-bottom:10px;color:var(--primary)">Audit Tizimi</h3>
-        <select id="auditBranch" style="padding:10px;width:100%;border-radius:10px;">
-          <option>Ц1</option><option>Shevchenko</option><option>Chilonzor</option>
-          <option>Next</option><option>Eko</option><option>IT Park</option>
-        </select>
-        <div id="questionsContainer"></div>
-        <button class="btn" style="height:70px;font-size:18px;margin-top:20px;" onclick="submitAudit()">AUDITNI SAQLASH</button>
-      </div>
-      <h4>Saqlangan auditlar</h4>
-      <div id="auditHistory"></div>
-    </div>
-  </div>
-</div>
+    <script>
+        // Login va Parolni shu yerda o'zgartirishingiz mumkin
+        const VALID_USER = "admin";
+        const VALID_PASS = "12345";
 
-<script>
-/* LOGIN */
-function login(){
-  const l=document.getElementById('login').value.trim();
-  const p=document.getElementById('password').value.trim();
-  if(l==="Hoty" && p==="123456"){
-     document.getElementById('loginPage').style.display='none';
-     document.getElementById('app').style.display='block';
-     showView('homeView');
-  } else {
-     alert("Login yoki parol xato!");
-  }
-}
-function logout(){location.reload();}
+        function checkLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const error = document.getElementById('error');
 
-/* VIEW TOGGLE */
-function showView(id){
-  ['homeView','catalogView','auditView'].forEach(v=>{
-    document.getElementById(v).style.display=(v===id)?'block':'none';
-  });
-  if(id==='auditView') setupAudit();
-}
+            if (user === VALID_USER && pass === VALID_PASS) {
+                // Login muvaffaqiyatli bo'lsa
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                localStorage.setItem('isLoggedIn', 'true');
+            } else {
+                // Xato bo'lsa
+                error.style.display = 'block';
+            }
+        }
 
-/* --- GOOGLE SHEETS DATA --- */
-const SHEET_ID='YOUR_SHEET_ID';
-const API_KEY='YOUR_API_KEY';
-const RANGE='Katalog!A2:C';
-async function loadCatalog(){
-  const el=document.getElementById('sheetStatus');
-  try{
-    el.innerText='Yuklanmoqda...';
-    const url=`[sheets.googleapis.com](https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY})`;
-    const res=await fetch(url);
-    const data=await res.json();
-    const rows=data.values||[];
-    const tbody=document.querySelector("#catalogTable tbody");
-    tbody.innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
-    el.innerText='Ma’lumotlar yuklandi ✅';
-  }catch(e){
-    el.innerText='Xatolik: Google Sheets bilan bog‘lanmadi ❌';
-  }
-}
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            location.reload(); // Sahifani yangilash
+        }
 
-/* --- AUDIT TIZIMI --- */
-const QUESTIONS=[
-  {text:"Restoran oldidagi bruschatka butun, mustahkam va toza.",minus:1},
-  {text:"XotyDogy yorlig'i toza va soz.",minus:1},
-  {text:"Chiqindi baklari toza va 3/4 dan oshmagan.",minus:1},
-  {text:"Zina va pandus toza va shikastlanmagan.",minus:1},
-  {text:"Barcha yoritish vositalari ishlaydi.",minus:1},
-  {text:"Pollar toza.",minus:1},
-  {text:"TV ishlaydi.",minus:1},
-  {text:"Mahsulot sifati yaxshi.",minus:5},
-  {text:"Yaroqlilik muddati o‘tmagan.",minus:20}
-];
-let currentMarks={};
-function setupAudit(){
-  currentMarks={};
-  const c=document.getElementById('questionsContainer');
-  c.innerHTML=QUESTIONS.map((q,i)=>`
-    <div style="margin-top:10px;padding-bottom:5px;border-bottom:1px solid var(--glass)">
-      <p><b>${i+1}. </b>${q.text}</p>
-      <div class="btn-group">
-        <button id="g_${i}" class="choice" onclick="setMark(${i},'good')">YAXSHI</button>
-        <button id="b_${i}" class="choice" onclick="setMark(${i},'bad')">YOMON</button>
-      </div>
-    </div>`).join('');
-  renderAuditHistory();
-}
-function setMark(i,s){
-  currentMarks[i]=s;
-  document.getElementById("g_"+i).className="choice "+(s==='good'?'active-good':'');
-  document.getElementById("b_"+i).className="choice "+(s==='bad'?'active-bad':'');
-}
-function submitAudit(){
-  if(Object.keys(currentMarks).length<QUESTIONS.length){alert("Barcha savollarni belgilang!");return;}
-  let score=100;
-  QUESTIONS.forEach((q,i)=>{if(currentMarks[i]==='bad')score-=q.minus;});
-  score=Math.max(0,score);
-  const branch=document.getElementById('auditBranch').value;
-  const audits=JSON.parse(localStorage.getItem('AUDITS')||'[]');
-  audits.push({branch,score,date:new Date().toLocaleString()});
-  localStorage.setItem('AUDITS',JSON.stringify(audits));
-  alert("Audit saqlandi! Ball: "+score);
-  renderAuditHistory();
-}
-function renderAuditHistory(){
-  const h=document.getElementById('auditHistory');
-  const audits=JSON.parse(localStorage.getItem('AUDITS')||'[]');
-  h.innerHTML=audits.map(a=>`
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;"><b>${a.branch}</b><span>${a.score} ball</span></div>
-      <small style="opacity:.7">${a.date}</small>
-    </div>`).join('');
-}
-</script>
+        // Sahifa yangilanganda login holatini tekshirish
+        window.onload = function() {
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+            }
+        }
+    </script>
+
 </body>
 </html>
-
