@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hoty Dogy Login</title>
+
 <style>
 body {
     margin: 0;
@@ -5,40 +12,46 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: sans-serif;
-    background: #f5f5f5; /* och fon */
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #fff8e1, #ffe082);
 }
 
 .login-box {
     background: white;
-    padding: 30px;
-    border-radius: 15px;
+    padding: 35px;
+    border-radius: 20px;
     width: 320px;
     text-align: center;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    animation: fade 0.6s ease;
 }
 
-h2 {
-    color: #f4b400; /* soft sariq */
+.logo {
+    font-size: 26px;
+    font-weight: bold;
+    color: #f4b400;
+    margin-bottom: 15px;
 }
 
 input {
     width: 100%;
     padding: 12px;
     margin: 12px 0;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid #ddd;
+    outline: none;
 }
 
 button {
     width: 100%;
     padding: 12px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     background: #f4b400;
     color: white;
     font-weight: bold;
     cursor: pointer;
+    transition: 0.3s;
 }
 
 button:hover {
@@ -48,5 +61,40 @@ button:hover {
 #error {
     color: red;
     display: none;
+    margin-top: 10px;
+}
+
+@keyframes fade {
+    from {opacity:0; transform: translateY(20px);}
+    to {opacity:1; transform: translateY(0);}
 }
 </style>
+</head>
+
+<body>
+
+<div class="login-box">
+    <div class="logo">🌭 HOTY DOGY</div>
+    <h3>Tizimga kirish</h3>
+
+    <input type="password" id="pass" placeholder="Parol kiriting">
+    <button onclick="login()">Kirish</button>
+
+    <p id="error">❌ Parol noto‘g‘ri</p>
+</div>
+
+<script>
+function login() {
+    const pass = document.getElementById('pass').value;
+
+    if (pass === "12345") {
+        sessionStorage.setItem('auth', 'true');
+        window.location.href = "dashboard.html";
+    } else {
+        document.getElementById('error').style.display = 'block';
+    }
+}
+</script>
+
+</body>
+</html>
