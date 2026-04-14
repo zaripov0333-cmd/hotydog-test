@@ -1,41 +1,135 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <title>Katalog | Hoty Dogy</title>
-  <style>
-    body { background:#0a0a0a; color:#fff; font-family:Poppins,sans-serif; padding:20px; }
-    table { width:100%; border-collapse:collapse; margin-top:20px; }
-    th,td { border-bottom:1px solid #333; padding:10px; }
-    th { background:#FFD43B; color:#000; }
-    .btn { background:#FFD43B; border:0; padding:10px; font-weight:bold; cursor:pointer; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirish - Tizimga xush kelibsiz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        .login-card h2 {
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #764ba2;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #764ba2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #5a3782;
+            transform: translateY(-2px);
+        }
+
+        #message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-  <h1>Katalog</h1>
-  <button class="btn" onclick="loadData()">Yangilash</button>
-  <table id="catalogTable">
-    <thead><tr><th>Nomi</th><th>Narxi</th><th>Toifa</th></tr></thead>
-    <tbody></tbody>
-  </table>
+    <div class="login-card">
+        <h2>Tizimga kirish</h2>
+        
+        <div class="input-group">
+            <label>Login</label>
+            <input type="text" id="username" placeholder="Loginingizni kiriting">
+        </div>
 
-<script>
-  const SHEET_ID = 'https://script.google.com/macros/s/AKfycbyYyKyWHOta6zIgg3l_eddRIC2tIxRFi00LPGmhm10T9QBzBTu0ukLMMKAn8EWrSUCh2g/exec'; // Google Sheets ID
-  const API_KEY = 'AKfycbyYyKyWHOta6zIgg3l_eddRIC2tIxRFi00LPGmhm10T9QBzBTu0ukLMMKAn8EWrSUCh2g'; // Sheets API key
-  const RANGE = 'Katalog!A2:C'; // Nom, Narx, Toifa ustunlari
+        <div class="input-group">
+            <label>Parol</label>
+            <input type="password" id="password" placeholder="Parolingizni kiriting">
+        </div>
 
-  async function loadData() {
-      const url = `[sheets.googleapis.com](https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY})`;
-      const res = await fetch(url);
-      const data = await res.json();
-      const rows = data.values || [];
-      const tbody = document.querySelector("#catalogTable tbody");
-      tbody.innerHTML = rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
-  }
+        <button onclick="handleLogin()">Kirish</button>
+        
+        <p id="message">Login yoki parol noto'g'ri!</p>
+    </div>
 
-  loadData(); // sahifa ochilganda avtomatik yuklansin
-</script>
+    <script>
+        // Oldindan belgilangan login va parol
+        const USERNAME_DB = "admin";
+        const PASSWORD_DB = "12345";
+
+        function handleLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const msg = document.getElementById('message');
+
+            if (user === USERNAME_DB && pass === PASSWORD_DB) {
+                // Muvaffaqiyatli login - Dashboardga yo'naltirish
+                localStorage.setItem('loggedIn', 'true');
+                window.location.href = "dashboard.html"; 
+            } else {
+                // Xato xabari
+                msg.style.display = 'block';
+                setTimeout(() => { msg.style.display = 'none'; }, 3000);
+            }
+        }
+
+        // Agar foydalanuvchi allaqachon kirgan bo'lsa, uni dashboardga o'tkazib yuboramiz
+        window.onload = function() {
+            if (localStorage.getItem('loggedIn') === 'true') {
+                window.location.href = "dashboard.html";
+            }
+        }
+    </script>
 
 </body>
 </html>
