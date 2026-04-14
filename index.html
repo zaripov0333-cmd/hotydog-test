@@ -1,80 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hoty Dogy Login</title>
-
-<style>
-body{
-background:#FFD43B;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-font-family:Segoe UI;
-}
-.box{
-background:white;
-padding:30px;
-border-radius:20px;
-width:300px;
-box-shadow:0 10px 30px rgba(0,0,0,0.3);
-}
-input{
-width:100%;
-padding:10px;
-margin:10px 0;
-border-radius:8px;
-border:1px solid #ccc;
-}
-button{
-width:100%;
-padding:10px;
-background:black;
-color:#FFD43B;
-border:none;
-border-radius:8px;
-cursor:pointer;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>Katalog | Hoty Dogy</title>
+  <style>
+    body { background:#0a0a0a; color:#fff; font-family:Poppins,sans-serif; padding:20px; }
+    table { width:100%; border-collapse:collapse; margin-top:20px; }
+    th,td { border-bottom:1px solid #333; padding:10px; }
+    th { background:#FFD43B; color:#000; }
+    .btn { background:#FFD43B; border:0; padding:10px; font-weight:bold; cursor:pointer; }
+  </style>
 </head>
-
 <body>
 
-<div class="box">
-<h2>Hoty Dogy</h2>
-<input id="login" placeholder="Login">
-<input id="password" type="password" placeholder="Parol">
-<button onclick="login()">Kirish</button>
-</div>
+  <h1>Katalog</h1>
+  <button class="btn" onclick="loadData()">Yangilash</button>
+  <table id="catalogTable">
+    <thead><tr><th>Nomi</th><th>Narxi</th><th>Toifa</th></tr></thead>
+    <tbody></tbody>
+  </table>
 
 <script>
+  const SHEET_ID = 'YOUR_GOOGLE_SHEET_ID'; // Google Sheets ID
+  const API_KEY = 'YOUR_API_KEY'; // Sheets API key
+  const RANGE = 'Katalog!A2:C'; // Nom, Narx, Toifa ustunlari
 
-if(!localStorage.getItem("users")){
-localStorage.setItem("users", JSON.stringify([
-{login:"aziz", password:"1234", role:"superadmin"}
-]));
-}
+  async function loadData() {
+      const url = `[sheets.googleapis.com](https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY})`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const rows = data.values || [];
+      const tbody = document.querySelector("#catalogTable tbody");
+      tbody.innerHTML = rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+  }
 
-function login(){
-
-let login=document.getElementById("login").value;
-let pass=document.getElementById("password").value;
-
-let users=JSON.parse(localStorage.getItem("users"));
-
-let user=users.find(u=>u.login===login && u.password===pass);
-
-if(user){
-localStorage.setItem("role",user.role);
-window.location="dashboard.html";
-}else{
-alert("Login xato");
-}
-
-}
-
+  loadData(); // sahifa ochilganda avtomatik yuklansin
 </script>
 
 </body>
