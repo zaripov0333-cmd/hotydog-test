@@ -2,104 +2,49 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard</title>
 
 <style>
 body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #f9f9f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    margin:0;
+    font-family:sans-serif;
+    background:#fff8dc;
+    text-align:center;
+}
+
+h1 {
+    background:#ff9800;
+    color:white;
+    padding:20px;
 }
 
 .container {
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    width: 360px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    animation: fade 0.5s ease;
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #f4b400;
-    margin-bottom: 10px;
-}
-
-.subtitle {
-    font-size: 14px;
-    color: #888;
-    margin-bottom: 20px;
+    padding:20px;
 }
 
 .btn {
-    display: block;
-    padding: 18px;
-    margin: 12px 0;
-    border-radius: 12px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.audit {
-    background: #f4b400;
-    color: white;
-}
-
-.sb {
-    background: #ffd54f;
-    color: black;
-}
-
-.btn:hover {
-    transform: scale(1.05);
-}
-
-.logout {
-    margin-top: 20px;
-    display: inline-block;
-    padding: 10px 15px;
-    background: #eee;
-    color: black;
-    border-radius: 8px;
-    text-decoration: none;
-}
-
-@keyframes fade {
-    from {opacity:0; transform: translateY(20px);}
-    to {opacity:1; transform: translateY(0);}
+    display:block;
+    margin:15px auto;
+    padding:15px;
+    width:250px;
+    background:#ff9800;
+    color:white;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:18px;
 }
 </style>
-
-<script>
-if (sessionStorage.getItem('auth') !== 'true') {
-    window.location.href = "index.html";
-}
-</script>
 </head>
 
 <body>
 
+<h1>🌭 HOTY DOGY</h1>
+
 <div class="container">
-    <div class="logo">🌭 HOTY DOGY</div>
-    <div class="subtitle">Boshqaruv paneli</div>
 
-    <a href="https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/edit"
-       target="_blank" class="btn audit">📊 Audit</a>
+    <a class="btn" href="sb.html">SB BALL</a>
+    <a class="btn" href="audit.html">AUDIT BALL</a>
 
-    <a href="https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/edit"
-       target="_blank" class="btn sb">📈 SB Ball</a>
-
-    <a href="#" onclick="sessionStorage.clear(); window.location.href='index.html';"
-       class="logout">🚪 Chiqish</a>
 </div>
 
 </body>
