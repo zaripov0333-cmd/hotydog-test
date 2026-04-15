@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<title>Live Audit Dashboard</title>
+
+<style>
+body {
+    font-family:sans-serif;
+    background:#fff8dc;
+    text-align:center;
+}
+
+h1 {
+    background:#ff9800;
+    color:white;
+    padding:20px;
+}
+
+.card {
+    background:white;
+    margin:15px auto;
+    padding:15px;
+    width:300px;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.name { font-size:20px; font-weight:bold; }
+
+.score { font-size:30px; margin:5px; }
+
+.green { color:green; }
+.red { color:red; }
+</style>
+</head>
+
+<body>
+
+<h1>🌭 HOTY DOGY AUDIT</h1>
+
+<div id="data"></div>
+
+<script>
+fetch("https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/gviz/tq?tqx=out:json")
+.then(res => res.text())
+.then(data => {
+
+    let json = JSON.parse(data.substr(47).slice(0,-2));
+    let rows = json.table.rows;
+
+    let filiallar = ["Chilonzor","Eco","Hext","Shevchenko","S1","IT Park"];
+
+    let html = "";
+
+    for(let i=0;i<6;i++){
+
+        let audit1 = rows[i].c[2]?.v || 0; // C ustun
+        let audit2 = rows[i].c[6]?.v || 0; // G ustun
+        let month = rows[i].c[12]?.v || 0; // M ustun
+
+        html += `
+        <div class="card">
+            <div class="name">${filiallar[i]}</div>
+            <div>1-audit: <span class="score">${audit1}</span></div>
+            <div>2-audit: <span class="score">${audit2}</span></div>
+            <div>Oylik: <span class="score green">${month}</span></div>
+        </div>
+        `;
+    }
+
+    document.getElementById("data").innerHTML = html;
+
+});
+</script>
+
+</body>
+</html>
