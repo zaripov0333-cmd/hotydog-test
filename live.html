@@ -81,13 +81,18 @@ body{
 <div class="header">🚀 HOTY DOGY PRO DASHBOARD</div>
 <div id="app">Loading...</div>
 
-<script>
+<<script>
 
 const auditURL = "https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/export?format=csv";
 const sbURL    = "https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/export?format=csv";
 
 function parseCSV(t){
   return t.split("\n").map(r=>r.split(","));
+}
+
+// 🔥 NOMNI NORMAL QILAMIZ
+function norm(x){
+  return (x || "").toLowerCase().replace(/\s+/g,"").trim();
 }
 
 Promise.all([
@@ -101,39 +106,38 @@ Promise.all([
 
  // 🔥 SB MAP
  let sbMap = {};
- for(let i=1;i<sb.length;i++){
-   let name = sb[i][1];
+ for(let i=0;i<sb.length;i++){
+   let name = norm(sb[i][1]);
    let val  = sb[i][2];
 
    if(name){
-     sbMap[name.trim()] = Number(val || 0);
+     sbMap[name] = Number(val || 0);
    }
  }
 
  let list = [];
 
- // 🔥 HAMMA QATORNI TEKSHIRIB TOPAMIZ
+ // 🔥 HAMMA QATORNI SKAN QILAMIZ
  audit.forEach(row => {
 
    row.forEach((cell, i) => {
 
-     // agar filial nomi bo‘lsa
+     let name = norm(cell);
+
+     // 🔥 faqat kerakli filiallarni filter
      if(
-       cell === "Chilonzor" ||
-       cell === "Eco" ||
-       cell === "Hext" ||
-       cell === "Шевченко" ||
-       cell === "Ц1" ||
-       cell === "IT Park"
+       name.includes("chilonzor") ||
+       name.includes("eco") ||
+       name.includes("hext") ||
+       name.includes("шевченко") ||
+       name.includes("ц1") ||
+       name.includes("itpark")
      ){
 
-       let name = cell.trim();
-
-       // yonidagi ustundan ballni olamiz
        let avg = Number(row[i+1] || 0);
 
        list.push({
-         name: name,
+         name: cell.trim(),
          avg: avg,
          sb: sbMap[name] || 0
        });
@@ -144,9 +148,8 @@ Promise.all([
 
  });
 
- // ❗ agar topilmasa
  if(list.length === 0){
-   document.getElementById("app").innerHTML = "❌ Ma'lumot topilmadi";
+   document.getElementById("app").innerHTML = "❌ Data topilmadi (sheet struktura tekshir)";
    return;
  }
 
