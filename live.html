@@ -90,6 +90,10 @@ function parseCSV(t){
   return t.split("\n").map(r=>r.split(","));
 }
 
+function clean(x){
+  return (x || "").toLowerCase().replace(/\s+/g,"").trim();
+}
+
 Promise.all([
  fetch(auditURL).then(r=>r.text()),
  fetch(sbURL).then(r=>r.text())
@@ -99,47 +103,60 @@ Promise.all([
  let audit = parseCSV(a);
  let sb    = parseCSV(s);
 
- // 🔥 SB MAP
+ // SB MAP
  let sbMap = {};
- for(let i=1;i<sb.length;i++){
-   let name = sb[i][1]?.trim();
-   let val  = sb[i][2];
-   if(name){
-     sbMap[name] = Number(val || 0);
-   }
- }
+ sb.forEach(r=>{
+   let name = clean(r[1]);
+   let val  = Number(r[2] || 0);
+   if(name) sbMap[name] = val;
+ });
 
  let list = [];
 
- // 🔥 FAqat 1 мс BLOKNI OLAMIZ
- for(let i=1;i<audit.length;i++){
+ // 🔥 "1 мс" BLOKNI TOPAMIZ
+ let startRow = -1;
+ let startCol = -1;
 
-   let name = audit[i][11]; // L ustun
-   let avg  = audit[i][12]; // M ustun
+ audit.forEach((row, r)=>{
+   row.forEach((cell, c)=>{
+     if(clean(cell).includes("1мс")){
+       startRow = r + 1; // pastdan boshlaymiz
+       startCol = c;
+     }
+   });
+ });
+
+ if(startRow === -1){
+   document.getElementById("app").innerHTML = "❌ 1 мс topilmadi";
+   return;
+ }
+
+ // 🔥 6 TA FILIALNI OLAMIZ
+ for(let i=0;i<6;i++){
+
+   let name = audit[startRow + i][startCol];
+   let avg  = audit[startRow + i][startCol + 1];
 
    if(!name) continue;
 
+   let key = clean(name);
+
    list.push({
-     name: name.trim(),
+     name: name,
      avg: Number(avg || 0),
-     sb: sbMap[name.trim()] || 0
+     sb: sbMap[key] || 0
    });
  }
 
- // ❗ FILTRLASH (faqat 6 filial)
- list = list.filter(x =>
-   x.name.includes("Chilonzor") ||
-   x.name.includes("Eco") ||
-   x.name.includes("Hext") ||
-   x.name.includes("Шевченко") ||
-   x.name.includes("Ц1") ||
-   x.name.includes("IT Park")
- );
+ if(list.length === 0){
+   document.getElementById("app").innerHTML = "❌ Ma'lumot yo‘q";
+   return;
+ }
 
- // 🔥 SORT
+ // SORT
  list.sort((a,b)=>b.avg - a.avg);
 
- let max = list[0]?.avg || 0;
+ let max = list[0].avg;
 
  let html = '<div class="container">';
 
@@ -175,8 +192,8 @@ Promise.all([
  document.getElementById("app").innerHTML = html;
 
 })
-.catch(err=>{
- document.getElementById("app").innerHTML = "❌ Xato: "+err;
+.catch(e=>{
+ document.getElementById("app").innerHTML = "❌ Xato: " + e;
 });
 
 </script>
