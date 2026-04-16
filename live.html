@@ -3,196 +3,207 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>HOTY DOGY LIVE</title>
+<title>HOTY DOGY GALAXY</title>
 
 <style>
 body{
  margin:0;
- font-family:sans-serif;
- background:linear-gradient(135deg,#f5e6c8,#fff3d6);
+ font-family:Inter,Arial;
+ color:#fff;
+ background:radial-gradient(circle at 20% 20%,#1b2735,#090a0f);
+ overflow-x:hidden;
 }
 
+/* ⭐ STAR BACKGROUND */
+body::before{
+ content:"";
+ position:fixed;
+ width:100%;
+ height:100%;
+ background:url("https://www.transparenttextures.com/patterns/stardust.png");
+ opacity:0.2;
+}
+
+/* HEADER */
 .header{
- background:#ff9800;
- color:white;
  text-align:center;
  padding:20px;
  font-size:22px;
- font-weight:bold;
+ font-weight:800;
+ letter-spacing:1px;
+ background:linear-gradient(90deg,#00c6ff,#0072ff);
+ box-shadow:0 0 25px rgba(0,150,255,.5);
 }
 
+/* FILTER */
+.filter{
+ text-align:center;
+ margin:15px;
+}
+
+select{
+ padding:10px;
+ border-radius:10px;
+ border:none;
+ font-size:16px;
+}
+
+/* GRID */
 .container{
  display:grid;
- grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+ grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
  gap:20px;
  padding:20px;
 }
 
+/* CARD */
 .card{
- background:white;
+ background:rgba(255,255,255,0.05);
+ backdrop-filter:blur(10px);
+ border-radius:20px;
  padding:20px;
- border-radius:15px;
- box-shadow:0 10px 25px rgba(0,0,0,0.15);
- transition:0.3s;
+ box-shadow:0 0 20px rgba(0,150,255,0.2);
+ transition:.3s;
 }
 
 .card:hover{
  transform:scale(1.05);
+ box-shadow:0 0 30px rgba(0,200,255,0.5);
 }
 
+/* TOP */
 .top{
- border:3px solid gold;
+ border:2px solid gold;
+ box-shadow:0 0 25px gold;
 }
 
-.name{
- font-size:18px;
- font-weight:bold;
- margin-bottom:10px;
-}
-
-.rank{
- font-size:12px;
- color:gray;
- margin-bottom:10px;
-}
+/* TEXT */
+.name{font-size:18px;font-weight:700;}
+.rank{font-size:12px;color:#aaa;}
 
 .row{
  display:flex;
  justify-content:space-between;
- margin:8px 0;
+ margin:10px 0;
 }
 
 .score{
- font-size:24px;
+ font-size:26px;
  font-weight:bold;
 }
 
-.red{color:#e53935;}
-.green{color:#2e7d32;}
+.red{color:#ff4d4d;}
+.yellow{color:#ffc107;}
+.green{color:#00ffae;}
 
+/* BONUS */
+.status{
+ margin-top:10px;
+ padding:5px 10px;
+ border-radius:10px;
+ text-align:center;
+ font-size:12px;
+}
+
+.bad{background:#ff4d4d33;}
+.mid{background:#ffc10733;}
+.good{background:#00ffae33;}
+
+.loading{text-align:center;padding:40px;}
 </style>
 </head>
 
 <body>
 
-<div class="header">🌭 HOTY DOGY LIVE DASHBOARD</div>
-<div id="app">Loading...</div>
+<div class="header">🌌 HOTY DOGY GALAXY DASHBOARD</div>
+
+<div class="filter">
+<select id="month">
+<option>Aprel</option>
+<option>Mart</option>
+<option>Fevral</option>
+</select>
+</div>
+
+<div id="app" class="loading">Loading...</div>
 
 <script>
 
-// 🔥 CSV LINKS
-const auditURL = "https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/export?format=csv";
-const sbURL    = "https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/export?format=csv";
+// 🔥 MASTER SHEET (1 ta ishlat)
+const url = "https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/export?format=csv";
 
-// 🔥 CSV parse
-function parseCSV(text){
- return text.split("\n").map(r=>r.split(","));
+// CSV parser
+function parseCSV(t){
+ return t.split("\n").map(r=>r.split(","));
 }
 
-// 🔥 nomlarni bir xil qilish
-function fix(name){
- let n = name.toLowerCase().trim();
-
- if(n === "эко") return "eco";
- if(n === "it парк") return "it park";
- if(n === "шевченко") return "shevchenko";
- if(n === "ц1") return "s1";
- if(n === "чилонзор") return "chilonzor";
-
- return n;
+// BONUS STATUS
+function getStatus(v){
+ if(v >= 80) return ["🟢 SUPER BONUS","good"];
+ if(v >= 60) return ["🟡 BONUS","mid"];
+ return ["🔴 PROBLEM","bad"];
 }
 
-Promise.all([
- fetch(auditURL).then(r=>r.text()),
- fetch(sbURL).then(r=>r.text())
-])
-.then(([auditText, sbText])=>{
+function load(){
+ fetch(url)
+ .then(r=>r.text())
+ .then(text=>{
+   let data = parseCSV(text);
+   let list=[];
 
- let audit = parseCSV(auditText);
- let sb    = parseCSV(sbText);
+   for(let i=1;i<data.length;i++){
+     let name = data[i][1];
+     if(!name) continue;
 
- // 🔥 SB MAP
- let sbMap = {};
- for(let i=1;i<sb.length;i++){
-   let name = sb[i][1];
-   let val  = sb[i][2];
+     let val = 0;
 
-   if(name){
-     sbMap[fix(name)] = Number(val||0);
-   }
- }
-
- let list = [];
-
- // 🔥 AUDIT DATA
- for(let i=1;i<audit.length;i++){
-
-   let name = audit[i][1];
-
-   if(!name) continue;
-
-   let key = fix(name);
-
-   // 🔥 OYLIKNI TOPISH (eng oxirgi son)
-   let avg = 0;
-
-   for(let j=0;j<audit[i].length;j++){
-     let val = audit[i][j];
-
-     if(val && !isNaN(val)){
-       avg = Number(val);
+     for(let j=0;j<data[i].length;j++){
+       let x = data[i][j];
+       if(x && !isNaN(x)){
+         val = Number(x);
+       }
      }
+
+     list.push({name,val,sb:0});
    }
 
-   list.push({
-     name:name,
-     avg:avg,
-     sb:sbMap[key] || 0
+   list.sort((a,b)=>b.val-a.val);
+   let max = list[0].val;
+
+   let html='<div class="container">';
+
+   list.forEach((x,i)=>{
+     let color = x.val<60?"red":(x.val<80?"yellow":"green");
+     let [text,cls]=getStatus(x.val);
+
+     html+=`
+     <div class="card ${x.val===max?"top":""}">
+       <div class="name">${x.name}</div>
+       <div class="rank">#${i+1}</div>
+
+       <div class="row">
+         <span>Audit</span>
+         <span class="score ${color}">${x.val}</span>
+       </div>
+
+       <div class="row">
+         <span>SB Ball</span>
+         <span class="score">${x.sb}</span>
+       </div>
+
+       <div class="status ${cls}">
+         ${text}
+       </div>
+     </div>
+     `;
    });
- }
 
- // 🔥 SORT (ranking)
- list.sort((a,b)=>b.avg - a.avg);
+   html+='</div>';
+   document.getElementById("app").innerHTML=html;
+ })
+}
 
- let max = list[0].avg;
-
- let html = '<div class="container">';
-
- list.forEach((x,i)=>{
-
-   let color = x.avg < 60 ? "red" : "green";
-   let top = x.avg === max ? "top" : "";
-
-   html += `
-   <div class="card ${top}">
-     <div class="name">${x.name}</div>
-     <div class="rank">#${i+1}</div>
-
-     <div class="row">
-       <span>Oylik Audit</span>
-       <span class="score ${color}">
-         ${x.avg.toFixed(1)}
-       </span>
-     </div>
-
-     <div class="row">
-       <span>SB Ball</span>
-       <span class="score">
-         ${x.sb.toFixed(1)}
-       </span>
-     </div>
-   </div>
-   `;
- });
-
- html += "</div>";
-
- document.getElementById("app").innerHTML = html;
-
-})
-.catch(e=>{
- document.getElementById("app").innerHTML = "❌ Xato: "+e;
-});
+load();
 
 </script>
 
