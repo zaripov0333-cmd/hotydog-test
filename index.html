@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<title>Hoty Dogy Login</title>
+<title>Login</title>
 
 <style>
 body {
@@ -14,34 +14,23 @@ body {
     align-items:center;
     height:100vh;
 }
-
 .box {
     background:white;
     padding:30px;
     border-radius:15px;
-    text-align:center;
     width:300px;
+    text-align:center;
 }
-
-h1 { color:#ff9800; }
-
-input {
+input, button {
     width:100%;
     padding:10px;
     margin:10px 0;
     border-radius:8px;
-    border:1px solid #ccc;
 }
-
 button {
-    width:100%;
-    padding:10px;
-    border:none;
     background:#ff9800;
     color:white;
-    font-weight:bold;
-    border-radius:8px;
-    cursor:pointer;
+    border:none;
 }
 </style>
 </head>
@@ -49,23 +38,20 @@ button {
 <body>
 
 <div class="box">
-    <h1>🌭 HOTY DOGY</h1>
+<h2>🌭 HOTY DOGY</h2>
 
-    <input type="text" id="login" placeholder="Login">
-    <input type="password" id="password" placeholder="Parol">
+<input id="login" placeholder="Login">
+<input id="parol" type="password" placeholder="Parol">
 
-    <button onclick="checkLogin()">Kirish</button>
+<button onclick="kirish()">Kirish</button>
 </div>
 
 <script>
-function checkLogin(){
-    let login = document.getElementById("login").value;
-    let password = document.getElementById("password").value;
-
-    if(login === "admin" && password === "1234"){
-        window.location.href = "dashboard.html";
+function kirish(){
+    if(login.value=="admin" && parol.value=="1234"){
+        location="dashboard.html";
     } else {
-        alert("Login yoki parol xato!");
+        alert("Xato!");
     }
 }
 </script>
