@@ -2,16 +2,56 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<title>Live Audit</title>
+<title>HOTY DOGY DASHBOARD</title>
 
 <style>
-body { font-family:sans-serif; background:#fff8dc; text-align:center; }
+body {
+    margin:0;
+    font-family:sans-serif;
+    background:#fff8dc;
+}
 
 h1 {
     background:#ff9800;
     color:white;
     padding:20px;
+    text-align:center;
 }
+
+.container {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.card {
+    background:white;
+    width:280px;
+    margin:15px;
+    padding:15px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.name {
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.row {
+    display:flex;
+    justify-content:space-between;
+    margin:5px 0;
+}
+
+.big {
+    font-size:28px;
+    font-weight:bold;
+}
+
+.green { color:green; }
+.red { color:red; }
 
 .back {
     position:absolute;
@@ -19,21 +59,10 @@ h1 {
     left:15px;
     background:#ff9800;
     color:white;
-    padding:8px;
+    padding:8px 12px;
     border-radius:8px;
     text-decoration:none;
 }
-
-.card {
-    background:white;
-    margin:15px auto;
-    padding:15px;
-    width:300px;
-    border-radius:12px;
-}
-
-.green { color:green; }
-.red { color:red; }
 </style>
 </head>
 
@@ -41,35 +70,54 @@ h1 {
 
 <a href="dashboard.html" class="back">⬅️</a>
 
-<h1>🔥 LIVE AUDIT</h1>
+<h1>🌭 HOTY DOGY LIVE</h1>
 
-<div id="data">Yuklanmoqda...</div>
+<div class="container" id="data">Loading...</div>
 
 <script>
-fetch("https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/gviz/tq?tqx=out:json")
-.then(res => res.text())
-.then(data => {
 
-    let json = JSON.parse(data.substr(47).slice(0,-2));
-    let rows = json.table.rows;
+// 🔥 2 ta sheet
+let auditURL = "https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/gviz/tq?tqx=out:json";
+let sbURL    = "https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/gviz/tq?tqx=out:json";
 
-    let names = ["Chilonzor","Eco","Hext","Shevchenko","S1","IT Park"];
+Promise.all([
+    fetch(auditURL).then(r=>r.text()),
+    fetch(sbURL).then(r=>r.text())
+]).then(([auditData, sbData])=>{
+
+    let auditJson = JSON.parse(auditData.substr(47).slice(0,-2));
+    let sbJson    = JSON.parse(sbData.substr(47).slice(0,-2));
+
+    let auditRows = auditJson.table.rows;
+    let sbRows    = sbJson.table.rows;
+
+    let names = ["Shevchenko","Chilonzor","Hext","Eco","S1","IT Park"];
+
     let html = "";
 
-    for(let i=0;i<6;i++){
+    for(let i=1;i<=6;i++){
 
-        let a1 = rows[i]?.c[2]?.v || 0;
-        let a2 = rows[i]?.c[6]?.v || 0;
-        let m  = rows[i]?.c[12]?.v || 0;
+        // 🔥 AUDIT (sening rasmga mos)
+        let audit = auditRows[i]?.c[2]?.v || 0;
 
-        let color = m >= 50 ? "green" : "red";
+        // 🔥 SB (2-qatorlardan boshlanadi)
+        let sb = sbRows[i]?.c[2]?.v || 0;
+
+        let color = audit >= 60 ? "green" : "red";
 
         html += `
         <div class="card">
-            <h2>${names[i]}</h2>
-            <p>1-audit: ${a1}</p>
-            <p>2-audit: ${a2}</p>
-            <p class="${color}" style="font-size:25px;">Oylik: ${m}</p>
+            <div class="name">${names[i-1]}</div>
+
+            <div class="row">
+                <span>Audit</span>
+                <span class="big ${color}">${audit}</span>
+            </div>
+
+            <div class="row">
+                <span>SB Ball</span>
+                <span class="big">${sb}</span>
+            </div>
         </div>
         `;
     }
