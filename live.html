@@ -113,29 +113,11 @@ Promise.all([
 
  let list = [];
 
- // 🔥 "1 мс" BLOKNI TOPAMIZ
- let startRow = -1;
- let startCol = -1;
+ // 🔥 TO‘G‘RI USTUNLAR (L=11, M=12)
+ for(let i=1;i<=6;i++){
 
- audit.forEach((row, r)=>{
-   row.forEach((cell, c)=>{
-     if(clean(cell).includes("1мс")){
-       startRow = r + 1; // pastdan boshlaymiz
-       startCol = c;
-     }
-   });
- });
-
- if(startRow === -1){
-   document.getElementById("app").innerHTML = "❌ 1 мс topilmadi";
-   return;
- }
-
- // 🔥 6 TA FILIALNI OLAMIZ
- for(let i=0;i<6;i++){
-
-   let name = audit[startRow + i][startCol];
-   let avg  = audit[startRow + i][startCol + 1];
+   let name = audit[i][11]; // L ustun
+   let avg  = audit[i][12]; // M ustun
 
    if(!name) continue;
 
@@ -197,7 +179,5 @@ Promise.all([
 });
 
 </script>
- 
-
 </body>
 </html>
