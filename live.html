@@ -1,113 +1,103 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>HOTY DOGY LIVE</title>
 
 <style>
-:root{
-  --bg1:#f6e7c9;
-  --bg2:#fff5db;
-  --primary:#ff9800;
-  --green:#2e7d32;
-  --red:#e53935;
-  --card:#ffffff;
-}
-*{box-sizing:border-box}
 body{
-  margin:0;
-  font-family:Inter, system-ui, Arial;
-  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+ margin:0;
+ font-family:sans-serif;
+ background:linear-gradient(135deg,#f5e6c8,#fff3d6);
 }
+
 .header{
-  background:var(--primary);
-  color:#fff;
-  padding:18px 16px;
-  text-align:center;
-  font-weight:800;
-  letter-spacing:.5px;
+ background:#ff9800;
+ color:white;
+ text-align:center;
+ padding:20px;
+ font-size:22px;
+ font-weight:bold;
 }
+
 .container{
-  max-width:1200px;
-  margin:0 auto;
-  padding:20px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:18px;
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+ gap:20px;
+ padding:20px;
 }
+
 .card{
-  background:var(--card);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:0 12px 30px rgba(0,0,0,.12);
-  transition:.25s;
+ background:white;
+ padding:20px;
+ border-radius:15px;
+ box-shadow:0 10px 25px rgba(0,0,0,0.15);
+ transition:0.3s;
 }
-.card:hover{ transform:translateY(-4px) scale(1.02); }
-.name{
-  font-size:18px;
-  font-weight:700;
-  margin-bottom:8px;
+
+.card:hover{
+ transform:scale(1.05);
 }
-.rank{
-  font-size:12px;
-  color:#888;
-  margin-bottom:10px;
-}
-.row{
-  display:flex;
-  justify-content:space-between;
-  margin:10px 0;
-  align-items:center;
-}
-.label{color:#666}
-.score{
-  font-size:26px;
-  font-weight:800;
-}
-.red{color:var(--red)}
-.green{color:var(--green)}
+
 .top{
-  border:2px solid gold;
-  background:#fffdf4;
+ border:3px solid gold;
 }
-.loading{
-  text-align:center;
-  padding:40px;
-  color:#555;
+
+.name{
+ font-size:18px;
+ font-weight:bold;
+ margin-bottom:10px;
 }
-.error{
-  color:red;
-  text-align:center;
-  padding:20px;
+
+.rank{
+ font-size:12px;
+ color:gray;
+ margin-bottom:10px;
 }
+
+.row{
+ display:flex;
+ justify-content:space-between;
+ margin:8px 0;
+}
+
+.score{
+ font-size:24px;
+ font-weight:bold;
+}
+
+.red{color:#e53935;}
+.green{color:#2e7d32;}
+
 </style>
 </head>
 
 <body>
 
 <div class="header">🌭 HOTY DOGY LIVE DASHBOARD</div>
-<div id="app" class="loading">Yuklanmoqda...</div>
+<div id="app">Loading...</div>
 
 <script>
 
-// 🔥 SHEET LINKLAR (CSV)
+// 🔥 CSV LINKS
 const auditURL = "https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/export?format=csv";
 const sbURL    = "https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/export?format=csv";
 
-// 🔥 parse
+// 🔥 CSV parse
 function parseCSV(text){
  return text.split("\n").map(r=>r.split(","));
 }
 
-// 🔥 nomni bir xil qilish
+// 🔥 nomlarni bir xil qilish
 function fix(name){
  let n = name.toLowerCase().trim();
 
  if(n === "эко") return "eco";
  if(n === "it парк") return "it park";
- if(n === "шевченко") return "шевченко";
- if(n === "ц1") return "ц1";
+ if(n === "шевченко") return "shevchenko";
+ if(n === "ц1") return "s1";
+ if(n === "чилонзор") return "chilonzor";
 
  return n;
 }
@@ -134,25 +124,35 @@ Promise.all([
 
  let list = [];
 
- // 🔥 AUDIT (O‘NG BLOK — OYLIK)
- for(let i=1;i<=6;i++){
+ // 🔥 AUDIT DATA
+ for(let i=1;i<audit.length;i++){
 
-   let name = audit[i][1]; // B ustun
-   let avg  = audit[i][12]; // M ustun (oylik)
+   let name = audit[i][1];
 
    if(!name) continue;
 
    let key = fix(name);
 
+   // 🔥 OYLIKNI TOPISH (eng oxirgi son)
+   let avg = 0;
+
+   for(let j=0;j<audit[i].length;j++){
+     let val = audit[i][j];
+
+     if(val && !isNaN(val)){
+       avg = Number(val);
+     }
+   }
+
    list.push({
      name:name,
-     avg:Number(avg||0),
+     avg:avg,
      sb:sbMap[key] || 0
    });
  }
 
- // 🔥 sort
- list.sort((a,b)=>b.avg-a.avg);
+ // 🔥 SORT (ranking)
+ list.sort((a,b)=>b.avg - a.avg);
 
  let max = list[0].avg;
 
