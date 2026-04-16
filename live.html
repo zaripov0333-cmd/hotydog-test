@@ -76,9 +76,8 @@ h1 {
 
 <script>
 
-// 🔥 2 ta sheet
 let auditURL = "https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/gviz/tq?tqx=out:json";
-let sbURL = "https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/gviz/tq?sheet=5%20%D1%84%D0%B8%D0%BB%D0%B8%D0%B0%D0%BB%20(aprel)&tqx=out:json";
+let sbURL    = "https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/gviz/tq?sheet=5%20%D1%84%D0%B8%D0%BB%D0%B8%D0%B0%D0%BB%20(aprel)&tqx=out:json";
 
 Promise.all([
     fetch(auditURL).then(r=>r.text()),
@@ -91,23 +90,36 @@ Promise.all([
     let auditRows = auditJson.table.rows;
     let sbRows    = sbJson.table.rows;
 
-    let names = ["Shevchenko","Chilonzor","Hext","Eco","S1","IT Park"];
+    // 🔥 SB ni OBJECT qilamiz (nomga bog‘laymiz)
+    let sbMap = {};
+
+    for(let i=1;i<sbRows.length;i++){
+        let name = sbRows[i]?.c[1]?.v;
+        let val  = sbRows[i]?.c[2]?.v;
+
+        if(name){
+            sbMap[name.toLowerCase()] = val;
+        }
+    }
 
     let html = "";
 
     for(let i=1;i<=6;i++){
 
-        // 🔥 AUDIT (sening rasmga mos)
+        let name  = auditRows[i]?.c[1]?.v; // B ustun (nom)
         let audit = auditRows[i]?.c[2]?.v || 0;
 
-        // 🔥 SB (2-qatorlardan boshlanadi)
-        let sb = sbRows[i]?.c[2]?.v || 0;
+        let sb = sbMap[name?.toLowerCase()] || 0;
+
+        // 🔥 sonni tozalash
+        audit = Number(audit).toFixed(1);
+        sb    = Number(sb).toFixed(1);
 
         let color = audit >= 60 ? "green" : "red";
 
         html += `
         <div class="card">
-            <div class="name">${names[i-1]}</div>
+            <div class="name">${name}</div>
 
             <div class="row">
                 <span>Audit</span>
