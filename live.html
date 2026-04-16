@@ -87,7 +87,7 @@ const auditURL = "https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGs
 const sbURL    = "https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/export?format=csv";
 
 function parseCSV(t){
- return t.split("\n").map(r=>r.split(","));
+  return t.split("\n").map(r=>r.split(","));
 }
 
 Promise.all([
@@ -99,35 +99,58 @@ Promise.all([
  let audit = parseCSV(a);
  let sb    = parseCSV(s);
 
- /* SB MAP */
+ // 🔥 SB MAP
  let sbMap = {};
  for(let i=1;i<sb.length;i++){
-   let name = sb[i][1]?.trim();
+   let name = sb[i][1];
    let val  = sb[i][2];
 
    if(name){
-     sbMap[name] = Number(val || 0);
+     sbMap[name.trim()] = Number(val || 0);
    }
  }
 
  let list = [];
 
- /* 🔥 TO‘G‘RI JOY (1 мс BLOK) */
- for(let i=1;i<=6;i++){
+ // 🔥 HAMMA QATORNI TEKSHIRIB TOPAMIZ
+ audit.forEach(row => {
 
-   let name = audit[i][11]; // L ustun
-   let avg  = audit[i][12]; // M ustun
+   row.forEach((cell, i) => {
 
-   if(!name) continue;
+     // agar filial nomi bo‘lsa
+     if(
+       cell === "Chilonzor" ||
+       cell === "Eco" ||
+       cell === "Hext" ||
+       cell === "Шевченко" ||
+       cell === "Ц1" ||
+       cell === "IT Park"
+     ){
 
-   list.push({
-     name:name.trim(),
-     avg:Number(avg || 0),
-     sb: sbMap[name.trim()] || 0
+       let name = cell.trim();
+
+       // yonidagi ustundan ballni olamiz
+       let avg = Number(row[i+1] || 0);
+
+       list.push({
+         name: name,
+         avg: avg,
+         sb: sbMap[name] || 0
+       });
+
+     }
+
    });
+
+ });
+
+ // ❗ agar topilmasa
+ if(list.length === 0){
+   document.getElementById("app").innerHTML = "❌ Ma'lumot topilmadi";
+   return;
  }
 
- /* SORT */
+ // 🔥 SORT
  list.sort((a,b)=>b.avg - a.avg);
 
  let max = list[0].avg;
@@ -145,7 +168,7 @@ Promise.all([
      <div class="rank">#${i+1}</div>
 
      <div class="row">
-       <span>Audit (oylik)</span>
+       <span>Audit</span>
        <span class="score ${color}">
          ${x.avg.toFixed(1)}
        </span>
@@ -167,10 +190,11 @@ Promise.all([
 
 })
 .catch(err=>{
- document.getElementById("app").innerHTML = "Xato: "+err;
+ document.getElementById("app").innerHTML = "❌ Xato: "+err;
 });
 
 </script>
+ 
 
 </body>
 </html>
