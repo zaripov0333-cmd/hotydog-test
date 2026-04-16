@@ -81,18 +81,13 @@ body{
 <div class="header">🚀 HOTY DOGY PRO DASHBOARD</div>
 <div id="app">Loading...</div>
 
-<<script>
+<script>
 
 const auditURL = "https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/export?format=csv";
 const sbURL    = "https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/export?format=csv";
 
 function parseCSV(t){
   return t.split("\n").map(r=>r.split(","));
-}
-
-// 🔥 NOMNI NORMAL QILAMIZ
-function norm(x){
-  return (x || "").toLowerCase().replace(/\s+/g,"").trim();
 }
 
 Promise.all([
@@ -106,10 +101,9 @@ Promise.all([
 
  // 🔥 SB MAP
  let sbMap = {};
- for(let i=0;i<sb.length;i++){
-   let name = norm(sb[i][1]);
+ for(let i=1;i<sb.length;i++){
+   let name = sb[i][1]?.trim();
    let val  = sb[i][2];
-
    if(name){
      sbMap[name] = Number(val || 0);
    }
@@ -117,46 +111,35 @@ Promise.all([
 
  let list = [];
 
- // 🔥 HAMMA QATORNI SKAN QILAMIZ
- audit.forEach(row => {
+ // 🔥 FAqat 1 мс BLOKNI OLAMIZ
+ for(let i=1;i<audit.length;i++){
 
-   row.forEach((cell, i) => {
+   let name = audit[i][11]; // L ustun
+   let avg  = audit[i][12]; // M ustun
 
-     let name = norm(cell);
+   if(!name) continue;
 
-     // 🔥 faqat kerakli filiallarni filter
-     if(
-       name.includes("chilonzor") ||
-       name.includes("eco") ||
-       name.includes("hext") ||
-       name.includes("шевченко") ||
-       name.includes("ц1") ||
-       name.includes("itpark")
-     ){
-
-       let avg = Number(row[i+1] || 0);
-
-       list.push({
-         name: cell.trim(),
-         avg: avg,
-         sb: sbMap[name] || 0
-       });
-
-     }
-
+   list.push({
+     name: name.trim(),
+     avg: Number(avg || 0),
+     sb: sbMap[name.trim()] || 0
    });
-
- });
-
- if(list.length === 0){
-   document.getElementById("app").innerHTML = "❌ Data topilmadi (sheet struktura tekshir)";
-   return;
  }
+
+ // ❗ FILTRLASH (faqat 6 filial)
+ list = list.filter(x =>
+   x.name.includes("Chilonzor") ||
+   x.name.includes("Eco") ||
+   x.name.includes("Hext") ||
+   x.name.includes("Шевченко") ||
+   x.name.includes("Ц1") ||
+   x.name.includes("IT Park")
+ );
 
  // 🔥 SORT
  list.sort((a,b)=>b.avg - a.avg);
 
- let max = list[0].avg;
+ let max = list[0]?.avg || 0;
 
  let html = '<div class="container">';
 
@@ -171,7 +154,7 @@ Promise.all([
      <div class="rank">#${i+1}</div>
 
      <div class="row">
-       <span>Audit</span>
+       <span>Oylik Audit</span>
        <span class="score ${color}">
          ${x.avg.toFixed(1)}
        </span>
