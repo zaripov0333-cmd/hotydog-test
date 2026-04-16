@@ -90,6 +90,9 @@ Promise.all([
     let auditRows = auditJson.table.rows;
     let sbRows    = sbJson.table.rows;
 
+    // 🔥 kerakli filiallar
+    let allowed = ["chilonzor","eco","hext","шевченко","ц1","it park"];
+
     // 🔥 SB MAP
     let sbMap = {};
     for(let i=1;i<sbRows.length;i++){
@@ -106,11 +109,17 @@ Promise.all([
     for(let i=1;i<auditRows.length;i++){
 
         let name  = auditRows[i]?.c[1]?.v;
-        let audit = auditRows[i]?.c[2]?.v || 0;
+        let audit = auditRows[i]?.c[2]?.v;
 
-        let sb = sbMap[name?.toLowerCase()] || 0;
+        if(!name) continue;
 
-        // 🔥 FLOAT FIX
+        let key = name.toLowerCase();
+
+        // ❗ faqat kerakli filiallar
+        if(!allowed.includes(key)) continue;
+
+        let sb = sbMap[key] || 0;
+
         audit = Number(audit).toFixed(1);
         sb    = Number(sb).toFixed(1);
 
@@ -146,6 +155,5 @@ Promise.all([
 
 });
 </script>
-
 </body>
 </html>
