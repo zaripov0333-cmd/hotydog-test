@@ -1,174 +1,196 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>HOTY DOGY LIVE</title>
 
 <style>
+:root{
+  --bg1:#f6e7c9;
+  --bg2:#fff5db;
+  --primary:#ff9800;
+  --green:#2e7d32;
+  --red:#e53935;
+  --card:#ffffff;
+}
+*{box-sizing:border-box}
 body{
-    margin:0;
-    font-family:sans-serif;
-    background:linear-gradient(135deg,#f5e6c8,#fff3d6);
+  margin:0;
+  font-family:Inter, system-ui, Arial;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
 }
-
-h1{
-    background:#ff9800;
-    color:white;
-    padding:20px;
-    text-align:center;
-    margin:0;
+.header{
+  background:var(--primary);
+  color:#fff;
+  padding:18px 16px;
+  text-align:center;
+  font-weight:800;
+  letter-spacing:.5px;
 }
-
 .container{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    padding:20px;
+  max-width:1200px;
+  margin:0 auto;
+  padding:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:18px;
 }
-
 .card{
-    width:260px;
-    margin:15px;
-    padding:20px;
-    border-radius:18px;
-    background:white;
-    box-shadow:0 10px 25px rgba(0,0,0,0.15);
-    transition:0.3s;
+  background:var(--card);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 12px 30px rgba(0,0,0,.12);
+  transition:.25s;
 }
-
-.card:hover{
-    transform:scale(1.06);
-}
-
+.card:hover{ transform:translateY(-4px) scale(1.02); }
 .name{
-    font-size:20px;
-    font-weight:bold;
-    margin-bottom:10px;
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:8px;
 }
-
-.row{
-    display:flex;
-    justify-content:space-between;
-    margin:10px 0;
-}
-
-.score{
-    font-size:26px;
-    font-weight:bold;
-}
-
-.red{color:#e53935;}
-.green{color:#2e7d32;}
-
-.top{
-    border:3px solid gold;
-    background:#fffdf5;
-}
-
 .rank{
-    font-size:14px;
-    color:#999;
+  font-size:12px;
+  color:#888;
+  margin-bottom:10px;
 }
-
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin:10px 0;
+  align-items:center;
+}
+.label{color:#666}
+.score{
+  font-size:26px;
+  font-weight:800;
+}
+.red{color:var(--red)}
+.green{color:var(--green)}
+.top{
+  border:2px solid gold;
+  background:#fffdf4;
+}
+.loading{
+  text-align:center;
+  padding:40px;
+  color:#555;
+}
+.error{
+  color:red;
+  text-align:center;
+  padding:20px;
+}
 </style>
 </head>
 
 <body>
 
-<h1>🌭 HOTY DOGY LIVE DASHBOARD</h1>
-
-<div class="container" id="data">Loading...</div>
+<div class="header">🌭 HOTY DOGY LIVE DASHBOARD</div>
+<div id="app" class="loading">Yuklanmoqda...</div>
 
 <script>
+// ❗ SHEET ID LAR
+const AUDIT_ID = "1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw";
+const SB_ID    = "1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs";
 
-// 🔥 2 ta sheet
-let auditURL = "https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/gviz/tq?sheet=5%20%D1%84%D0%B8%D0%BB%D0%B8%D0%B0%D0%BB%20(aprel)&tqx=out:json";
+// ❗ bu list nomi qanaqa bo‘lsa ham ishlaydi
+const AUDIT_URL = `https://docs.google.com/spreadsheets/d/${AUDIT_ID}/gviz/tq?tqx=out:json`;
+const SB_URL    = `https://docs.google.com/spreadsheets/d/${SB_ID}/gviz/tq?tqx=out:json`;
 
-let sbURL = "https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/gviz/tq?sheet=5%20%D1%84%D0%B8%D0%BB%D0%B8%D0%B0%D0%BB%20(aprel)&tqx=out:json";
+// ❗ faqat shu filiallar chiqadi
+const ALLOWED = ["шевченко","чилонзор","hext","eco","ц1","it park"];
 
-Promise.all([
-    fetch(auditURL).then(r=>r.text()),
-    fetch(sbURL).then(r=>r.text())
-]).then(([auditData, sbData])=>{
+function parseGViz(txt){
+  return JSON.parse(txt.substr(47).slice(0,-2));
+}
 
-    let auditJson = JSON.parse(auditData.substr(47).slice(0,-2));
-    let sbJson    = JSON.parse(sbData.substr(47).slice(0,-2));
+function norm(s){
+  return String(s||"").toLowerCase().trim();
+}
 
-    let auditRows = auditJson.table.rows;
-    let sbRows    = sbJson.table.rows;
+async function load(){
+  try{
+    const [aTxt, sTxt] = await Promise.all([
+      fetch(AUDIT_URL).then(r=>r.text()),
+      fetch(SB_URL).then(r=>r.text())
+    ]);
 
-    // 🔥 SB map (nomga bog‘lash)
-    let sbMap = {};
-    for(let i=1;i<sbRows.length;i++){
-        let name = sbRows[i]?.c[1]?.v;
-        let val  = sbRows[i]?.c[2]?.v;
+    const aJson = parseGViz(aTxt);
+    const sJson = parseGViz(sTxt);
 
-        if(name){
-            sbMap[name.toLowerCase()] = Number(val);
-        }
+    const aRows = aJson.table.rows;
+    const sRows = sJson.table.rows;
+
+    // 🔥 SB MAP (nom → qiymat)
+    const sbMap = {};
+    for(let i=1;i<sRows.length;i++){
+      const name = sRows[i]?.c?.[1]?.v;
+      const val  = sRows[i]?.c?.[2]?.v;
+      if(name){
+        sbMap[norm(name)] = Number(val||0);
+      }
     }
 
-    let list = [];
+    // 🔥 AUDIT LIST
+    const list = [];
+    for(let i=1;i<aRows.length;i++){
+      const name = aRows[i]?.c?.[1]?.v;
+      const val  = aRows[i]?.c?.[2]?.v;
 
-    for(let i=1;i<auditRows.length;i++){
+      if(!name) continue;
 
-        let name = auditRows[i]?.c[1]?.v;
-        let audit = auditRows[i]?.c[2]?.v;
+      const key = norm(name);
+      if(!ALLOWED.includes(key)) continue;
 
-        if(!name) continue;
-
-        let key = name.toLowerCase();
-
-        // 🔥 faqat filiallar
-        let allowed = ["шевченко","чилонзор","hext","eco","ц1","it park"];
-        if(!allowed.includes(key)) continue;
-
-        list.push({
-            name:name,
-            audit:Number(audit),
-            sb:sbMap[key] || 0
-        });
+      list.push({
+        name,
+        audit: Number(val||0),
+        sb: sbMap[key] || 0
+      });
     }
 
     // 🔥 SORT (ranking)
     list.sort((a,b)=>b.audit - a.audit);
 
-    let max = list[0].audit;
+    const max = list.length ? list[0].audit : 0;
 
-    let html = "";
+    // 🔥 RENDER
+    const html = `
+      <div class="container">
+        ${list.map((x,i)=>{
+          const color = x.audit < 60 ? "red" : "green";
+          const top   = x.audit === max ? "top" : "";
+          return `
+            <div class="card ${top}">
+              <div class="name">${x.name}</div>
+              <div class="rank">#${i+1}</div>
 
-    list.forEach((item,index)=>{
+              <div class="row">
+                <div class="label">Audit</div>
+                <div class="score ${color}">${x.audit.toFixed(1)}</div>
+              </div>
 
-        let color = item.audit < 60 ? "red" : "green";
-        let top   = item.audit === max ? "top" : "";
-
-        html += `
-        <div class="card ${top}">
-            
-            <div class="name">${item.name}</div>
-            <div class="rank">#${index+1} filial</div>
-
-            <div class="row">
-                <span>Audit</span>
-                <span class="score ${color}">
-                    ${item.audit.toFixed(1)}
-                </span>
+              <div class="row">
+                <div class="label">SB Ball</div>
+                <div class="score">${x.sb.toFixed(1)}</div>
+              </div>
             </div>
+          `;
+        }).join("")}
+      </div>
+    `;
 
-            <div class="row">
-                <span>SB Ball</span>
-                <span class="score">
-                    ${item.sb.toFixed(1)}
-                </span>
-            </div>
+    document.getElementById("app").innerHTML = html;
 
-        </div>
-        `;
-    });
+  }catch(e){
+    document.getElementById("app").innerHTML =
+      `<div class="error">❌ Xatolik: ${e.message}</div>`;
+    console.error(e);
+  }
+}
 
-    document.getElementById("data").innerHTML = html;
-
-});
+load();
 </script>
 
 </body>
