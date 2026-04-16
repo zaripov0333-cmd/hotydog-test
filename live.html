@@ -90,107 +90,110 @@ body{
 <div id="app" class="loading">Yuklanmoqda...</div>
 
 <script>
-// ❗ SHEET ID LAR
-const AUDIT_ID = "1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw";
-const SB_ID    = "1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs";
 
-// ❗ bu list nomi qanaqa bo‘lsa ham ishlaydi
-const AUDIT_URL = `https://docs.google.com/spreadsheets/d/${AUDIT_ID}/gviz/tq?tqx=out:json`;
-const SB_URL    = `https://docs.google.com/spreadsheets/d/${SB_ID}/gviz/tq?tqx=out:json`;
+// 🔥 SHEET LINKLAR (CSV)
+const auditURL = "https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/export?format=csv";
+const sbURL    = "https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/export?format=csv";
 
-// ❗ faqat shu filiallar chiqadi
-const ALLOWED = ["шевченко","чилонзор","hext","eco","ц1","it park"];
-
-function parseGViz(txt){
-  return JSON.parse(txt.substr(47).slice(0,-2));
+// 🔥 parse
+function parseCSV(text){
+ return text.split("\n").map(r=>r.split(","));
 }
 
-function norm(s){
-  return String(s||"").toLowerCase().trim();
+// 🔥 nomni bir xil qilish
+function fix(name){
+ let n = name.toLowerCase().trim();
+
+ if(n === "эко") return "eco";
+ if(n === "it парк") return "it park";
+ if(n === "шевченко") return "шевченко";
+ if(n === "ц1") return "ц1";
+
+ return n;
 }
 
-async function load(){
-  try{
-    const [aTxt, sTxt] = await Promise.all([
-      fetch(AUDIT_URL).then(r=>r.text()),
-      fetch(SB_URL).then(r=>r.text())
-    ]);
+Promise.all([
+ fetch(auditURL).then(r=>r.text()),
+ fetch(sbURL).then(r=>r.text())
+])
+.then(([auditText, sbText])=>{
 
-    const aJson = parseGViz(aTxt);
-    const sJson = parseGViz(sTxt);
+ let audit = parseCSV(auditText);
+ let sb    = parseCSV(sbText);
 
-    const aRows = aJson.table.rows;
-    const sRows = sJson.table.rows;
+ // 🔥 SB MAP
+ let sbMap = {};
+ for(let i=1;i<sb.length;i++){
+   let name = sb[i][1];
+   let val  = sb[i][2];
 
-    // 🔥 SB MAP (nom → qiymat)
-    const sbMap = {};
-    for(let i=1;i<sRows.length;i++){
-      const name = sRows[i]?.c?.[1]?.v;
-      const val  = sRows[i]?.c?.[2]?.v;
-      if(name){
-        sbMap[norm(name)] = Number(val||0);
-      }
-    }
+   if(name){
+     sbMap[fix(name)] = Number(val||0);
+   }
+ }
 
-    // 🔥 AUDIT LIST
-    const list = [];
-    for(let i=1;i<aRows.length;i++){
-      const name = aRows[i]?.c?.[1]?.v;
-      const val  = aRows[i]?.c?.[2]?.v;
+ let list = [];
 
-      if(!name) continue;
+ // 🔥 AUDIT (O‘NG BLOK — OYLIK)
+ for(let i=1;i<=6;i++){
 
-      const key = norm(name);
-      if(!ALLOWED.includes(key)) continue;
+   let name = audit[i][1]; // B ustun
+   let avg  = audit[i][12]; // M ustun (oylik)
 
-      list.push({
-        name,
-        audit: Number(val||0),
-        sb: sbMap[key] || 0
-      });
-    }
+   if(!name) continue;
 
-    // 🔥 SORT (ranking)
-    list.sort((a,b)=>b.audit - a.audit);
+   let key = fix(name);
 
-    const max = list.length ? list[0].audit : 0;
+   list.push({
+     name:name,
+     avg:Number(avg||0),
+     sb:sbMap[key] || 0
+   });
+ }
 
-    // 🔥 RENDER
-    const html = `
-      <div class="container">
-        ${list.map((x,i)=>{
-          const color = x.audit < 60 ? "red" : "green";
-          const top   = x.audit === max ? "top" : "";
-          return `
-            <div class="card ${top}">
-              <div class="name">${x.name}</div>
-              <div class="rank">#${i+1}</div>
+ // 🔥 sort
+ list.sort((a,b)=>b.avg-a.avg);
 
-              <div class="row">
-                <div class="label">Audit</div>
-                <div class="score ${color}">${x.audit.toFixed(1)}</div>
-              </div>
+ let max = list[0].avg;
 
-              <div class="row">
-                <div class="label">SB Ball</div>
-                <div class="score">${x.sb.toFixed(1)}</div>
-              </div>
-            </div>
-          `;
-        }).join("")}
-      </div>
-    `;
+ let html = '<div class="container">';
 
-    document.getElementById("app").innerHTML = html;
+ list.forEach((x,i)=>{
 
-  }catch(e){
-    document.getElementById("app").innerHTML =
-      `<div class="error">❌ Xatolik: ${e.message}</div>`;
-    console.error(e);
-  }
-}
+   let color = x.avg < 60 ? "red" : "green";
+   let top = x.avg === max ? "top" : "";
 
-load();
+   html += `
+   <div class="card ${top}">
+     <div class="name">${x.name}</div>
+     <div class="rank">#${i+1}</div>
+
+     <div class="row">
+       <span>Oylik Audit</span>
+       <span class="score ${color}">
+         ${x.avg.toFixed(1)}
+       </span>
+     </div>
+
+     <div class="row">
+       <span>SB Ball</span>
+       <span class="score">
+         ${x.sb.toFixed(1)}
+       </span>
+     </div>
+   </div>
+   `;
+ });
+
+ html += "</div>";
+
+ document.getElementById("app").innerHTML = html;
+
+})
+.catch(e=>{
+ document.getElementById("app").innerHTML = "❌ Xato: "+e;
+});
+
 </script>
 
 </body>
