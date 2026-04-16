@@ -73,11 +73,11 @@ h1 {
 <h1>🌭 HOTY DOGY LIVE</h1>
 
 <div class="container" id="data">Loading...</div>
-
 <script>
 
-let auditURL = "https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/gviz/tq?tqx=out:json";
-let sbURL    = "https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/gviz/tq?sheet=5%20%D1%84%D0%B8%D0%BB%D0%B8%D0%B0%D0%BB%20(aprel)&tqx=out:json";
+let auditURL = "https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/gviz/tq?sheet=Об&tqx=out:json";
+
+let sbURL = "https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/gviz/tq?sheet=5%20%D1%84%D0%B8%D0%BB%D0%B8%D0%B0%D0%BB%20(aprel)&tqx=out:json";
 
 Promise.all([
     fetch(auditURL).then(r=>r.text()),
@@ -90,9 +90,8 @@ Promise.all([
     let auditRows = auditJson.table.rows;
     let sbRows    = sbJson.table.rows;
 
-    // 🔥 SB ni OBJECT qilamiz (nomga bog‘laymiz)
+    // 🔥 SB MAP
     let sbMap = {};
-
     for(let i=1;i<sbRows.length;i++){
         let name = sbRows[i]?.c[1]?.v;
         let val  = sbRows[i]?.c[2]?.v;
@@ -104,32 +103,41 @@ Promise.all([
 
     let html = "";
 
-    for(let i=1;i<=6;i++){
+    for(let i=1;i<auditRows.length;i++){
 
-        let name  = auditRows[i]?.c[1]?.v; // B ustun (nom)
+        let name  = auditRows[i]?.c[1]?.v;
         let audit = auditRows[i]?.c[2]?.v || 0;
 
         let sb = sbMap[name?.toLowerCase()] || 0;
 
-        // 🔥 sonni tozalash
+        // 🔥 FLOAT FIX
         audit = Number(audit).toFixed(1);
         sb    = Number(sb).toFixed(1);
 
-        let color = audit >= 60 ? "green" : "red";
+        let color = audit < 60 ? "red" : "green";
 
         html += `
-        <div class="card">
-            <div class="name">${name}</div>
+        <div style="
+            background:white;
+            margin:15px;
+            padding:15px;
+            width:260px;
+            border-radius:15px;
+            box-shadow:0 5px 15px rgba(0,0,0,0.1);
+        ">
+            <h3>${name}</h3>
 
-            <div class="row">
-                <span>Audit</span>
-                <span class="big ${color}">${audit}</span>
-            </div>
+            <p>Audit: 
+                <span style="color:${color};font-size:24px;font-weight:bold;">
+                    ${audit}
+                </span>
+            </p>
 
-            <div class="row">
-                <span>SB Ball</span>
-                <span class="big">${sb}</span>
-            </div>
+            <p>SB Ball: 
+                <span style="font-size:20px;font-weight:bold;">
+                    ${sb}
+                </span>
+            </p>
         </div>
         `;
     }
