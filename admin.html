@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin</title>
+</head>
+<body style="background:#0f172a;color:white;font-family:sans-serif">
+
+<h2>ADMIN PANEL</h2>
+
+<select id="f">
+<option>Chilonzor</option>
+<option>Eco</option>
+<option>Next</option>
+<option>Shevchenko</option>
+<option>C1</option>
+<option>IT Park</option>
+</select>
+
+<input id="a1" placeholder="Audit 1">
+<input id="a2" placeholder="Audit 2">
+
+<button onclick="save()">Saqlash</button>
+
+<script>
+if(localStorage.role!="admin") location="index.html";
+
+function save(){
+ let data={
+  filial:f.value,
+  audit1:a1.value,
+  audit2:a2.value
+ };
+
+ alert("Keyingi bosqich: Google Sheetga yozamiz");
+ console.log(data);
+}
+</script>
+
+</body>
+</html>
