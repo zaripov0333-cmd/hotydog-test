@@ -1,58 +1,37 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>Login</title>
-
 <style>
-body {
-    margin:0;
-    font-family:sans-serif;
-    background: linear-gradient(135deg,#FFD700,#FFA500);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
-.box {
-    background:white;
-    padding:30px;
-    border-radius:15px;
-    width:300px;
-    text-align:center;
-}
-input, button {
-    width:100%;
-    padding:10px;
-    margin:10px 0;
-    border-radius:8px;
-}
-button {
-    background:#ff9800;
-    color:white;
-    border:none;
-}
+body{display:flex;justify-content:center;align-items:center;height:100vh;background:#0f172a;color:white;font-family:sans-serif}
+.box{background:#111827;padding:30px;border-radius:12px;width:250px}
+input,button{width:100%;margin:8px 0;padding:10px}
 </style>
 </head>
-
 <body>
 
 <div class="box">
-<h2>🌭 HOTY DOGY</h2>
-
-<input id="login" placeholder="Login">
-<input id="parol" type="password" placeholder="Parol">
-
-<button onclick="kirish()">Kirish</button>
+<h2>HOTY DOGY</h2>
+<input id="l" placeholder="login">
+<input id="p" type="password" placeholder="password">
+<button onclick="go()">Kirish</button>
 </div>
 
 <script>
-function kirish(){
-    if(login.value=="admin" && parol.value=="1234"){
-        location="dashboard.html";
-    } else {
-        alert("Xato!");
-    }
+function go(){
+ let l=document.getElementById("l").value;
+ let p=document.getElementById("p").value;
+
+ if(l=="admin" && p=="1234"){
+   localStorage.role="admin";
+   location="admin.html";
+ }
+ else if(l=="user" && p=="1234"){
+   localStorage.role="user";
+   location="live.html";
+ }
+ else alert("Xato");
 }
 </script>
 
