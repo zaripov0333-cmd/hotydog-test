@@ -3,77 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>HOTY DOGY PRO</title>
 
 <style>
 body{
- margin:0;
- font-family:Segoe UI;
- background:#0b0f1a;
- color:white;
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(135deg,#0f172a,#020617);
+  color:white;
 }
 
-/* HEADER */
 .header{
- text-align:center;
- padding:25px;
- font-size:26px;
- font-weight:700;
- background:linear-gradient(90deg,#1f2937,#0f172a);
+  text-align:center;
+  padding:20px;
+  font-size:24px;
+  font-weight:bold;
+  background:#111827;
 }
 
-/* GRID */
 .container{
- display:grid;
- grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
- gap:20px;
- padding:25px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+  padding:20px;
 }
 
-/* CARD */
 .card{
- background:linear-gradient(145deg,#111827,#1f2937);
- border-radius:16px;
- padding:20px;
- box-shadow:0 10px 25px rgba(0,0,0,0.5);
- transition:0.3s;
+  background:#111827;
+  border-radius:15px;
+  padding:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.5);
+  transition:0.3s;
 }
 
 .card:hover{
- transform:translateY(-5px) scale(1.02);
+  transform:scale(1.05);
 }
 
 .name{
- font-size:18px;
- font-weight:700;
- margin-bottom:10px;
-}
-
-.row{
- display:flex;
- justify-content:space-between;
- margin:10px 0;
-}
-
-.score{
- font-size:24px;
- font-weight:800;
-}
-
-.red{color:#ef4444;}
-.green{color:#22c55e;}
-
-.top{
- border:2px solid gold;
+  font-size:18px;
+  font-weight:bold;
 }
 
 .rank{
- font-size:12px;
- opacity:0.6;
+  font-size:12px;
+  opacity:0.7;
 }
 
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin-top:10px;
+}
+
+.score{
+  font-size:22px;
+  font-weight:bold;
+}
+
+.green{color:#22c55e;}
+.red{color:#ef4444;}
+
+.top{
+  border:2px solid gold;
+}
+
+.bonus{
+  margin-top:10px;
+  padding:5px;
+  border-radius:8px;
+  text-align:center;
+  font-size:12px;
+}
+
+.bonus.ok{background:#16a34a;}
+.bonus.no{background:#dc2626;}
 </style>
+
 </head>
 
 <body>
@@ -83,17 +89,30 @@ body{
 
 <script>
 
+// 🔥 LINKLAR
 const auditURL = "https://docs.google.com/spreadsheets/d/1R78jt3p9K86F49Pn6aurGsWR57hQV5gRuluoUPgP0hw/export?format=csv";
 const sbURL    = "https://docs.google.com/spreadsheets/d/1eFhGCDZrCFV72M6w6sM62UJtZOJpn5psTh3b4mNC-fs/export?format=csv";
 
+// 🔥 CSV PARSER
 function parseCSV(t){
   return t.split("\n").map(r=>r.split(","));
 }
 
+// 🔥 NOMNI TOZALASH
 function clean(x){
-  return (x || "").toLowerCase().replace(/\s+/g,"").trim();
+  return (x || "")
+    .toLowerCase()
+    .replace(/\s+/g,"")
+    .replace("эко","eco")
+    .replace("итпарк","itpark")
+    .replace("ц1","c1")
+    .replace("шевченко","shevchenko")
+    .replace("чилонзор","chilonzor")
+    .replace("нехт","next")
+    .trim();
 }
 
+// 🔥 LOAD
 Promise.all([
  fetch(auditURL).then(r=>r.text()),
  fetch(sbURL).then(r=>r.text())
@@ -103,17 +122,17 @@ Promise.all([
  let audit = parseCSV(a);
  let sb    = parseCSV(s);
 
- // SB MAP
+ // 🔥 SB MAP
  let sbMap = {};
  sb.forEach(r=>{
    let name = clean(r[1]);
-   let val  = Number(r[2] || 0);
+   let val  = parseFloat(r[2]) || 0;
    if(name) sbMap[name] = val;
  });
 
+ // 🔥 AUDIT LIST
  let list = [];
 
- // 🔥 TO‘G‘RI USTUNLAR (L=11, M=12)
  for(let i=1;i<=6;i++){
 
    let name = audit[i][11]; // L ustun
@@ -124,19 +143,19 @@ Promise.all([
    let key = clean(name);
 
    list.push({
-     name: name,
-     avg: Number(avg || 0),
-     sb: sbMap[key] || 0
+     name:name,
+     avg:parseFloat(avg)||0,
+     sb:sbMap[key]||0
    });
  }
 
- if(list.length === 0){
-   document.getElementById("app").innerHTML = "❌ Ma'lumot yo‘q";
+ if(list.length===0){
+   document.getElementById("app").innerHTML="❌ Ma'lumot yo‘q";
    return;
  }
 
- // SORT
- list.sort((a,b)=>b.avg - a.avg);
+ // 🔥 SORT
+ list.sort((a,b)=>b.avg-a.avg);
 
  let max = list[0].avg;
 
@@ -145,7 +164,8 @@ Promise.all([
  list.forEach((x,i)=>{
 
    let color = x.avg < 60 ? "red" : "green";
-   let top = x.avg === max ? "top" : "";
+   let bonus = x.avg >= 60 ? "ok" : "no";
+   let top   = x.avg === max ? "top" : "";
 
    html += `
    <div class="card ${top}">
@@ -153,7 +173,7 @@ Promise.all([
      <div class="rank">#${i+1}</div>
 
      <div class="row">
-       <span>Oylik Audit</span>
+       <span>Audit</span>
        <span class="score ${color}">
          ${x.avg.toFixed(1)}
        </span>
@@ -165,6 +185,10 @@ Promise.all([
          ${x.sb.toFixed(1)}
        </span>
      </div>
+
+     <div class="bonus ${bonus}">
+       ${x.avg >= 60 ? "BONUS ✅" : "RED ZONE ❌"}
+     </div>
    </div>
    `;
  });
@@ -175,9 +199,10 @@ Promise.all([
 
 })
 .catch(e=>{
- document.getElementById("app").innerHTML = "❌ Xato: " + e;
+ document.getElementById("app").innerHTML="❌ Xato: "+e;
 });
 
 </script>
+
 </body>
 </html>
