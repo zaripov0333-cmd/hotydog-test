@@ -1,39 +1,42 @@
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 p-6">
-    <div class="max-w-4xl mx-auto">
-        <h2 class="text-2xl font-bold mb-6">Admin Panel - Boshqaruv</h2>
-
-        <!-- Yangi Filial Qo'shish -->
-        <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
-            <h3 class="font-bold mb-4">Yangi Filial Qo'shish</h3>
-            <div class="flex gap-4">
-                <input type="text" id="newFilial" placeholder="Filial nomi" class="flex-1 p-2 border rounded">
-                <button onclick="alert('Filial qo\'shildi!')" class="bg-blue-600 text-white px-6 py-2 rounded shadow">Qo'shish</button>
-            </div>
-        </div>
-
-        <!-- Kategoriyalarni Boshqarish -->
-        <div class="bg-white p-6 rounded-xl shadow-sm">
-            <h3 class="font-bold mb-4">Audit Kategoriyalari</h3>
-            <ul class="space-y-3">
-                <li class="flex justify-between items-center p-2 bg-gray-100 rounded">
-                    <span>Kamera nazorati</span>
-                    <button class="text-red-500">O'chirish</button>
-                </li>
-                <li class="flex justify-between items-center p-2 bg-gray-100 rounded">
-                    <span>SB Ball (Xavfsizlik)</span>
-                    <button class="text-red-500">O'chirish</button>
-                </li>
-            </ul>
-            <div class="mt-4 flex gap-4">
-                <input type="text" id="cat" placeholder="Yangi kategoriya..." class="flex-1 p-2 border rounded">
-                <button onclick="alert('Kategoriya qo\'shildi!')" class="bg-green-600 text-white px-6 py-2 rounded shadow">Qo'shish</button>
-            </div>
-        </div>
+<!-- Admin Panel qismi -->
+<section class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+    <h3 class="text-xl font-bold mb-4 text-blue-800">Filial natijalarini kiritish</h3>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <select id="filialSelect" class="p-2 border rounded-lg bg-gray-50">
+            <option value="Filial 1">Filial 1</option>
+            <option value="Filial 2">Filial 2</option>
+            <option value="Filial 3">Filial 3</option>
+            <option value="Filial 4">Filial 4</option>
+            <option value="Filial 5">Filial 5</option>
+            <option value="Filial 6">Filial 6</option>
+        </select>
+        <input type="number" id="audit1" placeholder="Audit 1 ball" class="p-2 border rounded-lg">
+        <input type="number" id="audit2" placeholder="Audit 2 ball" class="p-2 border rounded-lg">
+        <input type="number" id="sbBall" placeholder="SB Ball" class="p-2 border rounded-lg">
+        <button onclick="saveData()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Saqlash</button>
     </div>
-</body>
-</html>
+</section>
+
+<script>
+function saveData() {
+    const filial = document.getElementById('filialSelect').value;
+    const a1 = parseFloat(document.getElementById('audit1').value) || 0;
+    const a2 = parseFloat(document.getElementById('audit2').value) || 0;
+    const sb = parseFloat(document.getElementById('sbBall').value) || 0;
+    
+    const otdacha = (a1 + a2) / 2;
+    
+    // Ma'lumotlarni obyekt qilib saqlaymiz
+    const data = {
+        name: filial,
+        audit1: a1,
+        audit2: a2,
+        sb: sb,
+        total: otdacha,
+        lastMonth: 85 // Bu o'tgan oydan qolgan shartli ball
+    };
+
+    localStorage.setItem(filial, JSON.stringify(data));
+    alert(filial + " ma'lumotlari saqlandi!");
+}
+</script>
