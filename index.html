@@ -1,39 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="uz">
 <head>
-<meta charset="UTF-8">
-<title>Login</title>
-<style>
-body{display:flex;justify-content:center;align-items:center;height:100vh;background:#0f172a;color:white;font-family:sans-serif}
-.box{background:#111827;padding:30px;border-radius:12px;width:250px}
-input,button{width:100%;margin:8px 0;padding:10px}
-</style>
+    <meta charset="UTF-8">
+    <title>Kirish | Audit System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-slate-900 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl w-96 text-center">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Tizimga kirish</h2>
+        <input type="text" id="user" placeholder="Login" class="w-full p-3 mb-4 border rounded-lg focus:outline-blue-500">
+        <input type="password" id="pass" placeholder="Parol" class="w-full p-3 mb-6 border rounded-lg focus:outline-blue-500">
+        <button onclick="login()" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition">Kirish</button>
+        <p id="error" class="text-red-500 mt-4 hidden">Login yoki parol xato!</p>
+    </div>
 
-<div class="box">
-<h2>HOTY DOGY</h2>
-<input id="l" placeholder="login">
-<input id="p" type="password" placeholder="password">
-<button onclick="go()">Kirish</button>
-</div>
-
-<script>
-function go(){
- let l=document.getElementById("l").value;
- let p=document.getElementById("p").value;
-
- if(l=="admin" && p=="1234"){
-   localStorage.role="admin";
-   location="admin.html";
- }
- else if(l=="user" && p=="1234"){
-   localStorage.role="user";
-   location="live.html";
- }
- else alert("Xato");
-}
-</script>
-
+    <script>
+        function login() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            if(u === 'admin' && p === 'admin123') {
+                window.location.href = 'admin.html';
+            } else if(u === 'viewer' && p === 'view123') {
+                window.location.href = 'dashboard.html';
+            } else {
+                document.getElementById('error').classList.remove('hidden');
+            }
+        }
+    </script>
 </body>
 </html>
