@@ -1,54 +1,25 @@
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body class="bg-gray-100 p-6">
-    <nav class="flex justify-between items-center mb-8 bg-white p-4 rounded-xl shadow">
-        <h1 class="text-xl font-bold text-blue-800">Filiallar Monitoringi</h1>
-        <a href="index.html" class="text-red-500 font-semibold">Chiqish</a>
-    </nav>
+// Dashboardda foizni hisoblash kodi
+function updateDashboard() {
+    const filialName = "Filial 1"; 
+    const savedData = JSON.parse(localStorage.getItem(filialName));
 
-    <!-- Filiallar Kartochkalari -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- Birinchi filial namunasi (shuni 6 marta takrorlang) -->
-        <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-green-500">
-            <div class="flex justify-between items-center">
-                <h3 class="text-lg font-bold">Chilonzor Filiali</h3>
-                <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-sm">Bonusga chiqdi</span>
+    if(savedData) {
+        const joriy = savedData.total;
+        const utgan = savedData.lastMonth;
+        const farq = ((joriy - utgan) / utgan * 100).toFixed(1);
+        
+        let rano = farq > 0 ? "↑" : "↓";
+        let color = farq > 0 ? "text-green-500" : "text-red-500";
+
+        document.getElementById('result-box').innerHTML = `
+            <div class="p-4 bg-white shadow rounded-lg">
+                <h4 class="font-bold">${filialName}</h4>
+                <p>Audit 1: ${savedData.audit1}</p>
+                <p>Audit 2: ${savedData.audit2}</p>
+                <p class="text-xl font-bold">O'rtacha: ${joriy}</p>
+                <p class="${color}">${rano} ${Math.abs(farq)}% o'zgarish</p>
+                <p class="font-bold text-blue-600">SB Ball: ${savedData.sb}</p>
             </div>
-            <div class="mt-4">
-                <p class="text-3xl font-bold">92.5 <span class="text-sm text-gray-500">ball</span></p>
-                <p class="text-green-600 text-sm font-medium">↑ 4.2% (O'tgan oyga nisbatan)</p>
-            </div>
-        </div>
-        <!-- Boshqa filiallar... -->
-    </div>
-
-    <!-- Grafik -->
-    <div class="bg-white p-6 rounded-xl shadow-md">
-        <h3 class="text-lg font-bold mb-4">Oylik Natijalar Solishtiruvi</h3>
-        <canvas id="myChart" height="100"></canvas>
-    </div>
-
-    <script>
-        const ctx = document.getElementById('myChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['F1', 'F2', 'F3', 'F4', 'F5', 'F6'],
-                datasets: [{
-                    label: 'O\'tgan oy',
-                    data: [85, 78, 92, 88, 70, 85],
-                    backgroundColor: '#cbd5e1'
-                }, {
-                    label: 'Bu oy',
-                    data: [92, 82, 90, 95, 85, 88],
-                    backgroundColor: '#2563eb'
-                }]
-            }
-        });
-    </script>
-</body>
-</html>
+        `;
+    }
+}
